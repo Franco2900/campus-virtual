@@ -19,7 +19,7 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 
 | ID | Nombre | Estado | Notas |
 |----|--------|--------|-------|
-| CU-01 | Registrarse | Pendiente | Bloqueado hasta OK docente |
+| CU-01 | Registrarse | Completada | Implementado end-to-end; verificaciones y revisión pasadas; cambio `add-user-registration` archivado |
 | CU-02 | Autenticarse | Pendiente | Bloqueado hasta OK docente |
 | CU-03 | Gestionar cursos | Pendiente | Bloqueado hasta OK docente |
 | CU-04 | Gestionar usuarios | Pendiente | Bloqueado hasta OK docente |
@@ -41,16 +41,17 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 - Paso cero de la Fase 6: **openspec inicializado** (`openspec init` v1.13.2 con `--tools opencode --language es`): `openspec/config.yaml` (context, `strict_tdd: false` hasta que exista runner de tests, reglas por fase) + integración nativa para opencode (6 skills `openspec-*` y 6 comandos `/opsx-*`). Verificado: `openspec list` resuelve el root del proyecto, sin cambios activos.
 - Decisiones registradas en `decisiones.md` (stack, arquitectura, MCPs, tiempos, openspec, comando MCP, set de skills/agentes, repo, operación de openspec).
 - Los casos de uso quedaron especificados en `casos_de_uso.md`.
+- **CU-01 (Registrarse) implementado end-to-end:** backend Flask (Flask 3.1.3, Flask-SQLAlchemy 3.1.1, SQLAlchemy 2.0.54, Werkzeug, pytest 9.1.1) con `POST /api/auth/register` (201/400/409, email único case-insensitive, hash de contraseña, rol Estudiante forzado) y 21 tests pasando; frontend React 19 + Vite 7 con proxy `/api` y pantalla de registro; smoke end-to-end verificado (alta 201 + duplicado 409 vía proxy). Decisión D-010.
+- **CU-01 cerrado:** verificación final (pytest 21 passed, `npm run build`, smoke 201/409), revisión inline del checklist `reviewer` sin bloqueantes (el subagente `reviewer` no pudo arrancar: error de tier del proveedor, registrado en `errores.md`; el usuario aceptó la revisión inline), docs actualizadas (AGENTS, README, decisiones, progreso, prompts_log, errores, tiempos) y cambio openspec `add-user-registration` archivado como `2026-10-09-add-user-registration` (specs sincronizadas, 4 requirements; `openspec validate --specs --strict` → 1 passed). Próximo: **CU-02 (Autenticarse)** — define el mecanismo de sesión/token (diferido en CU-01).
 
 ## Próximos pasos
 
-1. **CU-01 (Registrarse)** orquestado por la skill `new-use-case`: propose → specs → design → tasks → apply → verify → archive, delegando en los subagentes (`reviewer` obligatorio antes de marcar Completo). `track-time` en cada unidad; definir versiones de librerías y comandos de ejecución/test al arrancar.
-2. Definir el stack Python (venv + `requirements.txt`) y el scaffolding del backend al implementar CU-01.
+1. **CU-02 (Autenticarse)** orquestado por la skill `new-use-case`: define el mecanismo de sesión/token (diferido en CU-01).
+2. Reintentar el subagente `reviewer` (falló por error de tier del proveedor) en próximos CU, o revisarlo en `errores.md`.
 
 ## Pendientes de definición
 
-- Versiones exactas de librerías (Flask, SQLAlchemy, React, Vite, LangChain).
-- Organización de carpetas del frontend.
+- Lint/formato automático.
+- Organización de carpetas del frontend (parcial: definida por feature en CU-01).
 - Punto de integración del chatbot.
-- Comandos reales de ejecución, test y lint.
 - Convenciones de formato/indentación.

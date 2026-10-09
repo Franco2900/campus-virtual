@@ -104,3 +104,13 @@ Formato:
 - **Criterios:** una única fuente de verdad (`openspec/`), máxima trazabilidad de AI Engineering (foco de la evaluación), menor fricción por CU, no luchar contra el tool.
 - **Consecuencias / impacto:** `openspec config.yaml` con `strict_tdd: false` (no hay comando de tests todavía; se habilita cuando exista un runner de workspace). `casos_de_uso.md` sigue como fuente humana de los CU; openspec pasa a ser la fuente de verdad de specs. El `.opencode/.gitignore` autogenerado (oculta `node_modules`/`package.json` de openspec) se respeta.
 - **Estado:** Vigente.
+
+## D-010 — Stack y esquema del primer caso de uso (CU-01)
+
+- **Fecha:** 2026-10-09.
+- **Decisión:** al implementar CU-01 se fijaron: backend con Flask 3.1.3, Flask-SQLAlchemy 3.1.1, SQLAlchemy 2.0.54, Werkzeug 3.1.9 (hashing) y pytest 9.1.1 (pinned en `backend/requirements.txt`); frontend con React 19.3.0, Vite 7.3.7 y `@vitejs/plugin-react` 5.2.0 (pinned en `frontend/package.json`); esquema inicial con `db.create_all()` (sin migraciones todavía); CORS resuelto con el proxy de desarrollo de Vite (`/api → http://localhost:5000`, sin `flask-cors`); frontend organizado por feature (`src/features/<feature>/` + `src/api/client.js`); mensajes de error de la API en español (UI orientada a hispanohablantes).
+- **Contexto / problema:** CU-01 requiere el scaffolding completo (no había código); había que decidir versiones, hashing, init de esquema, CORS y estructura del frontend.
+- **Alternativas consideradas:** (a) `passlib`+`bcrypt` para hashing (descartado: wheel incierto en Python 3.14.6 en Windows; `werkzeug.security` es puro Python y valida en CU-02); (b) Flask-Migrate/Alembic desde el inicio (descartado: no hay esquema ni datos previos); (c) `flask-cors` (descartado: el proxy de Vite lo vuelve innecesario en dev); (d) frontend por tipo con carpetas `components/` (descartado: bolsa de gato a 10 CU).
+- **Criterios:** dependencias mínimas, portabilidad, ceremonia proporcional.
+- **Consecuencias / impacto:** las versiones quedan pinned y no se cambian sin autorización; las migraciones se introducirán (skill `create-migration`) cuando un CU modifique un esquema con datos. El mecanismo de sesión/token se decide en CU-02 (CU-01 no autentica).
+- **Estado:** Vigente.

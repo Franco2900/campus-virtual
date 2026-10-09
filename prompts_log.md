@@ -74,3 +74,33 @@ Formato de cada entrada:
 - **Resultado:** paso cero completado; proyecto listo para CU-01 vía `new-use-case`.
 - **Estado:** Completado.
 - **Verificaciones:** `openspec list --json` resuelve el root del proyecto; `openspec validate` sin cambios activos (esperado); skills/commands presentes en `.opencode/`.
+
+## 2026-10-09 13:06 — CU-01: planning (openspec propose)
+
+- **Contexto / tarea:** CU-01 (Registrarse). Generar el cambio `add-user-registration` con los 4 artefactos de planning (proposal, specs, design, tasks).
+- **Prompt utilizado:** "Arrancá CU-01 con new-use-case" → aprobación de defaults de stack y "arranca" para el planning.
+- **Resumen de la respuesta:** se creó el cambio, se escribieron `proposal.md`, `specs/user-auth/spec.md` (capability nueva), `design.md` (decisiones D-A..D-K) y `tasks.md` (7 grupos, 18 tareas); `openspec validate --strict` → válido.
+- **Archivos modificados:** `openspec/changes/add-user-registration/*` (4 artefactos), `tiempos.md` (T-007).
+- **Resultado:** planning completo y validado; se frenó en la frontera de openspec.
+- **Estado:** Completado.
+- **Verificaciones:** `openspec validate add-user-registration --strict` → valid; `openspec status` → 4/4.
+
+## 2026-10-09 13:10 — CU-01: apply (implementación)
+
+- **Contexto / tarea:** CU-01. Implementar el cambio aprobado (backend → frontend → tests → smoke).
+- **Prompt utilizado:** "Validado, arranca" (apply).
+- **Resumen de la respuesta:** subagente `backend`: scaffolding Flask por capas, modelo `User` (email único, rol enum, hash Werkzeug), `register_user()`, `POST /api/auth/register` y 21 tests (instalación sin fallos de wheels en Python 3.14.6; `pytest -q` 21 passed). El orquestador pasó los mensajes de error de la API a español. Subagente `frontend`: scaffold Vite 7 + React 19, `client.js`, `registerUser()` y `RegisterForm` (build OK). Smoke end-to-end por proxy: alta 201 + duplicado 409.
+- **Archivos modificados:** `backend/` (requirements, app, config, models, services, blueprints, tests), `frontend/` (package.json, vite.config, index.html, src/*), `.gitignore` (+`.pytest_cache/`), `AGENTS.md`, `README.md`, `decisiones.md` (D-010), `progreso.md`.
+- **Resultado:** CU-01 implementado end-to-end; pendiente `run-verification`, `reviewer` y archivo.
+- **Estado:** En progreso.
+- **Verificaciones:** `pytest -q` 21 passed; `npm run build` OK; smoke HTTP directo y vía proxy (201/409).
+
+## 2026-10-09 13:28 — CU-01: verificación final, revisión y archivo
+
+- **Contexto / tarea:** CU-01. Cerrar el ciclo: `run-verification`, gate de `reviewer` y archive del cambio.
+- **Prompt utilizado:** "arranca" (continuación del apply) + confirmación del usuario de aceptar la revisión inline ante la falla del subagente `reviewer`.
+- **Resumen de la respuesta:** verificación final (pytest 21 passed, `npm run build` OK, smoke ya corrido 201/409). El subagente `reviewer` falló al arrancar x2 (`OpenCode's free tier can only be used from within OpenCode`); se hizo revisión inline contra el checklist del reviewer sin bloqueantes (APROBADO) y el usuario aceptó archivarla. `openspec archive add-user-registration --yes` → archivado como `2026-10-09-add-user-registration` con sincronización de specs (4 requirements); `openspec validate --specs --strict` → 1 passed.
+- **Archivos modificados:** `errores.md` (entrada falla `reviewer`), `openspec/changes/add-user-registration/tasks.md` (18/18 [x]), `openspec/specs/user-auth/spec.md` (main spec creada), `progreso.md` (CU-01 Completada), `prompts_log.md`, `tiempos.md` (T-009).
+- **Resultado:** CU-01 declarado **Completada**; cambio archivado; docs y registros cerrados.
+- **Estado:** Completado.
+- **Verificaciones:** pytest 21 passed; `npm run build` OK; `openspec validate --specs --strict` OK; `openspec status` → 18/18 tasks.
