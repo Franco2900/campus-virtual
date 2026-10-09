@@ -1,0 +1,44 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "filesystem": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "cmd",
+        "/c",
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:/Users/Administrador/Desktop/Curso IA UNLa/tp 2"
+      ]
+    }
+  },
+  "permission": {
+    "bash": {
+      "*": "allow",
+      "git commit *": "ask",
+      "git push": "ask",
+      "git push *": "ask",
+      "git push --force *": "ask",
+      "git rebase *": "ask",
+      "git reset --hard *": "ask",
+      "ssh": "ask",
+      "ssh *": "ask",
+      "scp *": "ask",
+      "rsync *": "ask"
+    },
+    "read": {
+      "*": "allow",
+      "**/.env": "deny",
+      "**/.env.*": "deny",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "**/.ssh/**": "deny",
+      "**/*.pem": "deny",
+      "**/*.key": "deny",
+      "**/.aws/credentials": "deny",
+      "**/credentials.json": "deny"
+    }
+  }
+}
