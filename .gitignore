@@ -1,5 +1,6 @@
 # Local tooling generated per machine
 .atl/
+.engram/
 
 # Environment / secrets
 .env
