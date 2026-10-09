@@ -12,13 +12,16 @@ Este archivo es la fuente de verdad operativa. El README es para humanos.
 
 ## Cómo ejecutar
 
-> PENDIENTE DE DEFINIR: los comandos reales se completan cuando exista el código (Fase 6). No ejecutar comandos inventados.
+Comandos reales (verificados al implementar CU-01). En Windows, `npm` y `openspec` deben invocarse con el prefijo `cmd /c` por la execution policy de PowerShell (ver D-006); en Linux/macOS se omiten el prefijo `cmd /c` y los sufijos `.exe`.
 
-- **Backend (dev):** PENDIENTE DE DEFINIR (esperado: entorno virtual + `pip install -r requirements.txt` + `python app.py`).
-- **Frontend (dev):** PENDIENTE DE DEFINIR (esperado: `npm install` + `npm run dev`).
-- **Tests:** PENDIENTE DE DEFINIR (esperado: `pytest` en backend).
+- **Backend — instalación (una vez, desde la raíz del proyecto):**
+  - `python -m venv .venv`
+  - Windows: `.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt`
+  - Linux/macOS: `.venv/bin/python -m pip install -r backend/requirements.txt`
+- **Backend (dev):** `python backend/app.py` → `http://127.0.0.1:5000`. Base SQLite en `backend/instance/campus.db` (override con `CAMPUS_DB_PATH`; `SECRET_KEY` por entorno).
+- **Frontend (dev):** dentro de `frontend/`, `npm install` y `npm run dev` (Windows: `cmd /c npm install`, `cmd /c npm run dev`) → `http://localhost:5173`, con proxy de desarrollo `/api` → `http://localhost:5000`. Build: `npm run build`.
+- **Tests (backend):** dentro de `backend/`, Windows `..\.venv\Scripts\python.exe -m pytest`; Linux/macOS `../.venv/bin/python -m pytest`.
 - **Lint / formato:** PENDIENTE DE DEFINIR.
-- Se actualiza esta sección en cuanto los comandos existan y sean verificables.
 
 ## Arquitectura
 
@@ -37,7 +40,8 @@ backend/
 
 - **Persistencia:** toda consulta a la base se hace desde `services/` a través de los modelos SQLAlchemy. No hay SQL crudo en `routes/`.
 - **Validaciones:** en la capa `services/`.
-- **Frontend:** PENDIENTE DE DEFINIR la organización de carpetas (esperado: por feature o por tipo, a definir antes de CU-01).
+- **Esquema:** SQLite inicializado con `db.create_all()` desde el factory (`create_app()`). Sin migraciones formales todavía (ver D-010); se introducirán (skill `create-migration`) cuando un CU modifique un esquema con datos.
+- **Frontend:** organización por feature (`src/features/<feature>/`), con `src/api/client.js` como cliente HTTP base; componentes en `PascalCase`. Las validaciones de servidor son la fuente de verdad: el cliente solo envía y muestra los errores devueltos por el backend.
 - **Chatbot:** PENDIENTE DE DEFINIR el punto de integración con LangChain + Ollama.
 
 ## Casos de uso
@@ -79,8 +83,8 @@ Resumen (detalle completo en `casos_de_uso.md`):
 ├── progreso.md          # control de progreso
 ├── prompts_log.md       # auditoría de prompts
 ├── tiempos.md           # medición de tiempos de desarrollo
-├── backend/             # PENDIENTE DE DEFINIR (Fase 6)
-├── frontend/            # PENDIENTE DE DEFINIR (Fase 6)
+├── backend/             # API Flask (app.py, config/, models/, services/, blueprints/, tests/)
+├── frontend/            # SPA React + Vite (src/api/, src/features/)
 ├── openspec/            # specs spec-driven (openspec): fuente de verdad de specs
 ├── .atl/
 │   └── skill-registry.md  # índice de skills (generado)
@@ -94,11 +98,11 @@ Resumen (detalle completo en `casos_de_uso.md`):
 
 ## API
 
-> PENDIENTE DE DEFINIR. No inventar endpoints. La tabla se completa a medida que se implementan.
-
 | Método | Ruta | CU | Propósito | Auth |
 |--------|------|----|-----------|------|
-| - | - | - | (vacío hasta Fase 6) | - |
+| POST | `/api/auth/register` | CU-01 | Registrar una cuenta (rol Estudiante) | Público |
+
+> Se completa a medida que se implementan los CU. No inventar endpoints.
 
 ## Convenciones
 
@@ -106,14 +110,19 @@ Resumen (detalle completo en `casos_de_uso.md`):
 
 - **Idioma del código e identificadores:** inglés.
 - **Idioma de la documentación (README, AGENTS, docs):** español (neutral).
+- **Idioma de la UI y mensajes al usuario:** español (neutral).
 - **Backend:** `snake_case` para variables y funciones, `PascalCase` para clases, archivos en `snake_case`.
-- **Frontend:** PENDIENTE DE DEFINIR (esperado: `camelCase`/`PascalCase`, componentes `PascalCase`).
+- **Frontend:** `camelCase` para variables y funciones, `PascalCase` para componentes y sus archivos, archivos de módulos en `camelCase` (p. ej. `client.js`).
 - **Comentarios:** ninguno por defecto. Solo cuando expliquen una decisión, restricción o comportamiento no evidente.
 - **Indentación / formato:** PENDIENTE DE DEFINIR (esperado: formateador automático).
 
 ## Verificación
 
-> PENDIENTE DE DEFINIR: se completa con comandos reales en Fase 6.
+Comandos reales (verificados en CU-01):
+
+- **Backend:** dentro de `backend/`, Windows `..\.venv\Scripts\python.exe -m pytest`; Linux/macOS `../.venv/bin/python -m pytest`.
+- **Frontend:** dentro de `frontend/`, `npm run build` (Windows: `cmd /c npm run build`).
+- **Smoke:** levantar backend (`python backend/app.py`) y frontend (`npm run dev`) y probar `POST /api/auth/register` (alta 201 + duplicado 409).
 
 - No declarar una tarea completada sin haber ejecutado su verificación.
 - Conservar mensajes de error completos.
@@ -129,11 +138,11 @@ Resumen (detalle completo en `casos_de_uso.md`):
 
 ## Roadmap
 
-- **Ahora:** Fase 6 en marcha — openspec inicializado (`openspec/` + `config.yaml`), OK docente obtenido. Próximo: CU-01 orquestado por `new-use-case`.
-- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con `reviewer` antes de marcar Completo.
+- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse) Completada** end-to-end (backend Flask + frontend React/Vite + tests + docs + cambio openspec `2026-10-09-add-user-registration` archivado). Próximo: CU-02.
+- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con `reviewer` antes de marcar Completo. Nota: el subagente `reviewer` falló al arrancar en CU-01 por un error de tier del proveedor (ver `errores.md`); se cerró con revisión inline aceptada por el usuario — reintentar el subagente en el próximo CU.
 - **Futuro:** plugin de opencode para medir tiempos por tool-call de forma automática.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
-- **Pendiente:** definir versiones exactas de librerías y comandos reales de ejecución/test al arrancar CU-01.
+- **Pendiente:** definir lint/formato automático; introducir migraciones cuando un CU cambie el esquema con datos.
 
 ## Límites
 

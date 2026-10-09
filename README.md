@@ -26,23 +26,50 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 | ORM | SQLAlchemy |
 | Chatbot | LangChain + Ollama (local) |
 
-Las versiones exactas están en `casos_de_uso.md` y en `AGENTS.md`.
+Las versiones exactas están en `backend/requirements.txt` (backend) y `frontend/package.json` (frontend).
 
 ## Requisitos previos
 
-> PENDIENTE DE DEFINIR: versiones mínimas verificadas (Python, Node, pip/npm).
+- Python 3.14 (verificado en 3.14.6) y `pip`.
+- Node.js v24 (verificado en v24.19.0) y `npm`.
+- En Windows, `npm` se invoca como `cmd /c npm ...` por la execution policy de PowerShell.
 
 ## Instalación
 
-> PENDIENTE DE DEFINIR: pasos reales cuando exista el código (Fase 6).
+```bash
+# Backend (desde la raíz del proyecto)
+python -m venv .venv
+# Windows
+.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+# Linux/macOS
+.venv/bin/python -m pip install -r backend/requirements.txt
+
+# Frontend
+cd frontend
+npm install        # Windows: cmd /c npm install
+```
 
 ## Ejecución
 
-> PENDIENTE DE DEFINIR.
+```bash
+# Backend (desde la raíz) → http://127.0.0.1:5000
+python backend/app.py
+
+# Frontend (desde frontend/) → http://localhost:5173
+npm run dev        # Windows: cmd /c npm run dev
+```
+
+El servidor de desarrollo de Vite proxea `/api` hacia `http://localhost:5000`.
 
 ## Testing
 
-> PENDIENTE DE DEFINIR.
+```bash
+# Backend (desde backend/)
+..\.venv\Scripts\python.exe -m pytest        # Linux/macOS: ../.venv/bin/python -m pytest
+
+# Frontend (desde frontend/)
+npm run build                                 # Windows: cmd /c npm run build
+```
 
 ## Estructura
 
@@ -58,17 +85,22 @@ Las versiones exactas están en `casos_de_uso.md` y en `AGENTS.md`.
 ├── prompts_log.md     # auditoría de prompts
 ├── tiempos.md         # medición de tiempos
 ├── openspec/          # specs spec-driven (fuente de verdad de specs)
-├── backend/           # API Flask (PENDIENTE DE DEFINIR)
-└── frontend/          # SPA React (PENDIENTE DE DEFINIR)
+├── backend/           # API Flask (app.py, config/, models/, services/, blueprints/, tests/)
+└── frontend/          # SPA React + Vite (src/api/, src/features/)
 ```
 
 ## API
 
-> PENDIENTE DE DEFINIR: tabla de endpoints cuando exista el backend.
+| Método | Ruta | CU | Propósito | Auth |
+|--------|------|----|-----------|------|
+| POST | `/api/auth/register` | CU-01 | Registrar una cuenta (rol Estudiante) | Público |
 
 ## Configuración
 
-> PENDIENTE DE DEFINIR: variables de entorno (por ejemplo, ruta de la base, secretos de sesión, configuración de Ollama).
+Variables de entorno (con valores por defecto para desarrollo):
+
+- `CAMPUS_DB_PATH`: ruta del archivo SQLite (default `backend/instance/campus.db`).
+- `SECRET_KEY`: clave de sesión (default solo de desarrollo; fijar en producción).
 
 ## Servidores MCP (Model Context Protocol)
 
@@ -100,10 +132,11 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Roadmap
 
-- Openspec inicializado: pipeline spec-driven por CU (orquestado por `new-use-case`).
+- CU-01 (Registrarse) implementado end-to-end (backend Flask + frontend React/Vite + tests).
+- Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
 - Plugin de medición automática de tiempos.
 - Integración completa del chatbot.
-- Tests automatizados de backend y frontend.
+- Tests automatizados de frontend.
 
 ## Licencia
 
