@@ -12,7 +12,7 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 | Fase 2 | `opencode.json` de proyecto (MCP filesystem, permisos) | Completada |
 | Fase 3 | Subagentes especializados en `.opencode/agents/` | Completada |
 | Fase 4 | Skills reutilizables en `.opencode/skills/` | Completada |
-| Fase 5 | Git + repositorio en GitHub | Pendiente |
+| Fase 5 | Git + repositorio en GitHub | Completada |
 | Fase 6 | Implementación de casos de uso (requiere OK docente y openspec inicializado) | Bloqueada |
 
 ## Casos de uso
@@ -36,15 +36,15 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 - Fase 2 completada: `opencode.json` de proyecto con el MCP `filesystem` (comando `cmd /c npx -y @modelcontextprotocol/server-filesystem`) y bloque de permisos. MCPs documentados en el README.
 - Fase 3 completada: subagentes `backend`, `frontend`, `database`, `tester`, `reviewer` (read-only) en `.opencode/agents/`.
 - Fase 4 completada: skills `track-time`, `new-use-case`, `create-crud`, `create-migration`, `run-verification` en `.opencode/skills/`. Registro actualizado en `.atl/skill-registry.md`.
-- Decisiones registradas en `decisiones.md` (stack, arquitectura, MCPs, tiempos, openspec, comando MCP, set de skills/agentes).
+- Fase 5 completada: repo `main` en GitHub **público** `https://github.com/Franco2900/campus-virtual` con 4 commits por unidad de trabajo (`chore`, `docs` x2, `feat`). Verificación previa OK: MCP `filesystem` conectado y acotado al proyecto, `context7` respondiendo, 5 subagentes y 5 skills registrados.
+- Decisiones registradas en `decisiones.md` (stack, arquitectura, MCPs, tiempos, openspec, comando MCP, set de skills/agentes, repo).
 - Los casos de uso quedaron especificados en `casos_de_uso.md`.
 
 ## Próximos pasos
 
-1. **Reiniciar opencode** para que tome `opencode.json` (MCP `filesystem`), los subagentes y las skills.
-2. Verificar que el MCP `filesystem` aparece conectado y que subagentes/skills responden.
-3. Fase 5: inicializar git, agregar `.atl/` al `.gitignore` y publicar en GitHub.
-4. Inicializar openspec antes de CU-01 (tras el OK docente).
+1. **Obtener el OK docente sobre los 10 casos de uso** (condición habilitante; sin esto no se codea).
+2. **Inicializar openspec** — paso cero de la Fase 6, antes de implementar CU-01 (ver D-005).
+3. Implementar los casos de uso orquestados por `new-use-case` (Fase 6).
 
 ## Pendientes de definición
 

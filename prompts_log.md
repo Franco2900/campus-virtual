@@ -54,3 +54,13 @@ Formato de cada entrada:
 - **Resultado:** entorno de agentes/skills listo.
 - **Estado:** Completado.
 - **Verificaciones:** style-guide aplicado; registro regenerado y persistido en memoria.
+
+## 2026-10-09 12:19 — Fase 5: git + GitHub
+
+- **Contexto / tarea:** Fase 5. Control de versiones y repositorio remoto.
+- **Prompt utilizado:** "Verifica que los mcp, los subagentes y las skills antes de seguir con la proxima fase. No te olvides de indicarme cuando debo inicializar openspec" (verificación previa) y "Arranca con la fase 5".
+- **Resumen de la respuesta:** verificación en vivo de los 3 MCP (filesystem acotado al proyecto, engram operativo, context7 resolvió Flask), 5 subagentes y 5 skills; luego `git init` + `git branch -M main`, `.gitignore` (incl. `.atl/`), 4 commits por unidad de trabajo, `gh auth login` (Franco2900), repo público `campus-virtual`, push y sincronización de `main` con `origin/main`. Se indicó que openspec se inicializa tras el OK docente y antes de CU-01.
+- **Archivos modificados:** `.gitignore` (nuevo), `progreso.md`, `tiempos.md`, `prompts_log.md`, `decisiones.md` (D-008), `README.md`.
+- **Resultado:** Fase 5 completada; repo `https://github.com/Franco2900/campus-virtual`.
+- **Estado:** Completado.
+- **Verificaciones:** `gh auth status` OK; `git status -sb` limpio y sincronizado con `origin/main`; `gh repo view` confirma `PUBLIC` y `main`.

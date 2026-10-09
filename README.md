@@ -83,6 +83,11 @@ El desarrollo se apoya en tres servidores MCP. La configuración vive en `openco
 - **Comando del MCP filesystem:** `cmd /c npx -y @modelcontextprotocol/server-filesystem "<ruta del proyecto>"`.
 - **Portabilidad:** la ruta del MCP filesystem es específica de esta máquina. Para correr en otra máquina hay que ajustarla.
 
+## Repositorio
+
+- URL: https://github.com/Franco2900/campus-virtual
+- Rama por defecto: `main`. Commits por unidad de trabajo (Conventional Commits). `.atl/` (herramientas locales generadas) está en `.gitignore`.
+
 ## Roadmap
 
 - Migración a openspec (gestión spec-driven).
