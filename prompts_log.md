@@ -64,3 +64,13 @@ Formato de cada entrada:
 - **Resultado:** Fase 5 completada; repo `https://github.com/Franco2900/campus-virtual`.
 - **Estado:** Completado.
 - **Verificaciones:** `gh auth status` OK; `git status -sb` limpio y sincronizado con `origin/main`; `gh repo view` confirma `PUBLIC` y `main`.
+
+## 2026-10-09 12:43 — Fase 6, paso cero: inicializar openspec
+
+- **Contexto / tarea:** Fase 6. Inicializar openspec como fuente de verdad de specs (OK docente obtenido).
+- **Prompt utilizado:** "Ya tengo el ok del docente" → se investigó el flujo y se preguntó el modo de operación ("Aprobado, inicialo").
+- **Resumen de la respuesta:** investigación previa (CLI `openspec` v1.13.2 vía `cmd /c`; skills `sdd-*` = convención openspec, no sistema competidor → D-005 Superada por D-009). Se ejecutó `openspec init --tools opencode --language es --force --no-copilot-cloud`, que generó `openspec/` (config.yaml, specs/, changes/archive/), 6 skills `openspec-*` y 6 comandos `/opsx-*` en `.opencode/`, más un mini node project que su `.gitignore` propio mantiene fuera de git. Se enriqueció `config.yaml` (context del proyecto, `strict_tdd: false`, reglas y operaciones por convención) y se actualizó el registro de skills.
+- **Archivos modificados:** `openspec/config.yaml`, `.opencode/commands/opsx-*.md`, `.opencode/skills/openspec-*/SKILL.md`, `.atl/skill-registry.md`, `AGENTS.md`, `decisiones.md` (D-005 Superada, D-009), `progreso.md`, `tiempos.md` (T-006), `prompts_log.md`, `README.md`.
+- **Resultado:** paso cero completado; proyecto listo para CU-01 vía `new-use-case`.
+- **Estado:** Completado.
+- **Verificaciones:** `openspec list --json` resuelve el root del proyecto; `openspec validate` sin cambios activos (esperado); skills/commands presentes en `.opencode/`.

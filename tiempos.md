@@ -37,6 +37,7 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 | T-003 | 2026-10-09T11:56:41 | 2026-10-09T12:02:46 | 00:06:05 | CFG | - | Humano+Agente | Fase 2: `opencode.json` (MCP filesystem + permisos); verificación de `npx`/execution policy y arranque del server |
 | T-004 | 2026-10-09T12:02:46 | 2026-10-09T12:11:08 | 00:08:22 | CFG | - | Agente | Fase 3+4: subagentes (backend, frontend, database, tester, reviewer) y skills (track-time, new-use-case, create-crud, create-migration, run-verification); registro `.atl/skill-registry.md` y actualización de docs |
 | T-005 | 2026-10-09T12:19:05 | 2026-10-09T12:33:15 | 00:14:10 | CFG | - | Humano+Agente | Fase 5: verificación de MCPs/subagentes/skills, `git init`, `.gitignore` (incl. `.atl/`), 4 commits por work-unit, `gh auth login`, repo público `campus-virtual`, push y cierre documental |
+| T-006 | 2026-10-09T12:43:52 | 2026-10-09T12:50:19 | 00:06:27 | CFG | - | Agente | Fase 6, paso cero: `openspec init` v1.13.2 (--tools opencode --language es), `openspec/config.yaml` enriquecido (strict_tdd: false), registro de 6 skills `openspec-*` y 6 comandos `/opsx-*`, docs (D-005 Superada, D-009) |
 
 ## Totales
 
@@ -47,6 +48,6 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 | IMP | 00:00:00 |
 | TST | 00:00:00 |
 | DOC | 00:01:28 |
-| CFG | 00:28:37 |
+| CFG | 00:35:04 |
 | REV | 00:00:00 |
-| **Total** | **00:40:13** |
+| **Total** | **00:46:40** |

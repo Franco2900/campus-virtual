@@ -57,6 +57,7 @@ Las versiones exactas están en `casos_de_uso.md` y en `AGENTS.md`.
 ├── progreso.md        # control de progreso
 ├── prompts_log.md     # auditoría de prompts
 ├── tiempos.md         # medición de tiempos
+├── openspec/          # specs spec-driven (fuente de verdad de specs)
 ├── backend/           # API Flask (PENDIENTE DE DEFINIR)
 └── frontend/          # SPA React (PENDIENTE DE DEFINIR)
 ```
@@ -88,9 +89,18 @@ El desarrollo se apoya en tres servidores MCP. La configuración vive en `openco
 - URL: https://github.com/Franco2900/campus-virtual
 - Rama por defecto: `main`. Commits por unidad de trabajo (Conventional Commits). `.atl/` (herramientas locales generadas) está en `.gitignore`.
 
+## Desarrollo spec-driven (openspec)
+
+Los cambios se gestionan spec-driven: cada caso de uso se planifica y se implementa con un pipeline reproducible (propuesta → specs → diseño → tareas → aplicación → verificación → archivo), dejando rastro auditable en `openspec/`.
+
+- Estructura: `openspec/changes/{cambio}/` para cambios activos, `openspec/specs/` como fuente de verdad de specs, `openspec/changes/archive/` como pista de auditoría.
+- CLI: `openspec` (invocarlo en Windows como `cmd /c openspec ...` por la execution policy de PowerShell). En opencode se puede usar la vía nativa con los comandos `/opsx-*`.
+- `config.yaml` contiene el contexto del proyecto, `strict_tdd` (desactivado hasta que exista un runner de tests) y las reglas por fase.
+- Los casos de uso están especificados en `casos_de_uso.md`; openspec los refina por cambio.
+
 ## Roadmap
 
-- Migración a openspec (gestión spec-driven).
+- Openspec inicializado: pipeline spec-driven por CU (orquestado por `new-use-case`).
 - Plugin de medición automática de tiempos.
 - Integración completa del chatbot.
 - Tests automatizados de backend y frontend.

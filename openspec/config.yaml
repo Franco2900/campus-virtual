@@ -1,0 +1,37 @@
+schema: spec-driven
+
+context: |
+  Language: es
+  All artifacts must be written in es.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+  Campus Virtual - TP Integrador (UNLa), Grupo 12.
+  Stack: backend Python 3.14.6 + Flask (API REST), frontend React + Vite (Node v24.19.0), SQLite vía SQLAlchemy, chatbot LangChain + Ollama local.
+  Arquitectura backend: Blueprints por dominio (auth, courses, users, tasks, enrollments, grades) y capas routes -> services -> models. Lógica de negocio y validaciones solo en services/.
+  Reglas de negocio: roles excluyentes (Estudiante, Profesor, Administrador), email único, calificaciones 1..10, tareas no entregadas fuera de plazo cuentan como 1.
+  Portabilidad: la app corre en Windows, Linux y macOS; rutas relativas y sin comandos exclusivos de una plataforma en el código.
+
+strict_tdd: false
+
+rules:
+  proposal:
+    - Vincular la propuesta con su CU (casos_de_uso.md) y las reglas de negocio (AGENTS.md).
+    - Distinguir alcance aprobado de propuestas nuevas.
+  specs:
+    - Usar Given/When/Then para los escenarios.
+    - Usar palabras clave RFC 2119 (MUST, SHALL, SHOULD, MAY).
+  design:
+    - Documentar cada decisión de diseño con su justificación.
+    - Respetar la regla de dependencias routes -> services -> models y la portabilidad.
+  tasks:
+    - Agrupar por unidad de trabajo revisable (work-unit commits).
+    - Mantener cada tarea completable dentro de una sesión.
+    - Incluir la verificación de cada tarea en la misma unidad.
+
+operations:
+  apply:
+    guidance:
+      - Seguir los patrones de código existentes y la portabilidad (sin comandos ni separadores exclusivos de una plataforma en la app).
+      - Ejecutar run-verification antes de declarar terminado un cambio.
+  archive:
+    guidance:
+      - Conservar el archivo como pista de auditoría; no editar ni borrar cambios archivados.

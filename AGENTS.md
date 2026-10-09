@@ -81,11 +81,13 @@ Resumen (detalle completo en `casos_de_uso.md`):
 ├── tiempos.md           # medición de tiempos de desarrollo
 ├── backend/             # PENDIENTE DE DEFINIR (Fase 6)
 ├── frontend/            # PENDIENTE DE DEFINIR (Fase 6)
+├── openspec/            # specs spec-driven (openspec): fuente de verdad de specs
 ├── .atl/
 │   └── skill-registry.md  # índice de skills (generado)
 └── .opencode/
     ├── agents/          # subagentes: backend, frontend, database, tester, reviewer
-    └── skills/          # skills: track-time, new-use-case, create-crud, create-migration, run-verification
+    ├── commands/        # comandos /opsx-* del CLI openspec (generados)
+    └── skills/          # skills: track-time, new-use-case, create-crud, create-migration, run-verification, openspec-*
 ```
 
 > No documentar ni referenciar archivos que no existan todavía.
@@ -127,11 +129,11 @@ Resumen (detalle completo en `casos_de_uso.md`):
 
 ## Roadmap
 
-- **Ahora:** entorno configurado (docs + `opencode.json` + agentes + skills). **No programar hasta tener el OK docente.**
-- **Futuro:** inicializar **openspec** para gestión spec-driven antes de empezar a codear CU-01.
+- **Ahora:** Fase 6 en marcha — openspec inicializado (`openspec/` + `config.yaml`), OK docente obtenido. Próximo: CU-01 orquestado por `new-use-case`.
+- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con `reviewer` antes de marcar Completo.
 - **Futuro:** plugin de opencode para medir tiempos por tool-call de forma automática.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
-- **Pendiente:** Fase 5 (git + GitHub); `.atl/` debe ir en `.gitignore`.
+- **Pendiente:** definir versiones exactas de librerías y comandos reales de ejecución/test al arrancar CU-01.
 
 ## Límites
 
@@ -147,6 +149,7 @@ Resumen (detalle completo en `casos_de_uso.md`):
 - **context7** (documentación, remoto/externo, config global): consultar docs actualizadas antes de escribir código de librerías (Flask, SQLAlchemy, React, Vite, LangChain). Evita APIs inventadas.
 - **filesystem** (local, `opencode.json`): acceso a archivos acotado a la carpeta del proyecto.
 - **Terminal:** herramienta nativa de opencode.
+- **openspec CLI** (spec-driven): herramienta nativa del CLI; en Windows invocar siempre `cmd /c openspec ...` (mismo bloqueo de execution policy que `npx`, ver D-006). Los comandos `/opsx-*` omiten esa complejidad.
 - Requisito de la consigna: mínimo 2 servidores MCP, al menos 1 externo (se cumple con engram + context7 + filesystem).
 
 ## Skills y subagentes
@@ -160,6 +163,7 @@ Skills del proyecto (`.opencode/skills/`, registradas en `.atl/skill-registry.md
 | `create-crud` | Abm/CRUD de una entidad (modelo + servicio + rutas + React) |
 | `create-migration` | Cambios de esquema con migraciones |
 | `run-verification` | Verificar tests/build antes de declarar algo terminado |
+| `openspec-*` (6) | Vía nativa del CLI openspec: propose, explore, update-change, apply-change, sync-specs, archive-change (comandos `/opsx-*`) |
 
 Subagentes (`.opencode/agents/`): `backend`, `frontend`, `database`, `tester`, `reviewer` (read-only). Usarlos delegando trabajo específico; el `reviewer` es obligatorio antes de marcar un CU como Completo.
 

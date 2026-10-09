@@ -13,7 +13,7 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 | Fase 3 | Subagentes especializados en `.opencode/agents/` | Completada |
 | Fase 4 | Skills reutilizables en `.opencode/skills/` | Completada |
 | Fase 5 | Git + repositorio en GitHub | Completada |
-| Fase 6 | Implementación de casos de uso (requiere OK docente y openspec inicializado) | Bloqueada |
+| Fase 6 | Implementación de casos de uso (requiere OK docente y openspec inicializado) | En progreso |
 
 ## Casos de uso
 
@@ -37,14 +37,15 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 - Fase 3 completada: subagentes `backend`, `frontend`, `database`, `tester`, `reviewer` (read-only) en `.opencode/agents/`.
 - Fase 4 completada: skills `track-time`, `new-use-case`, `create-crud`, `create-migration`, `run-verification` en `.opencode/skills/`. Registro actualizado en `.atl/skill-registry.md`.
 - Fase 5 completada: repo `main` en GitHub **público** `https://github.com/Franco2900/campus-virtual` con 4 commits por unidad de trabajo (`chore`, `docs` x2, `feat`). Verificación previa OK: MCP `filesystem` conectado y acotado al proyecto, `context7` respondiendo, 5 subagentes y 5 skills registrados.
-- Decisiones registradas en `decisiones.md` (stack, arquitectura, MCPs, tiempos, openspec, comando MCP, set de skills/agentes, repo).
+- **OK docente obtenido** para los 10 casos de uso (condición habilitante).
+- Paso cero de la Fase 6: **openspec inicializado** (`openspec init` v1.13.2 con `--tools opencode --language es`): `openspec/config.yaml` (context, `strict_tdd: false` hasta que exista runner de tests, reglas por fase) + integración nativa para opencode (6 skills `openspec-*` y 6 comandos `/opsx-*`). Verificado: `openspec list` resuelve el root del proyecto, sin cambios activos.
+- Decisiones registradas en `decisiones.md` (stack, arquitectura, MCPs, tiempos, openspec, comando MCP, set de skills/agentes, repo, operación de openspec).
 - Los casos de uso quedaron especificados en `casos_de_uso.md`.
 
 ## Próximos pasos
 
-1. **Obtener el OK docente sobre los 10 casos de uso** (condición habilitante; sin esto no se codea).
-2. **Inicializar openspec** — paso cero de la Fase 6, antes de implementar CU-01 (ver D-005).
-3. Implementar los casos de uso orquestados por `new-use-case` (Fase 6).
+1. **CU-01 (Registrarse)** orquestado por la skill `new-use-case`: propose → specs → design → tasks → apply → verify → archive, delegando en los subagentes (`reviewer` obligatorio antes de marcar Completo). `track-time` en cada unidad; definir versiones de librerías y comandos de ejecución/test al arrancar.
+2. Definir el stack Python (venv + `requirements.txt`) y el scaffolding del backend al implementar CU-01.
 
 ## Pendientes de definición
 
