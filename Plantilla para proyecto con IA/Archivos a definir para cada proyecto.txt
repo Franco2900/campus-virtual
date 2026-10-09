@@ -1,0 +1,134 @@
+Casos de uso
+
+Describe una forma en la que un actor (usuario o sistema externo) interactúa con la aplicación para lograr un objetivo. Sirve para entender qué debe hacer el sistema antes de programarlo. No van en el README (ahí van características resumidas); se detallan en un documento de requisitos, en las notas del equipo o, como resumen corto de flujos, en el AGENTS.md para que el agente entienda el negocio.
+
+Partes de un caso de uso:
+- Actor: Quién inicia la acción (cliente, admin, sistema).
+- Disparador: Situación que lleva al actor a usarlo.
+- Flujo principal: Pasos normales para lograr el objetivo.
+- Resultado: Qué logra el actor al final.
+- (Opcional) Flujos alternativos: Qué pasa si algo sale mal (ej: carrito vacío, campos faltantes).
+
+Ejemplos de este proyecto:
+- Ver el menú: el cliente abre la página, mira los ítems y aplica filtros por categoría o dieta. Resultado: ve los productos disponibles.
+- Hacer un pedido: el cliente arma el carrito, envía el pedido y el sistema lo registra y abre WhatsApp con el resumen. Resultado: pedido registrado y enviado.
+- Contactar al local: el cliente completa el formulario; el sistema valida los campos y guarda el mensaje. Resultado: mensaje recibido.
+- (Alternativo) Carrito vacío: si el cliente intenta pedir sin items, el sistema responde error 400.
+
+*****************************************************************************************************************************************
+
+AGENTS.md
+
+Es un archivo en la raíz del proyecto con instrucciones para agentes de IA (opencode, Cursor, Codex, etc.), el equivalente de un README pero pensado para la IA que programa. Mientras el README explica qué hace el proyecto a humanos, el AGENTS.md les dice a los agentes cómo trabajar: arquitectura, comandos, convenciones, dónde viven los datos y qué evitar. Cuando el agente trabaja en el proyecto, lo lee automáticamente para respetar esas reglas.
+
+- Descripción del proyecto: De que trata el proyecto, que tecnologías usa y en que partes (frontend con react version x o backend con python version x).
+- Cómo correr el proyecto: Comando o comandos necesarios para hacer funcionar el proyecto.
+- Dependencias y restricciones: Qué lenguajes, versiones y librerías se pueden usar o si hay libertad, dónde se registran (requirements.txt) y qué más NO se debe tocar.
+- Portabilidad: Si el proyecto debe andar en celulares o en computadoras o en cualquier máquina y sistema operativo. Ej: El proyecto debe poder correr en cualquier computadora (Windows, Linux, macOS) con los pasos del "Cómo correr". Rutas relativas al proyecto, nada de rutas absolutas, separadores o comandos de una sola plataforma.
+- Arquitectura: Patron de arquitectura a usar (ej: modelo, vista, controlador) y el camino de los archivos (ej: app -> rutas -> controladores, etc)
+- Casos de uso o flujos del negocio: Qué hace el sistema desde el punto de vista del usuario (ej: el cliente ve el menú, arma el carrito y pide por WhatsApp). Ayuda al agente a entender el proyecto y no romper esos flujos.
+- Mapa de archivos: Explica que archivos conforman el proyecto y la funcionalidad de cada uno
+API o endpoints: Referencia rápida de las rutas o servicios existentes (ej: GET /api/menu) y sus funciones para que el agente no invente otras nuevas y reutilice las que ya hay.
+- Convenciones: Si se añade o no comentarios al código y si se añaden que tan explicativos o largos, tipo de nomenclatura (camelCase, PascalCase, snake_case, etc), lenguaje del código y los comentarios (español, ingles, etc)
+- Verificación: Cómo el agente comprueba que sus cambios funcionan (comando de tests, linter, script de smoke test, Swagger). Si todavía no hay tests configurados, se deja igual qué se corre para verificar.
+- Roadmap y límites conocidos: Qué está planeado a futuro y qué partes no se cambian sin avisar, para que el agente no rediseñe lo existente por su cuenta.
+- Seguridad y gotchas: Datos sensibles, endpoints sin autenticar, trampas del código (ej: IDs calculados con len(lista)+1, no borrar registros) y reglas de "qué NO hacer".
+
+*****************************************************************************************************************************************
+
+README.md
+
+El README explica a los humanos qué hace el proyecto y cómo usarlo. (A diferencia del AGENTS.md, que les dice a los agentes de IA cómo trabajar.)
+
+- Título y descripción: Qué hace el proyecto y para quién es.
+- Vista previa: Imágenes o capturas de la app terminada 
+- Características: Lista de las funcionalidades principales.
+- Tecnologías y herramientas: Stack usado por área (backend, frontend, estilos, persistencia, etc).
+- Requisitos previos: Versiones mínimas y dependencias del sistema (ej: Python 3.10+, pip).
+- Instalación y puesta en marcha: Pasos para levantar el proyecto (ej: pip install -r requirements.txt; python app.py).
+- Estructura del proyecto: Mapa de archivos o carpetas y su responsabilidad.
+- Documentación de la API: Tabla de endpoints con ejemplos (curl) y respuestas.
+- Configuración: Variables o archivos editables.
+- Roadmap: Funcionalidades planeadas a futuro.
+- Licencia (opcional): Bajo qué licencia se distribuye el proyecto.
+- Contacto y contribución (opcional): Cómo reportar problemas, proponer cambios o contactar al equipo.
+
+*****************************************************************************************************************************************
+
+Archivo de prompts
+
+Guardar en un archivo tipo prompts_usados.txt o prompts_log.md.
+Contenido recomendado:
+- Fecha y hora del prompt.
+- Prompt completo utilizado.
+- Contexto del caso de uso (ej: “Creación de CRUD para tabla usuarios”).
+- Respuesta generada por la IA (resumen, no necesariamente todo el output).
+- Estado del resultado: Pendiente / En progreso / Completado.
+Beneficio: Permite auditar cómo se llegó a cierto código y reproducir el proceso si es necesario.
+
+*****************************************************************************************************************************************
+
+Registro de decisiones
+
+Archivo sugerido: decisiones.md.
+Contenido recomendado:
+- Motivo de la decisión: por qué se eligió un framework, librería o patrón.
+- Alternativas consideradas: qué otras opciones se evaluaron.
+- Criterios de selección: rendimiento, compatibilidad, facilidad de mantenimiento, etc.
+- Impacto esperado: cómo afecta al proyecto a corto y largo plazo.
+Beneficio: Justifica las elecciones técnicas y evita discusiones futuras sin contexto.
+
+*****************************************************************************************************************************************
+
+Bitácora de errores
+
+Archivo sugerido: errores.md.
+Contenido recomendado:
+- Error encontrado (mensaje exacto).
+- Causa probable.
+- Pasos de diagnóstico realizados.
+- Solución aplicada.
+- Estado final (resuelto / pendiente).
+Beneficio: Evita repetir diagnósticos y sirve como guía para nuevos integrantes.
+
+*****************************************************************************************************************************************
+
+Resumen de progreso
+
+Archivo sugerido: progreso.md.
+Contenido recomendado:
+- Lista de tareas con estado (Pendiente / En progreso / Completada).
+- Último resumen del agente antes de nuevas modificaciones.
+- Próximos pasos definidos.
+Beneficio: Mantiene claridad sobre el estado actual del proyecto.
+
+*****************************************************************************************************************************************
+
+Skills reutilizables documentadas
+
+Archivo sugerido: SKILL.md.
+Contenido recomendado:
+- Nombre de la skill.
+- Propósito.
+- Parámetros de entrada.
+- Ejemplo de uso.
+- Manejo de errores.
+Beneficio: Facilita que otros proyectos puedan reutilizar las mismas skills.
+
+*****************************************************************************************************************************************
+
+¿Qué es MCP?
+
+El MCP (Model Context Protocol) es un estándar abierto que redefine la manera en que los modelos de lenguaje interactúan con el mundo exterior. Funciona como un “conector universal”, similar a lo que el puerto USB-C representa en la electrónica: una interfaz común que elimina la necesidad de integraciones personalizadas.
+	Gracias a este protocolo, los modelos ya no dependen únicamente de su conocimiento entrenado, sino que pueden acceder a datos en tiempo real, consultar bases de datos, ejecutar funciones en aplicaciones empresariales y comunicarse con herramientas de desarrollo.
+
+Integración con opencode.json
+
+El archivo opencode.json define cómo debe comportarse la IA dentro de tu proyecto. Además de especificar modelos, agentes, permisos y reglas internas, puede incluir configuraciones para habilitar la conexión mediante MCP, asegurando coherencia interna mientras se abre la interacción externa.
+Contenido recomendado:
+- Definir agentes MCP: indicar qué agentes están autorizados a comunicarse con hosts, clientes y servidores externos.
+- Permisos de conexión: establecer qué servicios externos (APIs, bases de datos, sistemas de archivos) pueden ser consultados.
+- Modelos habilitados: especificar qué modelos de IA pueden usar MCP y bajo qué condiciones.
+- Reglas de seguridad: evitar que el agente acceda a servicios no autorizados o ejecute funciones críticas sin validación.
+- Contexto compartido: definir cómo se transmiten parámetros y datos entre el proyecto y los servidores externos.
+- Skills MCP: encapsular tareas repetitivas como “consultar API externa”, “ejecutar migración en base de datos” o “generar reporte desde servidor conectado”.

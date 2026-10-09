@@ -1,0 +1,71 @@
+Especificaciones del Trabajo Práctico Integrador 
+ 
+ 
+Objetivo del TP 
+Desarrollar un sistema web completo (Frontend y Backend) delegando la programación 
+operativa a agentes autónomos de IA. El foco principal de la evaluación estará puesto en la 
+orquestación del entorno de trabajo (AI Engineering) y en la funcionalidad entregada, 
+dejando de lado la evaluación tradicional de la estética o calidad directa del código fuente 
+escrito. 
+ 
+ 
+Modalidad de Trabajo 
+● Integrantes: El trabajo se podrá realizar de forma individual o en equipos de 
+hasta 2 o 3 personas. 
+ 
+ 
+Criterios de Evaluación y Calificación 
+Para aprobar el Trabajo Práctico (y el curso), se requiere una nota mínima de 7 (siete) 
+sobre 10. La calificación se compondrá de la siguiente manera: 
+1. Funcionalidad del Sistema (Hasta 3 Puntos) 
+El equipo deberá proponer una lista de 10 casos de uso funcionales para su sistema web 
+antes del desarrollo. 
+● Criterio de Aprobación: El sistema web (Backend + Frontend) debe resolver de 
+manera interactiva y sin errores críticos un mínimo de 7 de los 10 casos de uso 
+propuestos. 
+● Enfoque: Se evalúa que el software funcione y cumpla con la lógica de negocio 
+acordada. 
+2. Esquema de Trabajo y AI Engineering (Hasta 3 Puntos) 
+Se evaluará el proceso y el ecosistema de herramientas de IA que se utilizó para construir 
+la aplicación. 
+● Configuración del Entorno: Uso efectivo de herramientas de desarrollo asistido. 
+● Interacción y Contexto: Uso correcto de reglas de contexto para guiar el desarrollo 
+de la lógica y patrones de diseño. 
+3. Documentación y Justificación: El README (Hasta 1 Punto) 
+El repositorio deberá contar con un archivo README.md exhaustivo que actúe como 
+bitácora y justificación del proceso de ingeniería: 
+● Explicación de la arquitectura del sistema y los 10 casos de uso planteados. 
+● Justificación de AI Engineering: Detalle de los prompts clave, metodologías de 
+iteración, loops de autocorrección automatizados si los hubo y cómo se 
+estructuraron las instrucciones del sistema. 
+Configuración detallada de los servidores MCP utilizados y su rol en el desarrollo. 
+4. Implementación de Model Context Protocol - MCP (Hasta 1 Punto) 
+Demostración práctica de la integración de agentes con su entorno a través del protocolo 
+MCP. 
+● Mínimo requerido: Integración de al menos 2 herramientas/servidores MCP en el 
+flujo de desarrollo o en la arquitectura. 
+● Requisito de origen: Al menos 1 de los servidores MCP utilizados debe ser 
+externo. 
+5. Chatbot integrado. Asistente Inteligente Integrado (Hasta 2 Puntos) 
+El proyecto deberá integrar dentro de la aplicación web un sistema de chat funcional 
+utilizando el framework de IA como LangChain. 
+Pasos a seguir 
+1. Definir el equipo de trabajo. Completar el equipo de trabajo para antes del 
+22/09/2026. Completar en el campus:  
+https://campus.unla.edu.ar/aulas/mod/choicegroup/view.php?id=660086  
+2. Definir el proyecto y los 10 casos de uso. Subir en un documento PDF en esta 
+sección del campus para antes del 29/09/2026, link: 
+https://campus.unla.edu.ar/aulas/mod/assign/view.php?id=661066  
+a. El PDF debería incluir: 
+i. 
+Tema y casos de uso. 
+ii. 
+iii. 
+Stack de tecnología a utilizar. 
+De cada integrante del equipo: 
+1. Apellido y nombre. 
+2. Mail. 
+3. Usuario de github. 
+3. El equipo docente envía una evaluación y definición de cada TP así pueden 
+comenzar a trabajar. Es decir, no arranquen a programar hasta tener el OK del 
+equipo docente sobre su tema de TP y sus 10 casos de uso.

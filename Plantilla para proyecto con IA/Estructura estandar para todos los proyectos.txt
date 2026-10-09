@@ -1,0 +1,24 @@
+/
+├── AGENTS.md
+├── README.md
+├── opencode.json
+├── casos_de_uso.md
+├── decisiones.md
+├── errores.md
+├── progreso.md
+├── prompts_log.md
+└── .opencode/
+    ├── agents/
+    │   ├── architect.md
+    │   ├── backend.md
+    │   ├── frontend.md
+    │   ├── database.md
+    │   ├── reviewer.md
+    │   └── tester.md
+    └── skills/
+        ├── create-crud/
+        │   └── SKILL.md
+        ├── run-tests/
+        │   └── SKILL.md
+        └── generate-docs/
+            └── SKILL.md

@@ -1,0 +1,943 @@
+# INICIALIZACIÓN DEL PROYECTO
+
+Voy a crear/iniciar el siguiente proyecto:
+
+## 1. Datos generales del proyecto
+
+**Nombre:** [NOMBRE DEL PROYECTO]
+
+**Descripción:** [DESCRIPCIÓN DEL PROYECTO EN 1-3 LÍNEAS]
+
+**Objetivo principal:** [QUÉ PROBLEMA RESUELVE O QUÉ OBJETIVO CUMPLE]
+
+**Usuarios/actores principales:** [TIPO DE USUARIOS]
+
+**Alcance inicial:** [FUNCIONALIDADES QUE SÍ DEBE TENER]
+
+**Fuera de alcance por ahora:** [FUNCIONALIDADES QUE NO DEBEN IMPLEMENTARSE]
+
+**Prioridad actual:** [CASO DE USO / MÓDULO / OBJETIVO PRIORITARIO]
+
+---
+
+# 2. STACK TECNOLÓGICO Y ENTORNO
+
+Debes respetar estrictamente las tecnologías y versiones definidas para este proyecto.
+
+**Lenguaje:** [LENGUAJE + VERSIÓN EXACTA]
+
+**Framework principal:** [FRAMEWORK + VERSIÓN EXACTA]
+
+**Librerías principales:** [LIBRERÍAS + VERSIONES]
+
+**Base de datos:** [MOTOR + VERSIÓN]
+
+**ORM / persistencia:** [ORM/LIBRERÍA + VERSIÓN]
+
+**Herramientas de ejecución:** [COMANDOS / RUNTIME]
+
+**Herramientas de compilación:** [COMPILADOR / BUILD TOOL]
+
+**Testing:** [FRAMEWORK / HERRAMIENTAS]
+
+**Linting / formateo:** [HERRAMIENTAS]
+
+**Sistema operativo objetivo:** [WINDOWS / LINUX / MACOS / MULTIPLATAFORMA]
+
+**Entorno de ejecución:** [LOCAL / DOCKER / SERVIDOR / CLOUD / OTRO]
+
+**Gestor de paquetes:** [NPM / PNPM / YARN / PIP / POETRY / CARGO / MAVEN / OTRO]
+
+## Reglas del stack
+
+* No reemplaces una tecnología definida por otra sin autorización.
+* No actualices versiones por iniciativa propia.
+* No introduzcas librerías nuevas si ya existe una dependencia adecuada en el proyecto.
+* Antes de agregar una dependencia, verifica primero las dependencias realmente instaladas y los archivos de configuración/lock existentes.
+* No utilices APIs, sintaxis o métodos correspondientes a versiones diferentes de las declaradas.
+* Si una versión necesaria no está disponible o existe una incompatibilidad, informa el problema antes de modificar el stack.
+* Si un dato técnico no está definido y no puede determinarse inspeccionando el proyecto, pregúntame antes de asumirlo.
+
+---
+
+# 3. INSPECCIÓN OBLIGATORIA DEL PROYECTO
+
+Antes de proponer cambios o escribir código, inspecciona el proyecto real.
+
+Debes revisar como mínimo:
+
+* estructura de carpetas;
+* archivos existentes;
+* archivos de configuración;
+* manifiestos de dependencias;
+* archivos de lock;
+* scripts de ejecución;
+* scripts de compilación;
+* configuración de base de datos;
+* tests existentes;
+* configuración de linting y formateo;
+* variables de entorno y archivos `.env` o equivalentes;
+* documentación existente;
+* configuraciones de OpenCode;
+* agentes existentes;
+* Skills existentes;
+* integración MCP existente;
+* archivos generados o que no deben editarse manualmente.
+
+## Reglas contra alucinaciones
+
+No asumas que existen:
+
+* archivos;
+* carpetas;
+* clases;
+* funciones;
+* endpoints;
+* tablas;
+* columnas;
+* APIs;
+* variables;
+* servicios;
+* dependencias;
+* scripts;
+* configuraciones;
+* agentes;
+* Skills;
+* servidores MCP.
+
+Debes comprobar su existencia antes de utilizarlos como fundamento de una modificación.
+
+Cuando una decisión dependa del código existente, indica qué archivos reales del proyecto utilizaste como evidencia.
+
+No inventes nombres para:
+
+* tablas;
+* campos;
+* endpoints;
+* rutas;
+* funciones;
+* clases;
+* módulos;
+* variables;
+* archivos;
+* configuraciones.
+
+Si un dato es necesario y no puede verificarse, marca la información como **PENDIENTE DE DEFINIR** o pregúntame antes de continuar.
+
+No corrijas problemas imaginarios.
+
+---
+
+# 4. PREGUNTAS ANTES DE ASUMIR
+
+Después de inspeccionar el proyecto, detecta únicamente las dudas que realmente bloqueen decisiones importantes.
+
+Antes de generar código:
+
+1. Identifica las decisiones que faltan.
+2. Separa las dudas críticas de las dudas menores.
+3. Pregunta primero las dudas críticas.
+4. No preguntes cosas que puedan descubrirse inspeccionando el proyecto.
+5. No preguntes por detalles que puedan quedar definidos mediante las convenciones ya existentes.
+6. Si varias preguntas están relacionadas, agrúpalas.
+
+Nunca inventes una respuesta para evitar una pregunta necesaria.
+
+Cuando exista información suficiente para continuar, no hagas preguntas innecesarias.
+
+---
+
+# 5. PLAN DE TRABAJO
+
+Antes de escribir código de aplicación, presenta un plan paso a paso.
+
+El plan debe incluir:
+
+* objetivo;
+* alcance;
+* arquitectura;
+* archivos que se modificarán;
+* archivos que se crearán;
+* dependencias necesarias;
+* cambios en base de datos;
+* casos de uso involucrados;
+* estrategia de testing;
+* estrategia de verificación;
+* riesgos o posibles impactos.
+
+El plan debe dividirse en unidades pequeñas y verificables.
+
+No realices cambios masivos cuando el problema pueda resolverse mediante cambios incrementales.
+
+No implementes funcionalidades fuera del alcance definido.
+
+---
+
+# 6. ESTILO DE CÓDIGO Y CONVENCIONES
+
+Debes respetar las convenciones existentes del proyecto.
+
+**Variables:** [snake_case / camelCase / otra]
+
+**Funciones:** [snake_case / camelCase / otra]
+
+**Clases:** [PascalCase / otra]
+
+**Archivos:** [convención]
+
+**Componentes:** [convención]
+
+**Constantes:** [convención]
+
+**Indentación:** [2 / 4 / otra]
+
+**Comillas:** [simples / dobles]
+
+**Punto y coma:** [sí / no]
+
+**Comentarios:** [ninguno / breves / explicativos]
+
+**Idioma del código:** [ESPAÑOL / INGLÉS]
+
+**Idioma de comentarios:** [ESPAÑOL / INGLÉS]
+
+**Tipado:** [estricto / requerido / opcional]
+
+**Tipos inseguros:** [permitidos / restringidos / prohibidos]
+
+**Formato:** [HERRAMIENTA]
+
+**Linting:** [HERRAMIENTA]
+
+## Reglas
+
+* Mantén consistencia con el código existente.
+* No reformatees archivos completos sin necesidad.
+* No cambies nombres públicos arbitrariamente.
+* No introduzcas estilos diferentes dentro del mismo módulo.
+* Evita tipos genéricos o inseguros cuando el proyecto requiera tipado estricto.
+* Respeta las reglas del linter y formateador configurados.
+* No agregues comentarios que simplemente repitan lo que hace el código.
+* Agrega comentarios solamente cuando expliquen una decisión, restricción o comportamiento no evidente.
+
+---
+
+# 7. ARQUITECTURA
+
+La arquitectura definida para este proyecto es:
+
+**Arquitectura:** [MVC / Clean Architecture / Hexagonal / Capas / Modular Monolith / otra]
+
+**Estructura principal:** [DESCRIPCIÓN]
+
+**Capas:** [PRESENTACIÓN / APLICACIÓN / DOMINIO / DATOS / OTRAS]
+
+**Comunicación entre componentes:** [DESCRIPCIÓN]
+
+**Persistencia:** [DESCRIPCIÓN]
+
+**Lógica de negocio:** [DÓNDE DEBE IMPLEMENTARSE]
+
+**Acceso a base de datos:** [DÓNDE DEBE REALIZARSE]
+
+**Validaciones:** [DÓNDE DEBEN REALIZARSE]
+
+## Reglas arquitectónicas
+
+Cada componente debe tener una responsabilidad clara.
+
+No mezcles:
+
+* presentación con lógica de negocio;
+* acceso a datos con presentación;
+* configuración con lógica de negocio;
+* lógica de negocio con scripts de infraestructura.
+
+La lógica de negocio debe permanecer en la capa correspondiente.
+
+El acceso a la base de datos debe realizarse únicamente desde los componentes autorizados por la arquitectura.
+
+No introduzcas patrones de diseño innecesarios.
+
+No rediseñes la arquitectura existente únicamente por preferencia personal.
+
+Si detectas que la arquitectura existente contradice estas reglas, informa primero el conflicto y propone una modificación incremental.
+
+---
+
+# 8. CASOS DE USO
+
+Los casos de uso representan las interacciones entre un actor y el sistema para lograr un objetivo.
+
+Cada caso de uso debe documentarse con:
+
+* ID;
+* nombre;
+* actor;
+* objetivo;
+* disparador;
+* precondiciones;
+* flujo principal;
+* flujos alternativos;
+* errores/excepciones;
+* resultado/postcondiciones;
+* datos involucrados;
+* criterios de aceptación.
+
+No implementes un caso de uso que no esté suficientemente definido.
+
+Trabaja preferentemente **un caso de uso a la vez**.
+
+Para cada caso de uso:
+
+1. analizar requisitos;
+2. revisar código existente;
+3. identificar archivos afectados;
+4. realizar el cambio mínimo necesario;
+5. verificar;
+6. documentar;
+7. actualizar progreso.
+
+Los casos de uso deben mantenerse separados de la descripción resumida del README.
+
+---
+
+# 9. PORTABILIDAD
+
+**Objetivo de portabilidad:** [SOLO LOCAL / WINDOWS / LINUX / MACOS / MULTIPLATAFORMA]
+
+Cuando el proyecto requiera portabilidad:
+
+* utiliza rutas relativas al proyecto;
+* evita rutas absolutas;
+* evita asumir un directorio de usuario;
+* evita comandos exclusivos de una plataforma cuando exista una alternativa portable;
+* documenta claramente los requisitos específicos de cada sistema;
+* no dependas de configuraciones particulares de una computadora.
+
+---
+
+# 10. PERSISTENCIA Y BASE DE DATOS
+
+**Motor:** [MOTOR + VERSIÓN]
+
+**ORM/persistencia:** [TECNOLOGÍA]
+
+**Migraciones:** [HERRAMIENTA]
+
+**Ubicación de acceso a datos:** [CARPETA / CAPA]
+
+## Reglas
+
+* Verifica primero el esquema real.
+* No inventes tablas ni columnas.
+* No cambies el esquema sin documentar la decisión.
+* No mezcles consultas SQL directamente con componentes que no correspondan.
+* No elimines datos ni ejecutes operaciones destructivas sin autorización explícita.
+* Usa migraciones cuando el proyecto las requiera.
+* Mantén consistencia entre modelo, esquema y código.
+* Si existen datos reales, evita operaciones destructivas sobre ellos.
+
+---
+
+# 11. VERIFICACIÓN Y TESTING
+
+Antes de considerar terminado un cambio, debes verificarlo.
+
+**Comando de tests:** [COMANDO]
+
+**Smoke test:** [COMANDO]
+
+**Lint:** [COMANDO]
+
+**Formateador:** [COMANDO]
+
+**Build/compilación:** [COMANDO]
+
+**Ejecución:** [COMANDO]
+
+Si no existen tests todavía, determina cuál es la forma mínima y reproducible de verificar el cambio sin inventar herramientas.
+
+## Reglas de verificación
+
+* Ejecuta primero la verificación más pequeña y relevante.
+* Luego ejecuta las verificaciones generales necesarias.
+* No afirmes que un cambio funciona si no fue comprobado.
+* No afirmes que los tests pasan si no ejecutaste los tests.
+* Conserva los mensajes de error completos cuando aparezcan problemas.
+* Cuando sea posible, reproduce primero el error antes de modificar el código.
+* Después de corregir un error, vuelve a ejecutar la verificación que lo detectó.
+
+---
+
+# 12. CRITERIOS DE FINALIZACIÓN
+
+Un caso de uso solamente se considera **Completado** cuando corresponda:
+
+* funcionalidad implementada;
+* código compilando o ejecutándose correctamente;
+* tests ejecutados;
+* verificaciones relevantes ejecutadas;
+* errores contemplados;
+* documentación actualizada;
+* README actualizado cuando corresponda;
+* AGENTS.md actualizado cuando corresponda;
+* progreso actualizado;
+* decisiones registradas cuando exista una decisión arquitectónica/técnica relevante.
+
+No declares una tarea completada solamente porque el código fue escrito.
+
+---
+
+# 13. CONTROL DEL PROGRESO
+
+Mantén un archivo:
+
+`progreso.md`
+
+Estados permitidos:
+
+* Pendiente
+* En progreso
+* Completada
+* Bloqueada
+
+Cada tarea debe identificar:
+
+* objetivo;
+* estado;
+* caso de uso relacionado;
+* archivos afectados;
+* última verificación;
+* próximos pasos.
+
+Antes de comenzar una nueva unidad importante de trabajo, revisa el estado actual del proyecto.
+
+Antes de nuevas modificaciones, proporciona un resumen breve de:
+
+* qué está completado;
+* qué está en progreso;
+* qué está bloqueado;
+* qué se modificó recientemente;
+* qué falta.
+
+No rehagas trabajo ya completado sin motivo.
+
+---
+
+# 14. MANEJO DE ERRORES
+
+Mantén un archivo:
+
+`errores.md`
+
+Para errores relevantes registra:
+
+* fecha;
+* error exacto;
+* contexto;
+* causa probable;
+* archivos involucrados;
+* diagnóstico realizado;
+* solución aplicada;
+* verificación posterior;
+* estado final.
+
+## Reglas
+
+* muestra el mensaje de error completo;
+* no ocultes errores;
+* no inventes causas;
+* diferencia entre causa confirmada y causa probable;
+* enumera las hipótesis cuando existan varias causas posibles;
+* prioriza diagnósticos reproducibles;
+* realiza cambios pequeños;
+* evita modificar múltiples componentes simultáneamente durante un diagnóstico cuando no sea necesario;
+* después de una corrección, verifica nuevamente.
+
+---
+
+# 15. REGISTRO DE DECISIONES
+
+Mantén un archivo:
+
+`decisiones.md`
+
+Para decisiones técnicas o arquitectónicas relevantes registra:
+
+* ID;
+* fecha;
+* decisión;
+* contexto;
+* problema;
+* alternativas consideradas;
+* criterios utilizados;
+* decisión adoptada;
+* consecuencias;
+* impacto esperado.
+
+No registres cada detalle trivial.
+
+Utiliza este archivo para evitar decisiones contradictorias en el futuro.
+
+---
+
+# 16. REGISTRO DE PROMPTS
+
+Mantén un archivo:
+
+`prompts_log.md`
+
+Cada entrada debe contener:
+
+* fecha;
+* contexto;
+* caso de uso o tarea;
+* prompt utilizado;
+* resumen de la respuesta;
+* archivos modificados;
+* resultado;
+* estado;
+* verificaciones realizadas.
+
+El registro debe servir para:
+
+* auditar cambios;
+* reproducir decisiones;
+* comprender cómo se llegó a una implementación;
+* identificar prompts que funcionaron o fallaron.
+
+No es necesario almacenar respuestas completas cuando el resumen y los resultados sean suficientes.
+
+---
+
+# 17. AGENTS.md
+
+Debes crear o actualizar:
+
+`AGENTS.md`
+
+Este archivo debe ser la fuente principal de instrucciones persistentes para el agente.
+
+Debe contener, como mínimo:
+
+## Proyecto
+
+* propósito;
+* stack;
+* versiones;
+* componentes principales.
+
+## Cómo ejecutar
+
+* instalación;
+* ejecución;
+* compilación;
+* tests;
+* lint;
+* formateo.
+
+## Arquitectura
+
+* patrón;
+* estructura;
+* responsabilidades;
+* flujo entre capas.
+
+## Casos de uso
+
+* resumen de los casos de uso;
+* reglas del negocio importantes.
+
+## Mapa de archivos
+
+* carpetas importantes;
+* archivos importantes;
+* responsabilidad de cada uno.
+
+## API
+
+* endpoints o servicios existentes;
+* método;
+* propósito;
+* parámetros;
+* respuesta;
+* autenticación cuando corresponda.
+
+No inventes endpoints para completar esta sección.
+
+## Convenciones
+
+* nomenclatura;
+* tipado;
+* comentarios;
+* formato;
+* idioma.
+
+## Verificación
+
+* comandos de verificación reales.
+
+## Roadmap
+
+* funcionalidades futuras conocidas.
+
+## Límites
+
+* partes que no deben modificarse sin autorización.
+
+## Seguridad y gotchas
+
+* datos sensibles;
+* permisos;
+* restricciones;
+* configuraciones peligrosas;
+* comportamientos no obvios;
+* cosas que nunca deben hacerse.
+
+Mantén `AGENTS.md` orientado al agente y suficientemente conciso para que siga siendo útil.
+
+---
+
+# 18. README.md
+
+Debes crear o actualizar:
+
+`README.md`
+
+El README está destinado principalmente a personas.
+
+Debe contener:
+
+## Título y descripción
+
+Qué hace el proyecto y para quién.
+
+## Vista previa
+
+Dejar una sección preparada para capturas o imágenes si corresponde.
+
+## Características
+
+Resumen de las principales funcionalidades.
+
+## Tecnologías
+
+Stack utilizado por área.
+
+## Requisitos previos
+
+Versiones mínimas y dependencias necesarias.
+
+## Instalación
+
+Pasos reales y verificables.
+
+## Ejecución
+
+Comandos reales.
+
+## Testing
+
+Cómo ejecutar las pruebas.
+
+## Estructura
+
+Mapa resumido de carpetas y responsabilidades.
+
+## API
+
+Resumen de endpoints existentes, cuando corresponda.
+
+## Configuración
+
+Variables de entorno y archivos configurables.
+
+## Roadmap
+
+Funcionalidades futuras conocidas.
+
+## Licencia
+
+Solo si está definida.
+
+## Contribución/contacto
+
+Solo si corresponde.
+
+No utilices el README para almacenar instrucciones extensas destinadas exclusivamente al agente.
+
+---
+
+# 19. MAPA REAL DEL PROYECTO
+
+Mantén actualizada la documentación necesaria para explicar:
+
+* qué archivos existen;
+* qué responsabilidad tiene cada uno;
+* qué archivos son generados;
+* qué archivos no deben editarse manualmente;
+* dónde está la lógica de negocio;
+* dónde está el acceso a datos;
+* dónde están las pruebas;
+* dónde están las configuraciones.
+
+No documentes archivos que no existan.
+
+Cuando la estructura cambie de manera relevante, actualiza la documentación correspondiente.
+
+---
+
+# 20. SUBAGENTES ESPECIALIZADOS
+
+Cuando resulte útil, crea agentes especializados para dividir responsabilidades.
+
+Roles candidatos:
+
+* Arquitecto de software.
+* Backend developer.
+* Frontend developer.
+* Especialista en base de datos.
+* Revisor de código.
+* Tester/QA.
+* Documentador.
+
+No es obligatorio crear todos los roles.
+
+Crea solamente los que sean útiles para este proyecto.
+
+Cada agente especializado debe tener:
+
+* propósito;
+* responsabilidades;
+* límites;
+* información que debe revisar;
+* herramientas necesarias;
+* criterios de finalización;
+* restricciones sobre lo que no debe modificar.
+
+Los subagentes no deben asumir información que no exista en el proyecto.
+
+Cuando una tarea requiera conocimiento específico, utiliza el agente especializado correspondiente en lugar de hacer que un único agente realice todas las funciones.
+
+---
+
+# 21. SKILLS REUTILIZABLES
+
+Identifica tareas repetitivas que puedan convertirse en Skills.
+
+Ejemplos:
+
+* crear CRUD;
+* generar documentación;
+* crear migraciones;
+* ejecutar tests;
+* crear componentes UI;
+* generar diagramas;
+* generar reportes;
+* revisar código;
+* preparar releases.
+
+No crees Skills únicamente por cumplir una lista.
+
+Cada Skill debe resolver una tarea concreta y reutilizable.
+
+Para cada Skill relevante crea:
+
+`.opencode/skills/<skill-id>/SKILL.md`
+
+Cada `SKILL.md` debe incluir:
+
+* nombre;
+* descripción;
+* cuándo utilizarla;
+* cuándo no utilizarla;
+* parámetros de entrada;
+* procedimiento;
+* formato esperado del resultado;
+* manejo de errores;
+* verificaciones;
+* ejemplos de uso.
+
+No crees Skills duplicadas.
+
+Utiliza nombres de Skill claros y consistentes con el formato aceptado por OpenCode.
+
+Las Skills deben ser autocontenidas y no asumir archivos que no existan.
+
+---
+
+# 22. MCP
+
+Si el proyecto requiere herramientas o servicios externos mediante MCP, primero inspecciona la configuración existente.
+
+No inventes servidores MCP.
+
+No agregues servidores MCP únicamente porque podrían ser útiles.
+
+Para cada integración MCP utilizada documenta:
+
+* nombre;
+* propósito;
+* servidor;
+* herramientas disponibles;
+* alcance;
+* permisos;
+* datos que puede consultar;
+* datos que puede modificar;
+* riesgos;
+* restricciones.
+
+Solo habilita servicios externos que estén explícitamente definidos o autorizados.
+
+Nunca almacenes credenciales directamente en archivos del proyecto.
+
+Utiliza variables de entorno o el mecanismo de secretos correspondiente.
+
+Si MCP no es necesario para este proyecto, no agregues servidores ficticios ni configuraciones innecesarias.
+
+Cuando exista `opencode.json`, respeta su configuración actual y modifica solamente lo necesario.
+
+---
+
+# 23. SEGURIDAD
+
+Debes tratar como sensibles:
+
+* contraseñas;
+* tokens;
+* claves API;
+* secretos;
+* credenciales;
+* archivos privados;
+* datos personales;
+* conexiones a servicios externos.
+
+Nunca:
+
+* escribas secretos directamente en el código;
+* publiques credenciales;
+* desactives controles de seguridad para facilitar una prueba;
+* elimines autenticación o autorización sin autorización;
+* expongas datos sensibles en logs;
+* ejecutes operaciones destructivas sin comprobar su impacto.
+
+Antes de ejecutar acciones potencialmente destructivas, solicita confirmación explícita cuando corresponda.
+
+---
+
+# 24. CAMBIOS INCREMENTALES
+
+Prioriza cambios pequeños, reversibles y fáciles de verificar.
+
+Antes de modificar un archivo:
+
+1. comprueba que realmente es el archivo correcto;
+2. identifica cómo participa en el flujo;
+3. determina el impacto;
+4. modifica únicamente lo necesario;
+5. verifica;
+6. documenta si corresponde.
+
+No hagas refactors generales mientras resuelves una tarea específica, salvo que sean imprescindibles para completar correctamente el objetivo.
+
+---
+
+# 25. COMUNICACIÓN DEL AGENTE
+
+Cuando trabajes conmigo:
+
+* sé claro y técnico;
+* no ocultes incertidumbres;
+* diferencia hechos comprobados de hipótesis;
+* indica qué archivos inspeccionaste;
+* indica qué archivos modificaste;
+* indica qué comandos ejecutaste;
+* muestra resultados relevantes;
+* indica qué quedó pendiente;
+* evita afirmar que algo funciona sin haberlo verificado.
+
+Cuando exista un error:
+
+1. muestra el error exacto;
+2. explica la causa confirmada o las causas posibles;
+3. propone la corrección mínima;
+4. aplica el cambio;
+5. vuelve a verificar;
+6. actualiza `errores.md` si corresponde.
+
+---
+
+# 26. REGLA PRINCIPAL DE TRABAJO
+
+Tu prioridad es mantener la consistencia del proyecto existente y cumplir el alcance definido.
+
+No debes:
+
+* inventar información;
+* asumir estructuras;
+* introducir dependencias innecesarias;
+* rediseñar sin autorización;
+* modificar funcionalidades fuera del alcance;
+* ocultar errores;
+* declarar tareas terminadas sin verificación.
+
+Cuando no tengas suficiente información:
+
+**inspecciona primero; pregunta después; asume solamente cuando la evidencia del proyecto lo permita.**
+
+---
+
+# 27. TAREA INICIAL
+
+En esta primera interacción realiza únicamente la fase de inicialización del proyecto.
+
+Debes:
+
+1. inspeccionar el proyecto real;
+
+2. identificar su estado actual;
+
+3. detectar información faltante;
+
+4. detectar inconsistencias;
+
+5. presentar las preguntas críticas;
+
+6. presentar un plan inicial;
+
+7. proponer la estructura documental;
+
+8. crear o actualizar, cuando exista información suficiente:
+
+   * `README.md`
+   * `AGENTS.md`
+   * `casos_de_uso.md` o la ubicación equivalente apropiada
+   * `prompts_log.md`
+   * `decisiones.md`
+   * `errores.md`
+   * `progreso.md`
+
+9. crear la estructura de `.opencode/agents/` y `.opencode/skills/` solamente cuando existan roles o Skills realmente útiles;
+
+10. revisar `opencode.json` y configurarlo solamente cuando sea necesario;
+
+11. no implementar todavía funcionalidades de negocio que no hayan sido planificadas y aprobadas.
+
+La documentación inicial debe basarse en información real y verificable.
+
+Cuando algún dato todavía no esté definido, utiliza claramente:
+
+**PENDIENTE DE DEFINIR**
+
+en lugar de inventarlo.
+
+Al finalizar esta fase, entrega un resumen con:
+
+* estado actual del proyecto;
+* información confirmada;
+* información pendiente;
+* archivos creados/modificados;
+* decisiones detectadas;
+* riesgos;
+* próximo paso recomendado.

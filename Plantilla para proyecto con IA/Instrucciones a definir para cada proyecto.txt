@@ -1,0 +1,110 @@
+Definir instrucciones para los siguientes casos:
+
+• Stack tecnológico y el entorno
+Es importante especificar exactamente qué tecnologías debe utilizar el agente y qué versiones están permitidas.
+Se recomienda definir:
+- Lenguaje de programación y versión.
+- Framework y versión.
+- Librerías principales y versiones.
+- Motor y versión de la base de datos.
+- ORM o librería de persistencia.
+- Herramientas de compilación, ejecución y testing.
+- Sistema operativo o entorno de ejecución cuando sea relevante.
+Esto evita que el agente asuma versiones diferentes, utilice sintaxis obsoleta o implemente métodos que ya no existen.
+
+• Estilo de código y las convenciones de tipado
+El agente debe conocer las reglas que debe seguir al escribir código para mantener la consistencia del proyecto.
+Se recomienda definir:
+- Convenciones de nombres para variables, funciones, clases y archivos.
+- Formato e indentación.
+- Convenciones para nombres de componentes.
+- Reglas de importación.
+- Uso de comillas, punto y coma, etc.
+- Nivel de tipado requerido.
+- Restricciones sobre tipos genéricos o inseguros.
+- Herramientas de análisis estático, linting y formateo.
+
+• Patrones de arquitectura y diseño
+El agente debe conocer cómo se organiza internamente el proyecto y qué responsabilidades corresponden a cada componente.
+Se recomienda definir:
+- Arquitectura general del sistema.
+- Organización de carpetas.
+- Separación de responsabilidades.
+- Responsabilidades de cada capa.
+- Patrones de diseño permitidos.
+- Forma de comunicación entre componentes.
+- Reglas sobre acceso a la base de datos.
+- Lugares donde debe implementarse la lógica de negocio.
+
+• Mitigar alucinaciones
+Los agentes de IA pueden asumir que existen archivos, rutas, tablas, APIs o configuraciones que en realidad no están presentes en el proyecto. Para reducir estos errores, incluir instrucciones como:
+- Antes de proponer cambios, inspeccionar la estructura real del proyecto.
+- No asumir la existencia de archivos, carpetas o configuraciones.
+- Si falta información, hacer preguntas antes de generar código.
+- Citar qué archivos fueron utilizados para tomar decisiones.
+- Verificar dependencias instaladas antes de sugerir librerías nuevas.
+- Confirmar nombres exactos de tablas, rutas, APIs y variables.
+- Realizar cambios pequeños e incrementales en lugar de modificaciones masivas.
+
+• Control del progreso
+Los agentes son más efectivos cuando trabajan sobre tareas pequeñas y verificables.
+Recomendaciones:
+- Resolver un caso de uso a la vez.
+- Dividir cada caso de uso en pasos concretos.
+- Confirmar cada paso antes de continuar.
+- Mantener un listado de tareas pendientes.
+- Marcar tareas como:
+  - Pendiente
+  - En progreso
+  - Completada
+- Solicitar al agente un resumen del estado actual del proyecto antes de iniciar nuevas modificaciones.
+
+• Manejo de errores
+Un agente no debe ocultar errores ni inventar soluciones.
+Instrucciones recomendadas:
+- Mostrar mensajes de error completos.
+- Explicar la causa probable del problema.
+- Proponer correcciones pequeñas.
+- No modificar múltiples componentes simultáneamente para solucionar un error.
+- Si existen varias causas posibles, enumerarlas.
+- Priorizar diagnósticos reproducibles.
+
+• Definir roles especializados (Subagentes)
+No utilizar un único agente para todo el proyecto.
+Ejemplos:
+- Arquitecto de software.
+- Backend developer.
+- Frontend developer.
+- Especialista en base de datos.
+- Revisor de código.
+- Tester.
+- Generador de documentación.
+Esto permite crear instrucciones específicas y reducir respuestas genéricas.
+
+• Criterios de finalización
+Un caso de uso no está terminado solamente porque el código compila.
+Cada caso de uso debería definir:
+- Funcionalidad implementada.
+- Código compilando.
+- Tests ejecutados.
+- Documentación actualizada.
+- README actualizado.
+- Casos de error contemplados.
+
+• Diseñar Skills reutilizables
+Las skills deben encapsular tareas repetitivas.
+Ejemplos:
+- Crear CRUD.
+- Generar documentación.
+- Crear migraciones.
+- Ejecutar tests.
+- Crear componentes UI.
+- Generar diagramas.
+- Crear presentaciones.
+- Generar reportes.
+Cada skill debería definir:
+- Cuándo usarla.
+- Parámetros de entrada.
+- Formato esperado.
+- Manejo de errores.
+- Ejemplos de uso.
