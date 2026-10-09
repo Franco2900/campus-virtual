@@ -1,0 +1,26 @@
+# Local tooling generated per machine
+.atl/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python (backend)
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+instance/
+
+# Node (frontend)
+node_modules/
+dist/
+*.local
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
