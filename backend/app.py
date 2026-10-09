@@ -1,0 +1,41 @@
+from pathlib import Path
+
+from flask import Flask
+
+from config.config import Config
+from models.base import db
+
+SQLITE_PREFIX = "sqlite:///"
+
+
+def _ensure_sqlite_directory(database_uri):
+    if not database_uri.startswith(SQLITE_PREFIX):
+        return
+    database_path = database_uri[len(SQLITE_PREFIX):]
+    if database_path and ":memory:" not in database_path:
+        Path(database_path).parent.mkdir(parents=True, exist_ok=True)
+
+
+def create_app(config=None):
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    if config:
+        app.config.update(config)
+
+    _ensure_sqlite_directory(app.config["SQLALCHEMY_DATABASE_URI"])
+
+    db.init_app(app)
+
+    from blueprints.auth import auth_bp
+    from models import user  # noqa: F401  (registers the User table)
+
+    app.register_blueprint(auth_bp)
+
+    with app.app_context():
+        db.create_all()
+
+    return app
+
+
+if __name__ == "__main__":
+    create_app().run(debug=True)
