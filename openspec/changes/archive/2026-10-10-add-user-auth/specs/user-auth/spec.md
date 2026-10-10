@@ -1,0 +1,47 @@
+# Spec Delta
+
+## ADDED Requirements
+
+### Requirement: Autenticación de credenciales
+El sistema SHALL permitir iniciar sesión a un usuario registrado validando su correo electrónico y contraseña. Cuando las credenciales son correctas, la sesión MUST quedar iniciada y el sistema MUST devolver los datos del usuario con su rol, sin exponer la contraseña. Cuando las credenciales son incorrectas, el sistema MUST responder con un único mensaje genérico de error (HTTP 401) sin revelar si lo incorrecto es el correo o la contraseña.
+
+#### Scenario: Inicio de sesión exitoso
+- **WHEN** un usuario registrado envía su correo electrónico y contraseña correctos a `POST /api/auth/login`
+- **THEN** el sistema inicia una sesión y responde con un estado de éxito (HTTP 200) junto con los datos del usuario (incluido su rol), sin exponer la contraseña
+
+#### Scenario: Credenciales incorrectas
+- **WHEN** un usuario envía a `POST /api/auth/login` un correo electrónico o una contraseña que no coinciden con la cuenta registrada
+- **THEN** el sistema responde con HTTP 401 y un mensaje genérico que no indica si falló el correo o la contraseña, y no inicia sesión
+
+#### Scenario: Solicitud de inicio de sesión inválida
+- **WHEN** un usuario envía a `POST /api/auth/login` una solicitud sin correo electrónico o sin contraseña
+- **THEN** el sistema responde con un error de validación (HTTP 400) y no inicia sesión
+
+### Requirement: Sesión activa persistente
+Una vez iniciada la sesión, el sistema MUST mantenerla activa en el cliente mediante una cookie firmada, de forma que los requests posteriores del mismo usuario sean identificados hasta que la sesión se cierre o expire.
+
+#### Scenario: La sesión persiste entre requests
+- **WHEN** un usuario inicia sesión correctamente y luego realiza un request autenticado enviando la cookie de sesión
+- **THEN** el sistema identifica al usuario como autenticado sin requerir que vuelva a ingresar sus credenciales
+
+### Requirement: Consulta de sesión actual
+El sistema SHALL permitir que un usuario con sesión activa consulte sus propios datos y rol a través de `GET /api/auth/me`. Este endpoint MUST requerir sesión activa: si no hay sesión, el sistema MUST responder HTTP 401.
+
+#### Scenario: Usuario autenticado consulta su perfil
+- **WHEN** un usuario con sesión activa envía `GET /api/auth/me`
+- **THEN** el sistema responde HTTP 200 con los datos del usuario autenticado y su rol
+
+#### Scenario: Usuario sin sesión consulta su perfil
+- **WHEN** un usuario sin sesión activa envía `GET /api/auth/me`
+- **THEN** el sistema responde HTTP 401 indicando que se requiere iniciar sesión
+
+### Requirement: Cierre de sesión
+El sistema SHALL permitir cerrar la sesión activa mediante `POST /api/auth/logout`. Tras el cierre el sistema MUST dejar de reconocer esa sesión; los requests autenticados posteriores con la misma cookie MUST responder HTTP 401. El cierre de sesión en estado ya no autenticado no MUST arrojar error.
+
+#### Scenario: Usuario autenticado cierra sesión
+- **WHEN** un usuario con sesión activa envía `POST /api/auth/logout`
+- **THEN** el sistema finaliza la sesión y los requests autenticados posteriores de esa cookie responden HTTP 401
+
+#### Scenario: Cierre de sesión sin sesión activa
+- **WHEN** un usuario sin sesión activa envía `POST /api/auth/logout`
+- **THEN** el sistema responde con éxito sin arrojar error, manteniendo el estado de no autenticado
