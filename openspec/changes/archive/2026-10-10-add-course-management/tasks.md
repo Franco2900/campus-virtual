@@ -29,4 +29,4 @@
 
 - [x] 5.1 Revisar con el subagente `reviewer` (o skill `review-use-case` inline si falla por tier) y corregir bloqueantes hasta APROBADO; persistir `reviews/cu-03.md` con hallazgos, severidad, veredicto y mapa de evidencia
 - [x] 5.2 Archivar el cambio openspec (`openspec archive add-course-management --yes`) y verificar `openspec validate --specs --strict` sin errores
-- [ ] 5.3 Registrar tiempos en `tiempos.md`, cerrar `track-time` y commitear por unidad de trabajo (conventional commits); verificar `git status` limpio y `git log` coherente
+- [x] 5.3 Registrar tiempos en `tiempos.md`, cerrar `track-time` y commitear por unidad de trabajo (conventional commits); verificar `git status` limpio y `git log` coherente
