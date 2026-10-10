@@ -18,6 +18,7 @@ Exit code is 0 when every step PASSes, 1 when a step FAILs, 2 on abort.
 import argparse
 import os
 import re
+import shutil
 import signal
 import socket
 import subprocess
@@ -33,9 +34,12 @@ BACKEND_DIR = PROJECT_ROOT / "backend"
 FRONTEND_DIR = PROJECT_ROOT / "frontend"
 PIDS_FILE = PROJECT_ROOT / "scripts" / ".verify-pids"
 LEGACY_PIDS_FILE = PROJECT_ROOT / "scripts" / ".cu02-pids"
+SEED_SCRIPT = PROJECT_ROOT / "scripts" / "seed_admin.py"
 BASE_URL = "http://127.0.0.1:5173"
 BACKEND_HEALTH_URL = "http://127.0.0.1:5000/api/auth/me"
 TIMEOUT_SECONDS = 60
+DEFAULT_ADMIN_EMAIL = "admin@smoke.test"
+DEFAULT_ADMIN_PASSWORD = "smoke-admin-123"
 
 
 def port_is_open(host, port):
@@ -96,6 +100,36 @@ def resolve_smoke(cu):
         return None
     path = PROJECT_ROOT / "scripts" / f"smoke_{cu}.py"
     return path if path.exists() else None
+
+
+def build_run_env(db_dir):
+    """Isolated run environment: dedicated SQLite DB plus admin seed credentials."""
+    run_env = os.environ.copy()
+    run_env["CAMPUS_DB_PATH"] = str(Path(db_dir) / "campus.db")
+    run_env.setdefault("CAMPUS_ADMIN_EMAIL", DEFAULT_ADMIN_EMAIL)
+    run_env.setdefault("CAMPUS_ADMIN_PASSWORD", DEFAULT_ADMIN_PASSWORD)
+    return run_env
+
+
+def seed_database(run_env):
+    """Provision the admin and demo data into the isolated DB before startup."""
+    if not SEED_SCRIPT.exists():
+        print(f"[SKIP] Sin script de seed ({SEED_SCRIPT.name}); se omite el aprovisionamiento.")
+        return True
+    result = subprocess.run(
+        [sys.executable, str(SEED_SCRIPT)],
+        cwd=str(PROJECT_ROOT),
+        env=run_env,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print("[FAIL] El seed del administrador falló.")
+        print(result.stdout)
+        print(result.stderr)
+        return False
+    print("[OK] Seed del administrador y datos de demo")
+    return True
 
 
 def collect_pids(paths):
@@ -206,6 +240,12 @@ def main():
         )
         return 2
 
+    db_dir = tempfile.mkdtemp(prefix=f"verify-{args.cu}-db-")
+    run_env = build_run_env(db_dir)
+    if not seed_database(run_env):
+        shutil.rmtree(db_dir, ignore_errors=True)
+        return 1
+
     backend_log = tempfile.NamedTemporaryFile(
         prefix=f"verify-{args.cu}-backend-", suffix=".log", delete=False
     ).name
@@ -220,6 +260,7 @@ def main():
         backend_proc = subprocess.Popen(
             [sys.executable, "run_backend.py"],
             cwd=str(BACKEND_DIR),
+            env=run_env,
             stdout=backend_log_handle,
             stderr=backend_log_handle,
             start_new_session=os.name != "nt",
@@ -250,6 +291,7 @@ def main():
         result = subprocess.run(
             [sys.executable, str(smoke_path), "--base", BASE_URL],
             cwd=str(PROJECT_ROOT),
+            env=run_env,
         )
         print(f"[OK] smoke finalizado con exit code {result.returncode}")
 
@@ -265,6 +307,7 @@ def main():
             for proc in (frontend_proc, backend_proc):
                 if proc is not None:
                     kill_process_tree(proc.pid)
+            shutil.rmtree(db_dir, ignore_errors=True)
 
 
 if __name__ == "__main__":
