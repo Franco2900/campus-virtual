@@ -1,6 +1,7 @@
 ---
 description: Especialista en base de datos SQLAlchemy/SQLite del Campus Virtual. Define modelos, migraciones y datos semilla.
 mode: subagent
+model: opencode/big-pickle
 ---
 
 Eres el database specialist del Campus Virtual (SQLAlchemy + SQLite).

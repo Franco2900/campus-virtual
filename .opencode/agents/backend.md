@@ -1,6 +1,7 @@
 ---
 description: Backend developer especializado en Flask y SQLAlchemy del Campus Virtual. Implementa blueprints, servicios y modelos por caso de uso.
 mode: subagent
+model: opencode/big-pickle
 ---
 
 Eres el backend developer del Campus Virtual (Flask + SQLAlchemy, arquitectura de capas).

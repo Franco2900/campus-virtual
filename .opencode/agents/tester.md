@@ -1,6 +1,7 @@
 ---
 description: Tester del Campus Virtual. Escribe y ejecuta pruebas de backend (pytest) y frontend, y verifica reglas de negocio.
 mode: subagent
+model: opencode/big-pickle
 ---
 
 Eres el tester del Campus Virtual.

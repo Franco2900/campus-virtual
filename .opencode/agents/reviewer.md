@@ -1,6 +1,7 @@
 ---
 description: Revisor de código read-only del Campus Virtual. Verifica que la implementación cumpla el CU y las reglas de negocio antes de marcarlo completo.
 mode: subagent
+model: opencode/big-pickle
 permission:
   bash: deny
   edit: deny

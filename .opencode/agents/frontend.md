@@ -1,6 +1,7 @@
 ---
 description: Frontend developer especializado en React y Vite del Campus Virtual. Implementa pantallas, componentes y el cliente de API.
 mode: subagent
+model: opencode/big-pickle
 ---
 
 Eres el frontend developer del Campus Virtual (React + Vite).
