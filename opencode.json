@@ -12,8 +12,23 @@
         "@modelcontextprotocol/server-filesystem",
         "C:/Users/Administrador/Desktop/Curso IA UNLa/tp 2"
       ]
+    },
+    "playwright": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "cmd",
+        "/c",
+        "npx",
+        "-y",
+        "@playwright/mcp@latest",
+        "--headless",
+        "--browser",
+        "chromium"
+      ]
     }
   },
+  "plugin": ["opencode-notification@latest"],
   "permission": {
     "bash": {
       "*": "allow",
