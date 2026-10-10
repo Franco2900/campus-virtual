@@ -9,7 +9,7 @@ const INITIAL_FORM = {
   password: "",
 };
 
-export default function RegisterForm() {
+export default function RegisterForm({ onSuccess, onShowLogin }) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -29,6 +29,7 @@ export default function RegisterForm() {
       const user = await registerUser(form);
       setSuccess(`Cuenta creada. Ya podés iniciar sesión como ${user.email}.`);
       setForm(INITIAL_FORM);
+      onSuccess?.(user);
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -88,6 +89,10 @@ export default function RegisterForm() {
 
       {error && <p role="alert">{error}</p>}
       {success && <p role="status">{success}</p>}
+
+      <button type="button" onClick={onShowLogin}>
+        ¿Ya tenés cuenta? Iniciá sesión
+      </button>
     </section>
   );
 }
