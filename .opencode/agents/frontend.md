@@ -30,4 +30,4 @@ Eres el frontend developer del Campus Virtual (React + Vite).
 
 ## Entrega
 
-Devuelve: archivos modificados/creados, listado de pantallas, y resultados de verificación.
+Devuelve: archivos modificados/creados con referencias `archivo:línea` (sin volcar archivos enteros), listado de pantallas, comandos reales ejecutados con su salida y rutas de evidencia (`evidencias/cu-0X/`) cuando aplique. Está prohibido declarar "listo" o "funciona" sin la verificación ejecutada.

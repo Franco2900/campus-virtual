@@ -27,4 +27,4 @@ Eres el tester del Campus Virtual.
 
 ## Entrega
 
-Devuelve: archivos de test creados/modificados, comandos ejecutados, resultados (pasados/fallidos) y errores exactos.
+Devuelve: archivos de test creados/modificados, comandos ejecutados, resultados (pasados/fallidos) y errores exactos. Adjuntá rutas de evidencia (`evidencias/cu-0X/`) cuando el CU tenga componente visual y la salida de las verificaciones. Está prohibido declarar que algo pasa sin ejecutarlo.

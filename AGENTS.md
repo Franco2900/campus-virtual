@@ -83,6 +83,8 @@ Resumen (detalle completo en `casos_de_uso.md`):
 ├── progreso.md          # control de progreso
 ├── prompts_log.md       # auditoría de prompts
 ├── tiempos.md           # medición de tiempos de desarrollo
+├── evidencias/          # screenshots de verificación por CU (evidencia visual)
+├── reviews/             # artefactos de revisión por CU (hallazgos, veredicto, mapa de evidencia)
 ├── backend/             # API Flask (app.py, config/, models/, services/, blueprints/, tests/)
 ├── frontend/            # SPA React + Vite (src/api/, src/features/)
 ├── openspec/            # specs spec-driven (openspec): fuente de verdad de specs
@@ -132,6 +134,13 @@ Comandos reales (verificados en CU-01):
 - Conservar mensajes de error completos.
 - Un CU se considera Completo solo cuando: funcionalidad implementada, código ejecutando, tests ejecutados, documentación y `progreso.md` actualizados (ver criterios en la plantilla).
 
+## Evidencia y revisiones
+
+- Screenshots por CU en `evidencias/cu-0X/` con nombres estandarizados `NN-accion.png` (full-page cuando aporte), cada uno ligado a un paso probado.
+- Cada cierre de CU persiste `reviews/cu-0X.md`: hallazgos con `archivo:línea`, severidad (Bloqueante/Alta/Media/Baja), veredicto (APROBADO/RECHAZADO) y mapa de evidencia.
+- Gate de evidencia: los screenshots deben mostrar el estado esperado (o salida real de smoke/tests si el CU no es visual) y la consola no debe tener errores inesperados.
+- La revisión se ejecuta con el subagente `reviewer`; si no está disponible (error de tier del proveedor), con la skill `review-use-case` inline.
+
 ## Progreso visible (heartbeat)
 
 - Reportar avance en cada turno de trabajo: qué se está haciendo, qué sigue, y estado de la todo list. No dejar pasajes largos sin salida al usuario.
@@ -151,7 +160,7 @@ Comandos reales (verificados en CU-01):
 ## Roadmap
 
 - **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse) y CU-02 (Autenticarse) implementadas y verificadas** (CU-02: smoke HTTP 10/10 + UI Playwright PASS). Cierre de CU-02 en curso: revisión, archive del cambio `add-user-auth` y commits. Próximo: CU-03.
-- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con `reviewer` antes de marcar Completo. Nota: el subagente `reviewer` falló al arrancar en CU-01 por un error de tier del proveedor (ver `errores.md`); se cerró con revisión inline aceptada por el usuario — reintentar el subagente en el próximo CU.
+- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01 y CU-02 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
 - **Futuro:** plugin de opencode para medir tiempos por tool-call de forma automática.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
 - **Pendiente:** definir lint/formato automático; introducir migraciones cuando un CU cambie el esquema con datos.
@@ -184,9 +193,10 @@ Skills del proyecto (`.opencode/skills/`, registradas en `.atl/skill-registry.md
 | `create-crud` | Abm/CRUD de una entidad (modelo + servicio + rutas + React) |
 | `create-migration` | Cambios de esquema con migraciones |
 | `run-verification` | Verificar tests/build antes de declarar algo terminado |
+| `review-use-case` | Checklist de revisión de un CU (inline del subagente `reviewer`, con gate de evidencia) |
 | `openspec-*` (6) | Vía nativa del CLI openspec: propose, explore, update-change, apply-change, sync-specs, archive-change (comandos `/opsx-*`) |
 
-Subagentes (`.opencode/agents/`): `backend`, `frontend`, `database`, `tester`, `reviewer` (read-only). Usarlos delegando trabajo específico; el `reviewer` es obligatorio antes de marcar un CU como Completo.
+Subagentes (`.opencode/agents/`): `backend`, `frontend`, `database`, `tester`, `reviewer` (read-only). Usarlos delegando trabajo específico; el `reviewer` es obligatorio antes de marcar un CU como Completo (si el subagente no está disponible por error de tier del proveedor, ejecutar la skill `review-use-case` inline).
 
 Recomendar skills y subagentes nuevos cuando un patrón se repita o una tarea sea recurrente; no crear por cumplir inventario.
 

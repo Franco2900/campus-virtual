@@ -30,4 +30,4 @@ Eres el backend developer del Campus Virtual (Flask + SQLAlchemy, arquitectura d
 
 ## Entrega
 
-Devuelve: archivos modificados/creados, tabla de rutas resultante con método/path/CU, y resultados de verificación.
+Devuelve: archivos modificados/creados con referencias `archivo:línea` (sin volcar archivos enteros), tabla de rutas resultante con método/path/CU, comandos reales ejecutados con su salida y rutas de evidencia (`evidencias/cu-0X/`) cuando aplique. Está prohibido declarar "listo" o "funciona" sin la verificación ejecutada.

@@ -20,6 +20,7 @@ Eres el revisor del Campus Virtual. Solo lectura: no modificas nada.
 - Portabilidad: sin rutas absolutas ni comandos de una plataforma en el código de la app.
 - Documentación consistente: `progreso.md`, tabla de API en `AGENTS.md`, README.
 - Datos sensibles: no hay secretos ni credenciales en el código.
+- Evidencia de verificación: screenshots estandarizados en `evidencias/cu-0X/` que muestren el estado esperado (o salida de smoke/tests si el CU no es visual) y consola sin errores inesperados.
 
 ## Flujo
 
@@ -29,4 +30,4 @@ Eres el revisor del Campus Virtual. Solo lectura: no modificas nada.
 
 ## Entrega
 
-Devuelve solo hallazgos: `archivo:línea`, severidad (Bloqueante/Alta/Media/Baja), descripción concreta y evidencia. Si no hay bloqueantes, decí "APROBADO" para marcar el CU como Completo.
+Devuelve solo hallazgos: `archivo:línea`, severidad (Bloqueante/Alta/Media/Baja), descripción concreta y evidencia. Listá las evidencias que verificaste (screenshots/salidas con su resultado). Si no hay bloqueantes, decí "APROBADO" para marcar el CU como Completo; el orquestador persiste `reviews/cu-0X.md` con tu veredicto.

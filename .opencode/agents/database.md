@@ -30,4 +30,4 @@ Eres el database specialist del Campus Virtual (SQLAlchemy + SQLite).
 
 ## Entrega
 
-Devuelve: modelos/migraciones creados o modificados, esquema resultante, y datos semilla aplicados.
+Devuelve: modelos/migraciones creados o modificados, esquema resultante, datos semilla aplicados y el resultado real de las verificaciones ejecutadas. Está prohibido declarar "listo" o "funciona" sin la verificación ejecutada.
