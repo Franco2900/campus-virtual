@@ -27,9 +27,11 @@ def create_app(config=None):
     db.init_app(app)
 
     from blueprints.auth import auth_bp
-    from models import user  # noqa: F401  (registers the User table)
+    from blueprints.courses import courses_bp
+    from models import course, user  # noqa: F401  (registers the User and Course tables)
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(courses_bp)
 
     with app.app_context():
         db.create_all()
