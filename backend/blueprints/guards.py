@@ -22,7 +22,11 @@ def require_roles(*roles):
         def decorated_function(*args, current_user=None, **kwargs):
             if current_user is None:
                 return jsonify({"error": "No tenés permisos para realizar esta acción"}), 403
-            user_role = current_user.role.value if hasattr(current_user.role, "value") else str(current_user.role)
+            user_role = (
+                current_user.role.value
+                if hasattr(current_user.role, "value")
+                else str(current_user.role)
+            )
             role_values = []
             for role in roles:
                 role_values.append(role.value if hasattr(role, "value") else str(role))

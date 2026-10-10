@@ -45,15 +45,9 @@ export default function App() {
           </button>
         </header>
       ) : showLogin ? (
-        <LoginForm
-          onSuccess={setUser}
-          onShowRegister={() => setShowLogin(false)}
-        />
+        <LoginForm onSuccess={setUser} onShowRegister={() => setShowLogin(false)} />
       ) : (
-        <RegisterForm
-          onSuccess={() => setShowLogin(true)}
-          onShowLogin={() => setShowLogin(true)}
-        />
+        <RegisterForm onSuccess={() => setShowLogin(true)} onShowLogin={() => setShowLogin(true)} />
       )}
     </main>
   );

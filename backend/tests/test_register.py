@@ -38,17 +38,13 @@ def test_register_duplicate_email(client):
 def test_register_duplicate_email_case_insensitive(client):
     client.post("/api/auth/register", json=VALID_PAYLOAD)
 
-    response = client.post(
-        "/api/auth/register", json={**VALID_PAYLOAD, "email": "ADA@Example.COM"}
-    )
+    response = client.post("/api/auth/register", json={**VALID_PAYLOAD, "email": "ADA@Example.COM"})
 
     assert response.status_code == 409
 
 
 def test_register_normalizes_email(client):
-    response = client.post(
-        "/api/auth/register", json={**VALID_PAYLOAD, "email": "Ada@Example.COM"}
-    )
+    response = client.post("/api/auth/register", json={**VALID_PAYLOAD, "email": "Ada@Example.COM"})
 
     assert response.status_code == 201
     assert response.get_json()["email"] == "ada@example.com"
@@ -76,33 +72,25 @@ def test_register_missing_field(client, field):
 
 @pytest.mark.parametrize("field", ["first_name", "last_name", "email", "password"])
 def test_register_blank_field(client, field):
-    response = client.post(
-        "/api/auth/register", json={**VALID_PAYLOAD, field: "   "}
-    )
+    response = client.post("/api/auth/register", json={**VALID_PAYLOAD, field: "   "})
 
     assert response.status_code == 400
 
 
 def test_register_short_password(client):
-    response = client.post(
-        "/api/auth/register", json={**VALID_PAYLOAD, "password": "short"}
-    )
+    response = client.post("/api/auth/register", json={**VALID_PAYLOAD, "password": "short"})
 
     assert response.status_code == 400
 
 
 def test_register_missing_json_body(client):
-    response = client.post(
-        "/api/auth/register", data="not json", content_type="application/json"
-    )
+    response = client.post("/api/auth/register", data="not json", content_type="application/json")
 
     assert response.status_code == 400
 
 
 def test_register_role_is_ignored(client):
-    response = client.post(
-        "/api/auth/register", json={**VALID_PAYLOAD, "role": "admin"}
-    )
+    response = client.post("/api/auth/register", json={**VALID_PAYLOAD, "role": "admin"})
 
     assert response.status_code == 201
     assert response.get_json()["role"] == "student"

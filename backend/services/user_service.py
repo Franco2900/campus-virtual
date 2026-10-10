@@ -32,17 +32,13 @@ def register_user(data):
     if not isinstance(password, str) or password == "":
         raise ValidationError("La contraseña es obligatoria")
     if len(password) < MIN_PASSWORD_LENGTH:
-        raise ValidationError(
-            f"La contraseña debe tener al menos {MIN_PASSWORD_LENGTH} caracteres"
-        )
+        raise ValidationError(f"La contraseña debe tener al menos {MIN_PASSWORD_LENGTH} caracteres")
 
     email = values["email"].lower()
     if not EMAIL_PATTERN.match(email):
         raise ValidationError("El formato del correo electrónico es inválido")
 
-    existing = db.session.execute(
-        db.select(User).where(User.email == email)
-    ).scalar_one_or_none()
+    existing = db.session.execute(db.select(User).where(User.email == email)).scalar_one_or_none()
     if existing is not None:
         raise ConflictError("El correo electrónico ya está registrado")
 

@@ -11,7 +11,7 @@ SQLITE_PREFIX = "sqlite:///"
 def _ensure_sqlite_directory(database_uri):
     if not database_uri.startswith(SQLITE_PREFIX):
         return
-    database_path = database_uri[len(SQLITE_PREFIX):]
+    database_path = database_uri[len(SQLITE_PREFIX) :]
     if database_path and ":memory:" not in database_path:
         Path(database_path).parent.mkdir(parents=True, exist_ok=True)
 

@@ -6,8 +6,8 @@ import pytest
 BACKEND_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
-from app import create_app  # noqa: E402
-from models.base import db  # noqa: E402
+from app import create_app
+from models.base import db
 
 
 @pytest.fixture

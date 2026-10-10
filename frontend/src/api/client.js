@@ -36,9 +36,7 @@ async function request(method, path, body) {
 
   if (!response.ok) {
     const message =
-      data && typeof data.error === "string" && data.error
-        ? data.error
-        : DEFAULT_ERROR_MESSAGE;
+      data && typeof data.error === "string" && data.error ? data.error : DEFAULT_ERROR_MESSAGE;
     throw new Error(message);
   }
 

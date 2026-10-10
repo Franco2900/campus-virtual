@@ -3,7 +3,6 @@ from werkzeug.security import generate_password_hash
 from models.base import db
 from models.user import User, UserRole
 
-
 VALID_USER = {
     "first_name": "Ada",
     "last_name": "Lovelace",
@@ -12,7 +11,9 @@ VALID_USER = {
 }
 
 
-def _create_user(app, email=VALID_USER["email"], password=VALID_USER["password"], role=UserRole.STUDENT):
+def _create_user(
+    app, email=VALID_USER["email"], password=VALID_USER["password"], role=UserRole.STUDENT
+):
     with app.app_context():
         user = User(
             first_name=VALID_USER["first_name"],
@@ -78,7 +79,9 @@ def test_me_without_session(client):
 
 def test_me_with_session(client, app):
     _create_user(app)
-    client.post("/api/auth/login", json={"email": VALID_USER["email"], "password": VALID_USER["password"]})
+    client.post(
+        "/api/auth/login", json={"email": VALID_USER["email"], "password": VALID_USER["password"]}
+    )
     response = client.get("/api/auth/me")
     assert response.status_code == 200
     body = response.get_json()
@@ -99,7 +102,9 @@ def test_session_persists_between_requests(client, app):
 
 def test_logout_with_session(client, app):
     _create_user(app)
-    client.post("/api/auth/login", json={"email": VALID_USER["email"], "password": VALID_USER["password"]})
+    client.post(
+        "/api/auth/login", json={"email": VALID_USER["email"], "password": VALID_USER["password"]}
+    )
     logout_response = client.post("/api/auth/logout")
     assert logout_response.status_code == 200
     assert logout_response.get_json()["message"] == "Sesión cerrada"

@@ -25,9 +25,7 @@ def get_current_user():
     user_id = session.get("user_id")
     if user_id is None:
         return None
-    user = db.session.execute(
-        db.select(User).where(User.id == user_id)
-    ).scalar_one_or_none()
+    user = db.session.execute(db.select(User).where(User.id == user_id)).scalar_one_or_none()
     return user
 
 
