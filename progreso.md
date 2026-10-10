@@ -2,7 +2,7 @@
 
 Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloqueada**.
 
-Última actualización: 2026-10-09.
+Última actualización: 2026-10-10.
 
 ## Fases de configuración del entorno
 
@@ -20,7 +20,7 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 | ID | Nombre | Estado | Notas |
 |----|--------|--------|-------|
 | CU-01 | Registrarse | Completada | Implementado end-to-end; verificaciones y revisión pasadas; cambio `add-user-registration` archivado |
-| CU-02 | Autenticarse | Pendiente | Bloqueado hasta OK docente |
+| CU-02 | Autenticarse | Completada | Implementado end-to-end; smoke HTTP 10/10 + UI Playwright; revisión APROBADA; cambio `2026-10-10-add-user-auth` archivado |
 | CU-03 | Gestionar cursos | Pendiente | Bloqueado hasta OK docente |
 | CU-04 | Gestionar usuarios | Pendiente | Bloqueado hasta OK docente |
 | CU-05 | Gestionar inscripciones | Pendiente | Bloqueado hasta OK docente |
@@ -42,12 +42,14 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 - Decisiones registradas en `decisiones.md` (stack, arquitectura, MCPs, tiempos, openspec, comando MCP, set de skills/agentes, repo, operación de openspec).
 - Los casos de uso quedaron especificados en `casos_de_uso.md`.
 - **CU-01 (Registrarse) implementado end-to-end:** backend Flask (Flask 3.1.3, Flask-SQLAlchemy 3.1.1, SQLAlchemy 2.0.54, Werkzeug, pytest 9.1.1) con `POST /api/auth/register` (201/400/409, email único case-insensitive, hash de contraseña, rol Estudiante forzado) y 21 tests pasando; frontend React 19 + Vite 7 con proxy `/api` y pantalla de registro; smoke end-to-end verificado (alta 201 + duplicado 409 vía proxy). Decisión D-010.
-- **CU-01 cerrado:** verificación final (pytest 21 passed, `npm run build`, smoke 201/409), revisión inline del checklist `reviewer` sin bloqueantes (el subagente `reviewer` no pudo arrancar: error de tier del proveedor, registrado en `errores.md`; el usuario aceptó la revisión inline), docs actualizadas (AGENTS, README, decisiones, progreso, prompts_log, errores, tiempos) y cambio openspec `add-user-registration` archivado como `2026-10-09-add-user-registration` (specs sincronizadas, 4 requirements; `openspec validate --specs --strict` → 1 passed). Próximo: **CU-02 (Autenticarse)** — define el mecanismo de sesión/token (diferido en CU-01).
+- **CU-02 (Autenticarse) implementado y verificado:** API `POST /api/auth/login` (cookie de sesión firmada de Flask, D-011), `GET /api/auth/me` (protegido por `@login_required`) y `POST /api/auth/logout` (idempotente). Backend con 32 tests en `backend/tests/test_auth.py`; frontend con pantalla de login con toggle a registro y barra de sesión (nombre + rol + "Cerrar sesión"); smoke end-to-end **10/10 PASS** vía `scripts/verify_cu02.py` (readyness + proxy + cleanup garantizado) y smoke de UI con Playwright (registro → login → header con rol Estudiante → logout → error renderizado del backend) con screenshots en `evidencias/cu-02/`. Cierre pendiente: revisión, archive del cambio `add-user-auth` y commits finales.
+- **Gotcha de tooling resuelto:** en Windows, terminar `npm.cmd` dejaba el `node vite` hijo huérfano escuchando en `:5173`; los servicios lanzados no sobreviven a un reinicio de opencode ni a un tool call abortado. Solución: `scripts/verify_cu02.py` con pre-condición de puertos libres y cleanup del árbol de procesos (ver `errores.md`).
+- **CU-02 cerrado:** backtrack 6.1 y 6.2 `[x]`, smoke HTTP 10/10 PASS y smoke de UI con Playwright (4 screenshots en `evidencias/cu-02/`), revisión del checklist `reviewer` sin bloqueantes (el subagente `reviewer` volvió a fallar por tier del proveedor; revisión inline aceptada), cambio `add-user-auth` archivado como `2026-10-10-add-user-auth` (`openspec validate --specs --strict` → 1 passed) y 6 commits por unidad de trabajo. Próximo: **CU-03 (Gestionar cursos)**.
 
 ## Próximos pasos
 
-1. **CU-02 (Autenticarse)** orquestado por la skill `new-use-case`: define el mecanismo de sesión/token (diferido en CU-01).
-2. Reintentar el subagente `reviewer` (falló por error de tier del proveedor) en próximos CU, o revisarlo en `errores.md`.
+1. **CU-03 (Gestionar cursos)** orquestado por la skill `new-use-case`.
+2. Resolver el tier del proveedor para el subagente `reviewer` (falló x2 en CU-01 y CU-02; se cerró con revisión inline) y reintentarlo en el próximo CU.
 
 ## Pendientes de definición
 

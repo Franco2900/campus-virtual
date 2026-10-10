@@ -41,16 +41,20 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 | T-007 | 2026-10-09T13:06:13 | 2026-10-09T13:08:03 | 00:01:50 | DIS | CU-01 | Agente | CU-01 (planning): cambio openspec `add-user-registration` — proposal, specs/user-auth (delta), design, tasks; validado con `openspec validate --strict` |
 | T-008 | 2026-10-09T13:10:25 | 2026-10-09T13:27:56 | 00:17:31 | IMP | CU-01 | Agente | CU-01 (apply): subagentes `backend` (scaffolding, modelo User, servicio, endpoint, 21 tests) y `frontend` (Vite 7 + React 19, cliente API, RegisterForm); mensajes de error a español; smoke end-to-end (201/409 vía proxy); docs (AGENTS, README, decisiones D-010, progreso, prompts_log, errores) |
 | T-009 | 2026-10-09T13:27:56 | 2026-10-09T13:34:24 | 00:06:28 | REV | CU-01 | Agente | CU-01 (cierre): verificación final (pytest 21 passed, build, smoke), revisión inline del checklist `reviewer` (subagente falló por tier del proveedor; aceptada por el usuario), sync de specs y archive openspec (`2026-10-09-add-user-registration`), docs de cierre |
+| T-010 | 2026-10-09T13:46:34 | 2026-10-09T13:51:02 | 00:04:28 | DIS | CU-02 | Agente | CU-02 (planning): cambio openspec `add-user-auth` — proposal, delta specs/user-auth (5 requirements ADDED), design (D-A..D-G), tasks (7 grupos, 16 tareas); validado con `openspec validate add-user-auth --strict` |
+| T-011 | 2026-10-10T08:19:00 | 2026-10-10T08:31:00 | 00:12:00 | IMP | CU-02 | Humano+Agente | CU-02 (cierre, smoke): diagnóstico de sesiones/`reviewer`; `scripts/verify_cu02.py` (wrapper portable: pre-condición de puertos, readiness, smoke contra el proxy, cleanup del árbol — mata el `node vite` huérfano); install del browser Chrome for Testing; smoke HTTP `10/10 PASS`; smoke de UI con Playwright (registro→login→header rol→logout→error del backend renderizado) con 4 screenshots en `evidencias/cu-02/`; cleanup garantizado |
+| T-012 | 2026-10-10T08:31:00 | 2026-10-10T08:35:00 | 00:04:00 | DOC | CU-02 | Agente | CU-02 (cierre, docs): tasks 6.1-6.2 `[x]`; AGENTS (tabla API 4 endpoints, smoke CU-02, MCP playwright, roadmap), README (API, testing, MCP, características, roadmap), `decisiones.md` D-011, `errores.md` (huérfanos + cierre del punto de freeze), `progreso.md`, `prompts_log.md` |
+| T-013 | 2026-10-10T08:35:00 | 2026-10-10T08:38:40 | 00:03:40 | REV | CU-02 | Agente | CU-02 (cierre, revisión y archive): reintento del subagente `reviewer` (falló por tier, como en CU-01) → revisión inline del checklist sin bloqueantes (APROBADO); `openspec archive add-user-auth --yes` → `2026-10-10-add-user-auth` (specs sincronizadas, +4 requirements); `openspec validate --specs --strict` → 1 passed; commits por unidad (6)
 
 ## Totales
 
 | Categoría | Duración acumulada |
 |-----------|--------------------|
 | DEC | 00:10:08 |
-| DIS | 00:01:50 |
-| IMP | 00:17:31 |
+| DIS | 00:06:18 |
+| IMP | 00:29:31 |
 | TST | 00:00:00 |
-| DOC | 00:01:28 |
+| DOC | 00:05:28 |
 | CFG | 00:35:04 |
-| REV | 00:06:28 |
-| **Total** | **01:12:29** |
+| REV | 00:10:08 |
+| **Total** | **01:36:37** |

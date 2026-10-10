@@ -104,3 +104,23 @@ Formato de cada entrada:
 - **Resultado:** CU-01 declarado **Completada**; cambio archivado; docs y registros cerrados.
 - **Estado:** Completado.
 - **Verificaciones:** pytest 21 passed; `npm run build` OK; `openspec validate --specs --strict` OK; `openspec status` → 18/18 tasks.
+
+## 2026-10-09 13:46 — CU-02: planning (openspec propose)
+
+- **Contexto / tarea:** CU-02 (Autenticarse). Generar el cambio `add-user-auth` con los 4 artefactos de planning (proposal, specs, design, tasks), tras definir el mecanismo de sesión (cookie Flask, D-011) y commits de CU-01.
+- **Prompt utilizado:** "Arranca" (plan aprobado: fix engram + commits CU-01 + CU-02). Mecanismo de sesión elegido por el usuario: "Cookie de sesión Flask (Recomendado)".
+- **Resumen de la respuesta:** se aplicó el fix de engram (`engram init "tp 2"`, `mem_save` escribiendo de nuevo) y se commitearon CU-01 en 5 unidades + gitignore. Luego se creó el cambio `add-user-auth`: proposal, delta `specs/user-auth/spec.md` (5 requirements ADDED: autenticación de credenciales, sesión persistente, consulta de sesión, cierre de sesión), design (D-A..D-G; A2 recuperación de contraseña fuera de alcance; CSRF diferido) y tasks (7 grupos, 16 tareas); `openspec validate add-user-auth --strict` → valid; `openspec status` → 4/4.
+- **Archivos modificados:** `.engram/config.json` (fix), `openspec/changes/add-user-auth/*` (4 artefactos), `tiempos.md` (T-010).
+- **Resultado:** planning completo y validado; se frenó en la frontera de openspec (D-011 en `decisiones.md` pendiente de registrar en apply).
+- **Estado:** Completado.
+- **Verificaciones:** `openspec validate add-user-auth --strict` → valid; `openspec status` → 4/4.
+
+## 2026-10-10 08:19 — CU-02: cierre (smoke definitivo, revisión y archive)
+
+- **Contexto / tarea:** CU-02. Cerrar el ciclo completo (tasks 6.1 → 7.3): smoke e2e HTTP + UI con Playwright y soluciones anti-"trabas".
+- **Prompt utilizado:** "Hace el smoke de cierre de CU-02 con HTTP clásico + UI con Playwright y las soluciones para que no vuelva a trabarse" (tras aprobar el plan de cierre).
+- **Resumen de la respuesta:** se creó `scripts/verify_cu02.py` (wrapper portable: pre-condición de puertos libres, readiness con timeout, smoke contra el proxy `:5173`, cleanup del árbol de procesos; modos `--keep`/`--cleanup`). Smoke HTTP → `Smoke CU-02: 10/10 PASS`, exit 0, sin huérfanos. Smoke de UI con Playwright MCP: registro en la UI → login → header con `Nombre Apellido (email) — Estudiante` → logout → error del backend renderizado; 4 screenshots en `evidencias/cu-02/`; console sin errores inesperados. `tasks.md` 6.1 y 6.2 `[x]`. Docs: AGENTS (tabla API 4 endpoints + smoke CU-02 + MCP playwright + roadmap), README (API, testing, MCP, características, roadmap), `decisiones.md` D-011, `progreso.md`, `errores.md` (huérfanos/duplicados y cierre del punto de freeze). Revisión: el subagente `reviewer` volvió a fallar por tier (mismo error); revisión inline del checklist sin bloqueantes → APROBADO. `openspec archive add-user-auth --yes` → archivado como `2026-10-10-add-user-auth`; `openspec validate --specs --strict` → 1 passed. Commits por unidad de trabajo (6).
+- **Archivos modificados:** `scripts/verify_cu02.py`, `scripts/smoke_cu02.py`, `evidencias/cu-02/*.png`, `openspec/specs/user-auth/spec.md`, `openspec/changes/archive/2026-10-10-add-user-auth/`, `AGENTS.md`, `README.md`, `decisiones.md`, `errores.md`, `progreso.md`, `prompts_log.md`, `tiempos.md`, `.gitignore`.
+- **Resultado:** CU-02 cerrado y Completada; cambio archivado; evidencia visual verificable.
+- **Estado:** Completado.
+- **Verificaciones:** `verify_cu02.py` → 10/10 PASS exit 0 (x2 corridas); `--cleanup` → 0 servicios vivos, puertos libres; smoke UI con screenshots; `openspec validate --specs --strict` → 1 passed; `git status` limpio al final.

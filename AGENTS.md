@@ -101,6 +101,9 @@ Resumen (detalle completo en `casos_de_uso.md`):
 | Método | Ruta | CU | Propósito | Auth |
 |--------|------|----|-----------|------|
 | POST | `/api/auth/register` | CU-01 | Registrar una cuenta (rol Estudiante) | Público |
+| POST | `/api/auth/login` | CU-02 | Iniciar sesión (emite cookie de sesión) | Público |
+| GET | `/api/auth/me` | CU-02 | Obtener el usuario autenticado | Sesión |
+| POST | `/api/auth/logout` | CU-02 | Cerrar sesión (idempotente; sin sesión responde 200) | Sesión |
 
 > Se completa a medida que se implementan los CU. No inventar endpoints.
 
@@ -122,11 +125,20 @@ Comandos reales (verificados en CU-01):
 
 - **Backend:** dentro de `backend/`, Windows `..\.venv\Scripts\python.exe -m pytest`; Linux/macOS `../.venv/bin/python -m pytest`.
 - **Frontend:** dentro de `frontend/`, `npm run build` (Windows: `cmd /c npm run build`).
-- **Smoke:** levantar backend (`python backend/app.py`) y frontend (`npm run dev`) y probar `POST /api/auth/register` (alta 201 + duplicado 409).
+- **Smoke CU-01:** levantar backend y frontend y probar `POST /api/auth/register` (alta 201 + duplicado 409).
+- **Smoke CU-02:** `.\.venv\Scripts\python.exe scripts\verify_cu02.py` — arranca backend + Vite, readiness, smoke HTTP completo contra el proxy (login/me/logout/401) y **cleanup garantizado** (detecta puertos ocupados y aborta sin duplicar servicios; mata el árbol de procesos). `--keep` deja los servicios vivos para el smoke UI con Playwright; `--cleanup` detiene los registrados en `scripts/.cu02-pids`.
 
 - No declarar una tarea completada sin haber ejecutado su verificación.
 - Conservar mensajes de error completos.
 - Un CU se considera Completo solo cuando: funcionalidad implementada, código ejecutando, tests ejecutados, documentación y `progreso.md` actualizados (ver criterios en la plantilla).
+
+## Progreso visible (heartbeat)
+
+- Reportar avance en cada turno de trabajo: qué se está haciendo, qué sigue, y estado de la todo list. No dejar pasajes largos sin salida al usuario.
+- Antes de un tool call largo (tests, build, subagente): avisar qué se ejecuta y la duración estimada; si supera ~2-3 min sin salida, reportarlo explícitamente.
+- Partir tareas grandes en pasos cortos y verificables, con su verificación (tests/build) en cada paso; mantener la todo list actualizada en tiempo real.
+- Delegar en subagentes trabajo acotado y sin tramos silenciosos; si hay pasos largos, exigir reportes intermedios.
+- Commitear por unidad de trabajo concluida para preservar avance y marcar hitos (skill `work-unit-commits`).
 
 ## Portabilidad
 
@@ -138,7 +150,7 @@ Comandos reales (verificados en CU-01):
 
 ## Roadmap
 
-- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse) Completada** end-to-end (backend Flask + frontend React/Vite + tests + docs + cambio openspec `2026-10-09-add-user-registration` archivado). Próximo: CU-02.
+- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse) y CU-02 (Autenticarse) implementadas y verificadas** (CU-02: smoke HTTP 10/10 + UI Playwright PASS). Cierre de CU-02 en curso: revisión, archive del cambio `add-user-auth` y commits. Próximo: CU-03.
 - **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con `reviewer` antes de marcar Completo. Nota: el subagente `reviewer` falló al arrancar en CU-01 por un error de tier del proveedor (ver `errores.md`); se cerró con revisión inline aceptada por el usuario — reintentar el subagente en el próximo CU.
 - **Futuro:** plugin de opencode para medir tiempos por tool-call de forma automática.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
@@ -156,7 +168,7 @@ Comandos reales (verificados en CU-01):
 
 - **engram** (memoria, local, config global): memoria persistente del proyecto. Usar para recordar decisiones y gotchas; no reemplaza a `decisiones.md`/`progreso.md`.
 - **context7** (documentación, remoto/externo, config global): consultar docs actualizadas antes de escribir código de librerías (Flask, SQLAlchemy, React, Vite, LangChain). Evita APIs inventadas.
-- **filesystem** (local, `opencode.json`): acceso a archivos acotado a la carpeta del proyecto.
+- **playwright** (UI e2e, local, `opencode.json`): navegar, completar formularios y capturar screenshots como evidencia de UI por CU (D-012). Requiere el browser instalado: `cmd /c npx -y @playwright/mcp@latest install-browser chrome-for-testing`.
 - **Terminal:** herramienta nativa de opencode.
 - **openspec CLI** (spec-driven): herramienta nativa del CLI; en Windows invocar siempre `cmd /c openspec ...` (mismo bloqueo de execution policy que `npx`, ver D-006). Los comandos `/opsx-*` omiten esa complejidad.
 - Requisito de la consigna: mínimo 2 servidores MCP, al menos 1 externo (se cumple con engram + context7 + filesystem).

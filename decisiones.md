@@ -115,6 +115,16 @@ Formato:
 - **Consecuencias / impacto:** las versiones quedan pinned y no se cambian sin autorización; las migraciones se introducirán (skill `create-migration`) cuando un CU modifique un esquema con datos. El mecanismo de sesión/token se decide en CU-02 (CU-01 no autentica).
 - **Estado:** Vigente.
 
+## D-011 — Mecanismo de sesión: cookie firmada de Flask
+
+- **Fecha:** 2026-10-09.
+- **Decisión:** CU-02 autentica con la cookie de sesión firmada del propio Flask (dada por `itsdangerous`): `session["user_id"] = user.id` en login, `logout()` limpia la cookie, y las rutas protegidas usan el decorador `@login_required` de `backend/blueprints/guards.py`. La sesión se inicia en `POST /api/auth/login`, se consulta con `GET /api/auth/me` (requiere sesión) y se cierra con `POST /api/auth/logout` (idempotente).
+- **Contexto / problema:** CU-01 dejó diferido el mecanismo de sesión/token; CU-02 lo exige para los 10 CU siguientes.
+- **Alternativas consideradas:** (a) JWT en `localStorage`/header `Authorization` (stateless, pero expone el token a XSS y agrega manejo de expiración/refresh); (b) Flask-Session con almacenamiento server-side (sesiones revocables, pero agrega dependencia y almacenamiento inútil para una sola instancia); (c) cookie de sesión firmada de Flask (elegida).
+- **Criterios:** seguridad básica suficiente (cookie `HttpOnly` + `SameSite=Lax` prefijadas por Flask evita exfiltración por XSS; el token nunca llega a JavaScript), cero dependencias nuevas, simplicidad para 10 CU, portabilidad.
+- **Consecuencias / impacto:** la cookie es la única fuente de verdad de la sesión; `Session` en el cliente (`frontend/src/features/auth/api.js`) guarda solo estado de UI y el `me` revalida contra el servidor; las rutas de CU-03 en adelante se protegen con `@login_required` (y chequearán rol vía `current_user`).
+- **Estado:** Vigente.
+
 ## D-012 — MCP Playwright para verificación e2e de UI
 
 - **Fecha:** 2026-10-09.

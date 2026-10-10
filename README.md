@@ -10,7 +10,7 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 
 ## Características
 
-- Registro y autenticación de usuarios (CU-01, CU-02).
+- Registro y autenticación de usuarios (**CU-01 y CU-02 implementados**): alta de cuenta, login con cookie de sesión firmada, sesión actual, cierre de sesión.
 - Gestión de cursos, usuarios e inscripciones (CU-03, CU-04, CU-05).
 - Gestión de tareas, entregas y correcciones (CU-06, CU-07, CU-08).
 - Consulta de calificaciones y filtrado de usuarios (CU-09, CU-10).
@@ -69,6 +69,9 @@ El servidor de desarrollo de Vite proxea `/api` hacia `http://localhost:5000`.
 
 # Frontend (desde frontend/)
 npm run build                                 # Windows: cmd /c npm run build
+
+# Smoke end-to-end CU-02 (arranca servicios, valida y limpia)
+..\.venv\Scripts\python.exe scripts\verify_cu02.py   # Linux/macOS: .venv/bin/python ...
 ```
 
 ## Estructura
@@ -94,6 +97,9 @@ npm run build                                 # Windows: cmd /c npm run build
 | Método | Ruta | CU | Propósito | Auth |
 |--------|------|----|-----------|------|
 | POST | `/api/auth/register` | CU-01 | Registrar una cuenta (rol Estudiante) | Público |
+| POST | `/api/auth/login` | CU-02 | Iniciar sesión (emite cookie de sesión) | Público |
+| GET | `/api/auth/me` | CU-02 | Obtener el usuario autenticado | Sesión |
+| POST | `/api/auth/logout` | CU-02 | Cerrar sesión (idempotente) | Sesión |
 
 ## Configuración
 
@@ -111,6 +117,7 @@ El desarrollo se apoya en tres servidores MCP. La configuración vive en `openco
 | `engram` | Memoria (local) | Config global | Memoria persistente del proyecto: decisiones, gotchas y estado que sobreviven entre sesiones y a la compactación de contexto. |
 | `context7` | Documentación (remoto/externo) | Config global | Documentación actualizada de Flask, SQLAlchemy, React, Vite, LangChain y Ollama; reduce APIs alucinadas por el modelo. Es el MCP externo requerido por la consigna. |
 | `filesystem` | Filesystem (local) | `opencode.json` (proyecto) | Acceso a archivos acotado por allowlist a la carpeta del proyecto. Valor demostrativo del protocolo; opencode ya dispone de acceso a archivos nativo. |
+| `playwright` | Browser e2e (local) | `opencode.json` (proyecto) | Validación real de la UI por CU: navegar, completar formularios y capturar screenshots como evidencia verificable (`@playwright/mcp`, headless + chromium). Complementa, no reemplaza, a pytest y al smoke HTTP. |
 
 - **Terminal:** se resuelve con la herramienta nativa de opencode (no se usa un MCP de terminal, por no existir un servidor oficial maduro).
 - **Comando del MCP filesystem:** `cmd /c npx -y @modelcontextprotocol/server-filesystem "<ruta del proyecto>"`.
@@ -132,7 +139,7 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Roadmap
 
-- CU-01 (Registrarse) implementado end-to-end (backend Flask + frontend React/Vite + tests).
+- CU-01 (Registrarse) y CU-02 (Autenticarse) implementados end-to-end (backend Flask + frontend React/Vite + tests + smoke HTTP y UI con Playwright).
 - Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
 - Plugin de medición automática de tiempos.
 - Integración completa del chatbot.
