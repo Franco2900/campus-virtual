@@ -26,7 +26,8 @@ Cargar cuando se trabaja sobre un caso de uso específico del proyecto (CU-01..C
 | Implementación de backend | Delegar a subagente `backend` |
 | Implementación de frontend | Delegar a subagente `frontend` |
 | Pruebas | Delegar a subagente `tester` |
-| Antes de marcar Completo | Delegar revisión al subagente `reviewer` |
+| Captura de evidencia de UI | Playwright MCP: screenshots estandarizados `evidencias/cu-0X/NN-accion.png` |
+| Antes de marcar Completo | Revisión con subagente `reviewer` (o skill `review-use-case` inline) y persistir `reviews/cu-0X.md` |
 
 ## Execution Steps
 
@@ -35,10 +36,11 @@ Cargar cuando se trabaja sobre un caso de uso específico del proyecto (CU-01..C
 3. Diseño mínimo: modelo, flujo, endpoints afectados.
 4. Implementar backend, luego frontend, luego tests (delegar según tabla).
 5. Verificar con `run-verification`.
-6. Revisar con `reviewer`; corregir lo bloqueante.
-7. Actualizar `progreso.md`, `decisiones.md` (si hay decisión), tabla de API en `AGENTS.md`, README si corresponde, `prompts_log.md`.
-8. Cerrar `track-time`.
+6. Capturar evidencia: screenshots por estado clave del CU (pantalla por rol, alta/edición, error renderizado, logout) en `evidencias/cu-0X/`; si el CU no es visual, evidencia = salida de smoke/tests. Gate: consola sin errores inesperados.
+7. Revisar con `reviewer` (o `review-use-case` inline); corregir bloqueantes y persistir `reviews/cu-0X.md` (hallazgos, severidades, veredicto, mapa de evidencia).
+8. Actualizar `progreso.md`, `decisiones.md` (si hay decisión), tabla de API en `AGENTS.md`, README si corresponde, `prompts_log.md`. Archive del cambio openspec.
+9. Cerrar `track-time`. Si el contexto se extendió, cerrar sesión con `mem_session_summary` y retomar en una sesión nueva (ver "Fases y sesiones" en AGENTS.md).
 
 ## Output Contract
 
-Resumen: CU, archivos modificados, verificaciones ejecutadas, estado final (Pendiente/En progreso/Completado/Bloqueada).
+Resumen: CU, archivos modificados, verificaciones ejecutadas, evidencia y veredicto de revisión, estado final (Pendiente/En progreso/Completado/Bloqueada).

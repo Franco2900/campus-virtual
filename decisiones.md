@@ -144,3 +144,33 @@ Formato:
 - **Criterios:** soporte Windows, bajo ruido, cero dependencias en la app.
 - **Consecuencias / impacto:** los avisos llegan cuando el terminal no está enfocado (por defecto); se activa al reiniciar opencode. Config opcional vía `oc-notification.json` (delay y eventos por tipo). No es un MCP (no agrega herramientas), solo notificaciones.
 - **Estado:** Vigente.
+
+## D-014 — Evidencia y revisión obligatorias por CU
+
+- **Fecha:** 2026-10-10.
+- **Decisión:** todo CU se cierra con (a) evidencia verificable: screenshots estandarizados en `evidencias/cu-0X/` (`NN-accion.png`, full-page cuando aporte) que muestren los estados clave por rol y consola sin errores inesperados, o salida real de smoke/tests si el CU no es visual; y (b) un artefacto de revisión `reviews/cu-0X.md` persistido con hallazgos (`archivo:línea`, severidad Bloqueante/Alta/Media/Baja), veredicto APROBADO/RECHAZADO y mapa de evidencia. La revisión corre con el subagente `reviewer`; si no está disponible por error de tier del proveedor (ocurrió en CU-01 y CU-02), se ejecuta inline con la skill `review-use-case`.
+- **Contexto / problema:** la revisión y la evidencia vivían solo en el chat de la sesión y la cátedra evalúa la orquestación de AI Engineering; sin artefactos persistidos no hay trazabilidad ni gate objetivo.
+- **Alternativas consideradas:** (a) checklist inline sin artefacto (elegida antes, sin dejar rastro); (b) veredicto en `progreso.md` (sin mapa de evidencia); (c) artefacto dedicado por CU (elegida).
+- **Criterios:** trazabilidad evaluable, gate verificable, repetible cuando el subagente falla, mínimo esfuerzo por CU.
+- **Consecuencias / impacto:** el pipeline `new-use-case` incorpora el paso de evidencia y revisión antes del archive; AGENTS documenta la sección "Evidencia y revisiones".
+- **Estado:** Vigente.
+
+## D-015 — Lint y formato automáticos (ruff + Prettier)
+
+- **Fecha:** 2026-10-10.
+- **Decisión:** adoptar `ruff` (Python, `==0.16.9` en `backend/requirements.txt`) y `Prettier` (JS/JSX, devDependency del frontend) con config mínima (`backend/pyproject.toml`: line-length 100, target py314; `frontend/.prettierrc`: printWidth 100, semis, comillas dobles). Comandos: `python -m ruff check backend` / `python -m ruff format --check backend`; `npm run lint:format` / `lint:format:fix`. Se formateó todo el código existente en un único commit de estilo.
+- **Contexto / problema:** era la "PENDIENTE DE DEFINIR" más antigua de AGENTS; sin formateador se acumulaba deuda de estilo y los diffs mezclaban formato con lógica.
+- **Alternativas consideradas:** (a) Black (solo Python, sin lint); (b) ruff + Prettier (elegida: ruff = lint + format en una herramienta; Prettier estándar para React); (c) flake8 + black (dos herramientas por filetype, más config).
+- **Criterios:** una herramienta por lenguaje, cero plugins de editor, chequeos ejecutables en CI, no tocar la lógica.
+- **Consecuencias / impacto:** el CI agrega jobs de lint/format (Fase U4); los agentes usan `ruff format`/`prettier` antes de cerrar unidades; las convenciones de "Indentación / formato" quedan definidas.
+- **Estado:** Vigente.
+
+## D-016 — CI con GitHub Actions (tests + build + lint)
+
+- **Fecha:** 2026-10-10.
+- **Decisión:** agregar `.github/workflows/ci.yml` en `ubuntu-latest` con tres jobs que corren en cada push y PR a `main`: `test` (Python 3.14, `pytest` en `backend/`), `build` (Node 24, `npm ci` + `npm run build` en `frontend/`) y `lint` (`ruff check` + `ruff format --check` + `prettier --check`).
+- **Contexto / problema:** se detectaron regresiones tarde (test que rompió un cambio de UI) y no había señal temprana; el TP gana credibilidad con verificación continua.
+- **Alternativas consideradas:** (a) CI en GitHub Actions (elegida: el repo ya vive en GitHub y es gratuito para repos públicos); (b) Git hooks locales (solo cubren a quien los instale); (c) no hacer nada.
+- **Criterios:** cero costo, portabilidad (valida la CROSS-platform que ya se garantiza en código), sin dependencias nuevas.
+- **Consecuencias / impacto:** cualquier push se valida solo; los tests y el build ya pasan en local, el primer run de CI lo confirma; no se toca el stack.
+- **Estado:** Vigente.

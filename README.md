@@ -70,8 +70,10 @@ El servidor de desarrollo de Vite proxea `/api` hacia `http://localhost:5000`.
 # Frontend (desde frontend/)
 npm run build                                 # Windows: cmd /c npm run build
 
-# Smoke end-to-end CU-02 (arranca servicios, valida y limpia)
-..\.venv\Scripts\python.exe scripts\verify_cu02.py   # Linux/macOS: .venv/bin/python ...
+# Smoke end-to-end (arranca servicios, valida y limpia; por defecto CU-02)
+..\.venv\Scripts\python.exe scripts\verify.py                 # Linux/macOS: .venv/bin/python ...
+..\.venv\Scripts\python.exe scripts\verify.py --diagnose     # estado de puertos/pids (read-only)
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu03      # requiere scripts/smoke_cu03.py
 ```
 
 ## Estructura

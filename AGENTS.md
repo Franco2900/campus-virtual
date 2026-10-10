@@ -21,7 +21,8 @@ Comandos reales (verificados al implementar CU-01). En Windows, `npm` y `openspe
 - **Backend (dev):** `python backend/app.py` → `http://127.0.0.1:5000`. Base SQLite en `backend/instance/campus.db` (override con `CAMPUS_DB_PATH`; `SECRET_KEY` por entorno).
 - **Frontend (dev):** dentro de `frontend/`, `npm install` y `npm run dev` (Windows: `cmd /c npm install`, `cmd /c npm run dev`) → `http://localhost:5173`, con proxy de desarrollo `/api` → `http://localhost:5000`. Build: `npm run build`.
 - **Tests (backend):** dentro de `backend/`, Windows `..\.venv\Scripts\python.exe -m pytest`; Linux/macOS `../.venv/bin/python -m pytest`.
-- **Lint / formato:** PENDIENTE DE DEFINIR.
+- **Lint / formato (backend):** desde la raíz, Windows `.\.venv\Scripts\python.exe -m ruff check backend` y `.\.venv\Scripts\python.exe -m ruff format --check backend`; Linux/macOS `.venv/bin/python -m ruff ...`. Aplicar: `-m ruff check backend --fix` y `-m ruff format backend`.
+- **Lint / formato (frontend):** dentro de `frontend/`, Windows `cmd /c npm run lint:format` (check) / `cmd /c npm run lint:format:fix` (aplica); Linux/macOS `npm run ...`.
 
 ## Arquitectura
 
@@ -119,7 +120,7 @@ Resumen (detalle completo en `casos_de_uso.md`):
 - **Backend:** `snake_case` para variables y funciones, `PascalCase` para clases, archivos en `snake_case`.
 - **Frontend:** `camelCase` para variables y funciones, `PascalCase` para componentes y sus archivos, archivos de módulos en `camelCase` (p. ej. `client.js`).
 - **Comentarios:** ninguno por defecto. Solo cuando expliquen una decisión, restricción o comportamiento no evidente.
-- **Indentación / formato:** PENDIENTE DE DEFINIR (esperado: formateador automático).
+- **Indentación / formato:** `ruff format` (Python) y `Prettier` (JS/JSX), configuración en `backend/pyproject.toml` y `frontend/.prettierrc` (ver "Cómo ejecutar").
 
 ## Verificación
 
@@ -128,7 +129,7 @@ Comandos reales (verificados en CU-01):
 - **Backend:** dentro de `backend/`, Windows `..\.venv\Scripts\python.exe -m pytest`; Linux/macOS `../.venv/bin/python -m pytest`.
 - **Frontend:** dentro de `frontend/`, `npm run build` (Windows: `cmd /c npm run build`).
 - **Smoke CU-01:** levantar backend y frontend y probar `POST /api/auth/register` (alta 201 + duplicado 409).
-- **Smoke CU-02:** `.\.venv\Scripts\python.exe scripts\verify_cu02.py` — arranca backend + Vite, readiness, smoke HTTP completo contra el proxy (login/me/logout/401) y **cleanup garantizado** (detecta puertos ocupados y aborta sin duplicar servicios; mata el árbol de procesos). `--keep` deja los servicios vivos para el smoke UI con Playwright; `--cleanup` detiene los registrados en `scripts/.cu02-pids`.
+- **Smoke HTTP general:** `.\.venv\Scripts\python.exe scripts\verify.py [--cu CU-0X]` — arranca backend + Vite, readiness, corre el smoke del CU (`scripts/smoke_cu0X.py`, patrón `smoke_cu02.py`) contra el proxy y **cleanup garantizado** (detecta puertos ocupados y aborta sin duplicar servicios; mata el árbol de procesos). `--keep` deja los servicios vivos para el smoke UI con Playwright (pids en `scripts/.verify-pids`); `--cleanup` detiene los registrados; `--diagnose` muestra en solo lectura puertos ocupados y pids registrados.
 
 - No declarar una tarea completada sin haber ejecutado su verificación.
 - Conservar mensajes de error completos.
@@ -148,6 +149,20 @@ Comandos reales (verificados en CU-01):
 - Partir tareas grandes en pasos cortos y verificables, con su verificación (tests/build) en cada paso; mantener la todo list actualizada en tiempo real.
 - Delegar en subagentes trabajo acotado y sin tramos silenciosos; si hay pasos largos, exigir reportes intermedios.
 - Commitear por unidad de trabajo concluida para preservar avance y marcar hitos (skill `work-unit-commits`).
+
+## Fases y sesiones
+
+- Trabajar **un CU por fase** y, en lo posible, **una sesión por CU** (o por unidad de trabajo grande). Las sesiones largas sin corte degradan el contexto del agente y distorsionan la medición de tiempos.
+- Señales para iniciar una sesión nueva:
+  - El contexto del agente está muy cargado: respuestas degradadas, tool outputs truncados con frecuencia o aviso de "contexto extenso" en la sesión actual.
+  - Se cierra un hito: un CU completo (después del archive y los commits) o una unidad de trabajo grande.
+  - Antes de arrancar un CU nuevo (sprint de CU = sesión limpia).
+- Protocolo de cierre de sesión:
+  1. Commitear la unidad en curso (skill `work-unit-commits`) y cerrar `track-time`.
+  2. Pedir al agente que ejecute `mem_session_summary` con el estado completo.
+  3. Cerrar y abrir una sesión nueva.
+  4. Al retomar, el agente carga `mem_context`/`mem_search`, lee `progreso.md` y `AGENTS.md`, y continúa donde quedó (nunca asumir que el estado anterior sigue vivo).
+- Gotcha operativo: "no ver avance en el terminal" NO significa cuelgue (ver `errores.md`); antes de asumir una traba, consultar `python scripts/verify.py --diagnose` y el estado del working tree.
 
 ## Portabilidad
 
