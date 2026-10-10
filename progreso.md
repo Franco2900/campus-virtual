@@ -21,7 +21,7 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 |----|--------|--------|-------|
 | CU-01 | Registrarse | Completada | Implementado end-to-end; verificaciones y revisión pasadas; cambio `add-user-registration` archivado |
 | CU-02 | Autenticarse | Completada | Implementado end-to-end; smoke HTTP 10/10 + UI Playwright; revisión APROBADA; cambio `2026-10-10-add-user-auth` archivado |
-| CU-03 | Gestionar cursos | Pendiente | Bloqueado hasta OK docente |
+| CU-03 | Gestionar cursos | Completada | Implementado end-to-end; smoke 13/13 + UI Playwright; revisión APROBADA; cambio `2026-10-10-add-course-management` archivado |
 | CU-04 | Gestionar usuarios | Pendiente | Bloqueado hasta OK docente |
 | CU-05 | Gestionar inscripciones | Pendiente | Bloqueado hasta OK docente |
 | CU-06 | Gestionar tareas | Pendiente | Bloqueado hasta OK docente |
@@ -45,11 +45,14 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 - **CU-02 (Autenticarse) implementado y verificado:** API `POST /api/auth/login` (cookie de sesión firmada de Flask, D-011), `GET /api/auth/me` (protegido por `@login_required`) y `POST /api/auth/logout` (idempotente). Backend con 32 tests en `backend/tests/test_auth.py`; frontend con pantalla de login con toggle a registro y barra de sesión (nombre + rol + "Cerrar sesión"); smoke end-to-end **10/10 PASS** vía `scripts/verify.py` (readiness + proxy + cleanup garantizado) y smoke de UI con Playwright (registro → login → header con rol Estudiante → logout → error renderizado del backend) con screenshots en `evidencias/cu-02/`. Cierre: revisión APROBADA, cambio `add-user-auth` archivado y commits finales.
 - **Gotcha de tooling resuelto:** en Windows, terminar `npm.cmd` dejaba el `node vite` hijo huérfano escuchando en `:5173`; los servicios lanzados no sobreviven a un reinicio de opencode ni a un tool call abortado. Solución: `scripts/verify.py` (**generalizado**, `--cu` y `--diagnose` para diagnóstico read-only) con pre-condición de puertos libres y cleanup del árbol de procesos (ver `errores.md`).
 - **CU-02 cerrado:** backtrack 6.1 y 6.2 `[x]`, smoke HTTP 10/10 PASS y smoke de UI con Playwright (4 screenshots en `evidencias/cu-02/`), revisión del checklist `reviewer` sin bloqueantes (el subagente `reviewer` volvió a fallar por tier del proveedor; revisión inline aceptada), cambio `add-user-auth` archivado como `2026-10-10-add-user-auth` (`openspec validate --specs --strict` → 1 passed) y 6 commits por unidad de trabajo. Próximo: **CU-03 (Gestionar cursos)**.
+- **CU-03 (Gestionar cursos) implementado y verificado (cierre en curso):** ciclo spec-driven `add-course-management` (proposal/specs/design/tasks). Backend: modelo `Course` (`code` único case-insensitive, `active` con baja lógica), `course_service` con validaciones en `services/` (400/403/404/409) y blueprint `courses` (`GET/POST /api/courses`, `GET/PUT/PATCH /api/courses/<id>`) protegido por `@login_required` + `@require_roles(UserRole.ADMIN)`. Bootstrap del Administrador con `scripts/seed_admin.py` (env obligatorio, idempotente, 4 cursos demo) — D-017. Frontend: ruteo con `react-router-dom` y pantalla de cursos (listado con estado, alta, edición, activar/desactivar) — D-018. Verificación: **55 tests** backend, `npm run build` + Prettier OK, smoke end-to-end **13/13 PASS** y evidencia UI Playwright (7 screenshots en `evidencias/cu-03/`). `scripts/verify.py` ahora corre contra una **base temporal aislada** con seed del admin.
+- **Bug detectado y corregido vía evidencia UI:** el registro no emite cookie de sesión, pero el frontend asumía sesión al registrar; se corrigió para navegar a `/login` tras el registro (ver D-018).
+- **CU-03 cerrado:** revisión APROBADA (skill `review-use-case` inline, sin bloqueantes; `reviews/cu-03.md`), cambio archivado como `2026-10-10-add-course-management` (`openspec validate --specs --strict` → 2 passed), y commits por unidad de trabajo. Próximo: **CU-04 (Gestionar usuarios)**.
 
 ## Próximos pasos
 
-1. **CU-03 (Gestionar cursos)** orquestado por la skill `new-use-case`.
-2. Resolver el tier del proveedor para el subagente `reviewer` (falló x2 en CU-01 y CU-02; se cerró con revisión inline) y reintentarlo en el próximo CU.
+1. **CU-04 (Gestionar usuarios)** orquestado por la skill `new-use-case`.
+2. Resolver el tier del proveedor para el subagente `reviewer` (falló en CU-01, CU-02 y CU-03; se cerró con revisión inline) y reintentarlo en el próximo CU.
 
 ## Pendientes de definición
 

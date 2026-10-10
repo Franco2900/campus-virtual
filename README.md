@@ -11,7 +11,8 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 ## Características
 
 - Registro y autenticación de usuarios (**CU-01 y CU-02 implementados**): alta de cuenta, login con cookie de sesión firmada, sesión actual, cierre de sesión.
-- Gestión de cursos, usuarios e inscripciones (CU-03, CU-04, CU-05).
+- Gestión de cursos (**CU-03 implementado**): listado (incluye inactivos), alta, edición y activar/desactivar con baja lógica, restringido al Administrador.
+- Gestión de usuarios e inscripciones (CU-04, CU-05).
 - Gestión de tareas, entregas y correcciones (CU-06, CU-07, CU-08).
 - Consulta de calificaciones y filtrado de usuarios (CU-09, CU-10).
 - Chatbot asistente integrado con LangChain + Ollama.
@@ -70,10 +71,14 @@ El servidor de desarrollo de Vite proxea `/api` hacia `http://localhost:5000`.
 # Frontend (desde frontend/)
 npm run build                                 # Windows: cmd /c npm run build
 
+# Lint / formato
+python -m ruff check backend && python -m ruff format --check backend   # backend (desde la raíz)
+npm run lint:format                           # frontend (desde frontend/)
+
 # Smoke end-to-end (arranca servicios, valida y limpia; por defecto CU-02)
 ..\.venv\Scripts\python.exe scripts\verify.py                 # Linux/macOS: .venv/bin/python ...
 ..\.venv\Scripts\python.exe scripts\verify.py --diagnose     # estado de puertos/pids (read-only)
-..\.venv\Scripts\python.exe scripts\verify.py --cu cu03      # requiere scripts/smoke_cu03.py
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu03      # siembra admin + cursos y corre smoke_cu03
 ```
 
 ## Estructura
@@ -102,6 +107,11 @@ npm run build                                 # Windows: cmd /c npm run build
 | POST | `/api/auth/login` | CU-02 | Iniciar sesión (emite cookie de sesión) | Público |
 | GET | `/api/auth/me` | CU-02 | Obtener el usuario autenticado | Sesión |
 | POST | `/api/auth/logout` | CU-02 | Cerrar sesión (idempotente) | Sesión |
+| GET | `/api/courses` | CU-03 | Listar cursos (incluye inactivos) | Sesión + Administrador |
+| POST | `/api/courses` | CU-03 | Crear un curso (201/400/409) | Sesión + Administrador |
+| GET | `/api/courses/<id>` | CU-03 | Obtener un curso (200/404) | Sesión + Administrador |
+| PUT | `/api/courses/<id>` | CU-03 | Editar un curso (200/400/404/409) | Sesión + Administrador |
+| PATCH | `/api/courses/<id>` | CU-03 | Activar/desactivar un curso — body `{"active": <bool>}` | Sesión + Administrador |
 
 ## Configuración
 
@@ -109,6 +119,22 @@ Variables de entorno (con valores por defecto para desarrollo):
 
 - `CAMPUS_DB_PATH`: ruta del archivo SQLite (default `backend/instance/campus.db`).
 - `SECRET_KEY`: clave de sesión (default solo de desarrollo; fijar en producción).
+- `CAMPUS_ADMIN_EMAIL`: correo del Administrador inicial (**obligatoria** para el seed).
+- `CAMPUS_ADMIN_PASSWORD`: contraseña del Administrador inicial (**obligatoria** para el seed).
+
+### Bootstrap del Administrador
+
+El primer Administrador (y 4 cursos de demostración) se crean con un seed idempotente. Requiere las dos variables `CAMPUS_ADMIN_*`:
+
+```bash
+# Windows
+$env:CAMPUS_ADMIN_EMAIL="admin@example.com"; $env:CAMPUS_ADMIN_PASSWORD="una-clave-segura"
+.\.venv\Scripts\python.exe scripts\seed_admin.py
+# Linux/macOS
+CAMPUS_ADMIN_EMAIL=admin@example.com CAMPUS_ADMIN_PASSWORD=una-clave-segura .venv/bin/python scripts/seed_admin.py
+```
+
+Si el Administrador ya existe, el script no duplica nada. El registro público (`/api/auth/register`) siempre crea rol Estudiante; un Administrador sólo se crea por este seed.
 
 ## Servidores MCP (Model Context Protocol)
 
@@ -141,7 +167,7 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Roadmap
 
-- CU-01 (Registrarse) y CU-02 (Autenticarse) implementados end-to-end (backend Flask + frontend React/Vite + tests + smoke HTTP y UI con Playwright).
+- CU-01 (Registrarse), CU-02 (Autenticarse) y CU-03 (Gestionar cursos) implementados end-to-end (backend Flask + frontend React/Vite con ruteo + tests + smoke HTTP y UI con Playwright).
 - Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
 - Plugin de medición automática de tiempos.
 - Integración completa del chatbot.

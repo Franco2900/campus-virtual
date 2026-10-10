@@ -107,6 +107,11 @@ Resumen (detalle completo en `casos_de_uso.md`):
 | POST | `/api/auth/login` | CU-02 | Iniciar sesión (emite cookie de sesión) | Público |
 | GET | `/api/auth/me` | CU-02 | Obtener el usuario autenticado | Sesión |
 | POST | `/api/auth/logout` | CU-02 | Cerrar sesión (idempotente; sin sesión responde 200) | Sesión |
+| GET | `/api/courses` | CU-03 | Listar cursos (incluye inactivos) | Sesión + Administrador |
+| POST | `/api/courses` | CU-03 | Crear un curso (201/400/409) | Sesión + Administrador |
+| GET | `/api/courses/<id>` | CU-03 | Obtener un curso (200/404) | Sesión + Administrador |
+| PUT | `/api/courses/<id>` | CU-03 | Editar un curso (200/400/404/409) | Sesión + Administrador |
+| PATCH | `/api/courses/<id>` | CU-03 | Activar/desactivar un curso — body `{"active": <bool>}` (200/400/404) | Sesión + Administrador |
 
 > Se completa a medida que se implementan los CU. No inventar endpoints.
 
@@ -174,8 +179,8 @@ Comandos reales (verificados en CU-01):
 
 ## Roadmap
 
-- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse) y CU-02 (Autenticarse) implementadas y verificadas** (CU-02: smoke HTTP 10/10 + UI Playwright PASS). Cierre de CU-02 en curso: revisión, archive del cambio `add-user-auth` y commits. Próximo: CU-03.
-- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01 y CU-02 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
+- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse) y CU-03 (Gestionar cursos) implementadas, verificadas y cerradas**. CU-03: smoke HTTP 13/13 + evidencia UI Playwright, revisión APROBADA y cambio `add-course-management` archivado como `2026-10-10-add-course-management`. Próximo: CU-04.
+- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Bootstrap del Administrador con `scripts/seed_admin.py` (`CAMPUS_ADMIN_EMAIL`/`CAMPUS_ADMIN_PASSWORD` obligatorias, D-017); `scripts/verify.py --cu cu0X` corre contra una base temporal aislada sembrada. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01, CU-02 y CU-03 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
 - **Futuro:** plugin de opencode para medir tiempos por tool-call de forma automática.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
 - **Pendiente:** definir lint/formato automático; introducir migraciones cuando un CU cambie el esquema con datos.

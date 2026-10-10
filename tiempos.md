@@ -46,15 +46,18 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 | T-012 | 2026-10-10T08:31:00 | 2026-10-10T08:35:00 | 00:04:00 | DOC | CU-02 | Agente | CU-02 (cierre, docs): tasks 6.1-6.2 `[x]`; AGENTS (tabla API 4 endpoints, smoke CU-02, MCP playwright, roadmap), README (API, testing, MCP, características, roadmap), `decisiones.md` D-011, `errores.md` (huérfanos + cierre del punto de freeze), `progreso.md`, `prompts_log.md` |
 | T-013 | 2026-10-10T08:35:00 | 2026-10-10T08:38:40 | 00:03:40 | REV | CU-02 | Agente | CU-02 (cierre, revisión y archive): reintento del subagente `reviewer` (falló por tier, como en CU-01) → revisión inline del checklist sin bloqueantes (APROBADO); `openspec archive add-user-auth --yes` → `2026-10-10-add-user-auth` (specs sincronizadas, +4 requirements); `openspec validate --specs --strict` → 1 passed; commits por unidad (6)
 
+| T-014 | 2026-10-10T10:26:49 | 2026-10-10T10:39:00 | 00:12:11 | IMP | CU-03 | Humano+Agente | CU-03 (propose + apply): cambio `add-course-management` (proposal/specs/design/tasks); backend (modelo `Course`, `course_service` con validaciones, blueprint `courses` con `@login_required`+`@require_roles`, `seed_admin.py` con env obligatorio e idempotente); frontend (ruteo con `react-router-dom`, `features/courses` API/`CoursesPage`/`CourseForm`); tests (23 nuevos); `scripts/verify.py` con base temporal aislada + seed |
+| T-015 | 2026-10-10T10:39:00 | 2026-10-10T10:42:34 | 00:03:34 | TST | CU-03 | Agente | CU-03 (verify): `pytest` 55 passed; `ruff check`/`format` y Prettier OK; `npm run build` OK; smoke end-to-end `Smoke CU-03: 13/13 PASS` (y regresión CU-02 10/10 PASS); evidencia UI Playwright (7 screenshots en `evidencias/cu-03/`); bug detectado y corregido (registro no inicia sesión → navegar a `/login`, D-018) |
+
 ## Totales
 
 | Categoría | Duración acumulada |
 |-----------|--------------------|
 | DEC | 00:10:08 |
 | DIS | 00:06:18 |
-| IMP | 00:29:31 |
-| TST | 00:00:00 |
+| IMP | 00:41:42 |
+| TST | 00:03:34 |
 | DOC | 00:05:28 |
 | CFG | 00:35:04 |
 | REV | 00:10:08 |
-| **Total** | **01:36:37** |
+| **Total** | **01:52:22** |

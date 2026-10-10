@@ -174,3 +174,23 @@ Formato:
 - **Criterios:** cero costo, portabilidad (valida la CROSS-platform que ya se garantiza en código), sin dependencias nuevas.
 - **Consecuencias / impacto:** cualquier push se valida solo; los tests y el build ya pasan en local, el primer run de CI lo confirma; no se toca el stack.
 - **Estado:** Vigente.
+
+## D-017 — Bootstrap del Administrador inicial vía seed con variables de entorno
+
+- **Fecha:** 2026-10-10.
+- **Decisión:** el primer usuario Administrador se crea con un script portable `scripts/seed_admin.py` que lee `CAMPUS_ADMIN_EMAIL` y `CAMPUS_ADMIN_PASSWORD` (ambas obligatorias; si faltan, falla con mensaje claro) y crea el admin (`role=ADMIN`) más 4 cursos de demostración (activos e inactivos). El script es idempotente: si el admin ya existe, no duplica ni re-siembra cursos. Para el smoke, `scripts/verify.py` lo ejecuta contra una base SQLite temporal aislada (`CAMPUS_DB_PATH` en un directorio `tempfile`) y propaga esas credenciales al smoke.
+- **Contexto / problema:** CU-01 fuerza el rol Estudiante en el registro y la asignación de roles es CU-04; ninguna vía de la API puede crear un Administrador, por lo que CU-03 (gestión de cursos, sólo Administrador) quedaba sin forma de autenticarse para probarse. No se puede hardcodear un secreto.
+- **Alternativas consideradas:** (a) permitir un rol en el registro (rompe la regla de rol forzado de CU-01); (b) crear el admin "a mano" en la base (no reproducible ni portable); (c) endpoint de bootstrap protegido por token (superficie de ataque extra); (d) script de seed con variables de entorno (elegida).
+- **Criterios:** reproducible, portable (Windows/Linux/macOS), sin secretos en el repo, idempotente, sin ampliar la superficie de la API pública.
+- **Consecuencias / impacto:** para correr el sistema hace falta definir las dos variables de entorno antes del seed; el seed crea también datos de demo (4 cursos) útiles para los CU siguientes. La asignación de Profesor y la relación profesor↔curso quedan para CU-04 (no se mezclan acá).
+- **Estado:** Vigente.
+
+## D-018 — Ruteo del frontend con react-router-dom
+
+- **Fecha:** 2026-10-10.
+- **Decisión:** introducir `react-router-dom` en el frontend y organizar la navegación con `BrowserRouter`: rutas `/login`, `/register` y `/courses` (protegida por rol Administrador), más `/` que redirige según el rol. La sesión se restaura al montar con `getMe()`; una ruta `ProtectedRoute` muestra "Cargando...", redirige a `/login` si no hay sesión y bloquea por rol si no coincide. El registro **no** inicia sesión en el cliente (el backend no emite cookie en `POST /api/auth/register`): tras registrarse se navega a `/login`.
+- **Contexto / problema:** hasta CU-02 la app renderizaba por condición con un toggle local (`showLogin`); con múltiples pantallas por rol eso no escala ni da URLs navegables. Además se detectó (vía evidencia Playwright) que asumir sesión tras el registro mostraba la UI logueada sin cookie, expulsando al usuario al recargar.
+- **Alternativas consideradas:** (a) seguir con render condicional (no escala); (b) router completo como TanStack Router (más potente, más ceremonia); (c) `react-router-dom` (elegida: estándar, diffs chicos, cubre guard por rol).
+- **Criterios:** URLs navegables, guard de sesión/rol en un solo lugar, dependencia estándar y liviana, cambio incremental sobre `App.jsx`.
+- **Consecuencias / impacto:** el servidor de dev de Vite debe servir el fallback de SPA (ya lo hace por defecto); las próximas pantallas se agregan como features con su ruta y su guard. El registro queda como acción previa al login (coherente con que la cookie sólo se emite en login).
+- **Estado:** Vigente.
