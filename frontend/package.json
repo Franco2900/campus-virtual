@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint:format": "prettier --check .",
+    "lint:format:fix": "prettier --write ."
   },
   "dependencies": {
     "react": "^19.3.0",
@@ -14,6 +16,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.2.0",
+    "prettier": "^3.9.10",
     "vite": "^7.3.7"
   }
 }

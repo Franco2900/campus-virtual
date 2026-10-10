@@ -12,6 +12,7 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+.ruff_cache/
 .venv/
 venv/
 instance/
@@ -29,4 +30,4 @@ Thumbs.db
 
 # Playwright MCP session artifacts
 .playwright-mcp/
-scripts/.cu02-pids
+scripts/.verify-pids
