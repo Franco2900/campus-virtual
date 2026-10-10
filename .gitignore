@@ -26,3 +26,7 @@ dist/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Playwright MCP session artifacts
+.playwright-mcp/
+scripts/.cu02-pids
