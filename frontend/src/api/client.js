@@ -47,6 +47,14 @@ export function post(path, body) {
   return request("POST", path, body);
 }
 
+export function put(path, body) {
+  return request("PUT", path, body);
+}
+
+export function patch(path, body) {
+  return request("PATCH", path, body);
+}
+
 export function get(path) {
   return request("GET", path);
 }
