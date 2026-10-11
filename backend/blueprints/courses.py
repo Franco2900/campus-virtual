@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 
 from blueprints.guards import login_required, require_roles
 from models.user import UserRole
+from services import course_teacher_service
 from services.course_service import (
     create_course,
     get_course_or_404,
@@ -22,6 +23,16 @@ def _serialize_course(course):
         "description": course.description,
         "active": course.active,
         "created_at": course.created_at.isoformat(),
+    }
+
+
+def _serialize_teacher(user):
+    return {
+        "id": user.id,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "role": user.role.value,
     }
 
 
@@ -86,3 +97,42 @@ def patch_course_endpoint(current_user, course_id):
     except NotFoundError as error:
         return jsonify({"error": str(error)}), 404
     return jsonify(_serialize_course(course)), 200
+
+
+@courses_bp.get("/<int:course_id>/teachers")
+@login_required
+@require_roles(UserRole.ADMIN)
+def list_teachers_endpoint(current_user, course_id):
+    try:
+        teachers = course_teacher_service.list_teachers(course_id)
+    except NotFoundError as error:
+        return jsonify({"error": str(error)}), 404
+    return jsonify([_serialize_teacher(teacher) for teacher in teachers]), 200
+
+
+@courses_bp.post("/<int:course_id>/teachers")
+@login_required
+@require_roles(UserRole.ADMIN)
+def assign_teacher_endpoint(current_user, course_id):
+    data = request.get_json(silent=True)
+    teacher_id = data.get("teacher_id") if isinstance(data, dict) else None
+    try:
+        teacher = course_teacher_service.assign_teacher(course_id, teacher_id)
+    except ValidationError as error:
+        return jsonify({"error": str(error)}), 400
+    except ConflictError as error:
+        return jsonify({"error": str(error)}), 409
+    except NotFoundError as error:
+        return jsonify({"error": str(error)}), 404
+    return jsonify(_serialize_teacher(teacher)), 201
+
+
+@courses_bp.delete("/<int:course_id>/teachers/<int:teacher_id>")
+@login_required
+@require_roles(UserRole.ADMIN)
+def remove_teacher_endpoint(current_user, course_id, teacher_id):
+    try:
+        course_teacher_service.remove_teacher(course_id, teacher_id)
+    except NotFoundError as error:
+        return jsonify({"error": str(error)}), 404
+    return jsonify({"message": "Profesor desasignado"}), 200

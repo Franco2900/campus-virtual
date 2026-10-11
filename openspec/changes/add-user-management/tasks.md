@@ -15,10 +15,10 @@
 
 ## 3. Backend — asignación de profesores por curso
 
-- [ ] 3.1 Crear `models/course_teacher.py` (`CourseTeacher`: `course_id` FK, `teacher_id` FK, `UNIQUE(course_id, teacher_id)`) y registrarlo en `app.py`; generar y aplicar la migración `0003`; verificar que la crea
-- [ ] 3.2 Crear `services/course_teacher_service.py` (`assign_teacher`, `remove_teacher`, `list_teachers`) con validaciones: curso existente, usuario existente, rol Profesor, duplicado; verificar con tests de servicio
-- [ ] 3.3 Extender `blueprints/courses.py` con `GET/POST /api/courses/<id>/teachers` y `DELETE /api/courses/<id>/teachers/<teacher_id>` (solo Administrador); verificar con tests: 401/403, 201/200 asignar, 400 no-teacher, 409 duplicado, 404 curso/usuario, 200 quitar y listar
-- [ ] 3.4 Ejecutar la suite completa y verificar que pasan `test_courses.py` + `test_course_teachers.py`
+- [x] 3.1 Crear `models/course_teacher.py` (`CourseTeacher`: `course_id` FK, `teacher_id` FK, `UNIQUE(course_id, teacher_id)`) y registrarlo en `app.py`; generar y aplicar la migración `0003`; verificar que la crea
+- [x] 3.2 Crear `services/course_teacher_service.py` (`assign_teacher`, `remove_teacher`, `list_teachers`) con validaciones: curso existente, usuario existente, rol Profesor, duplicado; verificar con tests de servicio
+- [x] 3.3 Extender `blueprints/courses.py` con `GET/POST /api/courses/<id>/teachers` y `DELETE /api/courses/<id>/teachers/<teacher_id>` (solo Administrador); verificar con tests: 401/403, 201/200 asignar, 400 no-teacher, 409 duplicado, 404 curso/usuario, 200 quitar y listar
+- [x] 3.4 Ejecutar la suite completa y verificar que pasan `test_courses.py` + `test_course_teachers.py`
 
 ## 4. Frontend — pantalla de usuarios y profesores por curso
 
