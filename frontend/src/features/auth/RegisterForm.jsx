@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { Button, FormField } from "../../ui/index.js";
 import { registerUser } from "./api.js";
 
 const INITIAL_FORM = {
@@ -39,60 +40,73 @@ export default function RegisterForm({ onSuccess, onShowLogin }) {
 
   // Native validation is disabled so the backend stays the source of truth.
   return (
-    <section>
-      <h2>Crear cuenta</h2>
+    <>
+      <h2 className="h5 mb-3">Crear cuenta</h2>
       <form onSubmit={handleSubmit} noValidate>
-        <label htmlFor="firstName">Nombre</label>
-        <input
+        <FormField
           id="firstName"
           name="firstName"
-          type="text"
+          label="Nombre"
+          autoComplete="given-name"
           value={form.firstName}
           onChange={handleChange}
           required
         />
 
-        <label htmlFor="lastName">Apellido</label>
-        <input
+        <FormField
           id="lastName"
           name="lastName"
-          type="text"
+          label="Apellido"
+          autoComplete="family-name"
           value={form.lastName}
           onChange={handleChange}
           required
         />
 
-        <label htmlFor="email">Correo electrónico</label>
-        <input
+        <FormField
           id="email"
           name="email"
           type="email"
+          label="Correo electrónico"
+          autoComplete="email"
           value={form.email}
           onChange={handleChange}
           required
         />
 
-        <label htmlFor="password">Contraseña</label>
-        <input
+        <FormField
           id="password"
           name="password"
           type="password"
+          label="Contraseña"
+          autoComplete="new-password"
           value={form.password}
           onChange={handleChange}
           required
         />
 
-        <button type="submit" disabled={submitting}>
+        {error && (
+          <div className="alert alert-danger py-2" role="alert">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="alert alert-success py-2" role="status">
+            {success}
+          </div>
+        )}
+
+        <Button type="submit" icon="person-plus-fill" className="w-100" disabled={submitting}>
           {submitting ? "Enviando..." : "Registrarme"}
-        </button>
+        </Button>
       </form>
 
-      {error && <p role="alert">{error}</p>}
-      {success && <p role="status">{success}</p>}
-
-      <button type="button" onClick={onShowLogin}>
-        ¿Ya tenés cuenta? Iniciá sesión
-      </button>
-    </section>
+      <p className="text-center text-secondary mt-3 mb-0">
+        ¿Ya tenés cuenta?{" "}
+        <button type="button" className="btn btn-link p-0 align-baseline" onClick={onShowLogin}>
+          Iniciá sesión
+        </button>
+      </p>
+    </>
   );
 }

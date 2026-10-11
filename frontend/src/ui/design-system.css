@@ -1,0 +1,267 @@
+/* Estilos propios del design system. Los colores siempre provienen de tokens. */
+
+/* Botón de marca */
+.btn-brand {
+  --bs-btn-bg: var(--campus-brand);
+  --bs-btn-border-color: var(--campus-brand);
+  --bs-btn-color: var(--campus-brand-contrast);
+  --bs-btn-hover-bg: var(--campus-brand-hover);
+  --bs-btn-hover-border-color: var(--campus-brand-hover);
+  --bs-btn-hover-color: var(--campus-brand-contrast);
+  --bs-btn-active-bg: var(--campus-brand-hover);
+  --bs-btn-active-border-color: var(--campus-brand-hover);
+  --bs-btn-active-color: var(--campus-brand-contrast);
+  --bs-btn-disabled-bg: var(--campus-brand);
+  --bs-btn-disabled-border-color: var(--campus-brand);
+  --bs-btn-disabled-color: var(--campus-brand-contrast);
+  font-weight: 600;
+}
+
+.btn-soft {
+  --bs-btn-bg: var(--campus-surface-2);
+  --bs-btn-border-color: var(--campus-border);
+  --bs-btn-color: var(--campus-text);
+  --bs-btn-hover-bg: var(--campus-brand-soft);
+  --bs-btn-hover-border-color: var(--campus-brand);
+  --bs-btn-hover-color: var(--campus-brand);
+  --bs-btn-active-bg: var(--campus-brand-soft);
+  --bs-btn-active-color: var(--campus-brand);
+  font-weight: 600;
+}
+
+/* Tarjeta */
+.campus-card {
+  background-color: var(--campus-surface);
+  border: 1px solid var(--campus-border);
+  border-radius: var(--campus-radius);
+  box-shadow: var(--campus-shadow);
+}
+
+.campus-card--flat {
+  box-shadow: none;
+}
+
+/* Encabezado de página */
+.campus-page-header h1,
+.campus-page-header h2 {
+  margin-bottom: 0.15rem;
+}
+
+.brand-gradient {
+  background: linear-gradient(120deg, var(--campus-brand), var(--role-student));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Chip / identificación de rol */
+.role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.role-chip i {
+  font-size: 0.95rem;
+}
+
+/* Layout de autenticación */
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 26rem;
+  padding: 2rem;
+}
+
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.auth-brand__icon {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 1rem;
+  background: var(--campus-brand-soft);
+  color: var(--campus-brand);
+  font-size: 1.6rem;
+}
+
+/* Shell de aplicación */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background-color: color-mix(in srgb, var(--campus-surface) 82%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--campus-border);
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+}
+
+.app-sidebar {
+  width: 16rem;
+  flex-shrink: 0;
+  border-right: 1px solid var(--campus-border);
+  background-color: color-mix(in srgb, var(--campus-surface) 70%, transparent);
+  padding: 1.25rem 0.85rem;
+}
+
+.app-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 0.7rem;
+  color: var(--campus-muted);
+  font-weight: 600;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.app-nav-link:hover {
+  background-color: var(--campus-brand-soft);
+  color: var(--campus-brand);
+  transform: translateX(2px);
+}
+
+.app-nav-link.is-active {
+  background-color: var(--campus-brand);
+  color: var(--campus-brand-contrast);
+}
+
+.app-nav-link i {
+  font-size: 1.05rem;
+}
+
+.app-content {
+  flex: 1;
+  min-width: 0;
+  padding: 1.75rem;
+}
+
+.app-footer {
+  padding: 1rem 1.75rem;
+  color: var(--campus-muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--campus-border);
+}
+
+.app-footer i {
+  color: var(--campus-danger);
+}
+
+/* Tabla del design system */
+.campus-table thead th {
+  color: var(--campus-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom-color: var(--campus-border);
+}
+
+.campus-table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.campus-table tbody td {
+  vertical-align: middle;
+}
+
+/* Estado vacío */
+.campus-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  color: var(--campus-muted);
+  text-align: center;
+}
+
+.campus-empty i {
+  font-size: 2rem;
+}
+
+/* Tarjeta de estadística */
+.campus-stat {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+}
+
+.campus-stat__icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.9rem;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.campus-stat__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.campus-stat__label {
+  color: var(--campus-muted);
+  font-size: 0.85rem;
+}
+
+/* Responsive: el sidebar pasa a fila horizontal en pantallas chicas */
+@media (max-width: 767.98px) {
+  .app-body {
+    flex-direction: column;
+  }
+
+  .app-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--campus-border);
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding: 0.75rem;
+  }
+
+  .app-nav-link {
+    white-space: nowrap;
+  }
+
+  .app-content {
+    padding: 1.25rem 1rem;
+  }
+}

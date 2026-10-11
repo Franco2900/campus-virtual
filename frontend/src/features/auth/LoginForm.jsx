@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { Button, FormField } from "../../ui/index.js";
 import { login } from "./api.js";
 
 const INITIAL_FORM = {
@@ -33,39 +34,48 @@ export default function LoginForm({ onSuccess, onShowRegister }) {
 
   // Native validation is disabled so the backend stays the source of truth.
   return (
-    <section>
-      <h2>Iniciar sesión</h2>
+    <>
+      <h2 className="h5 mb-3">Iniciar sesión</h2>
       <form onSubmit={handleSubmit} noValidate>
-        <label htmlFor="email">Correo electrónico</label>
-        <input
+        <FormField
           id="email"
           name="email"
           type="email"
+          label="Correo electrónico"
+          autoComplete="email"
           value={form.email}
           onChange={handleChange}
           required
         />
 
-        <label htmlFor="password">Contraseña</label>
-        <input
+        <FormField
           id="password"
           name="password"
           type="password"
+          label="Contraseña"
+          autoComplete="current-password"
           value={form.password}
           onChange={handleChange}
           required
         />
 
-        <button type="submit" disabled={submitting}>
+        {error && (
+          <div className="alert alert-danger py-2" role="alert">
+            {error}
+          </div>
+        )}
+
+        <Button type="submit" icon="box-arrow-in-right" className="w-100" disabled={submitting}>
           {submitting ? "Iniciando sesión..." : "Iniciar sesión"}
-        </button>
+        </Button>
       </form>
 
-      {error && <p role="alert">{error}</p>}
-
-      <button type="button" onClick={onShowRegister}>
-        ¿No tenés cuenta? Registrate
-      </button>
-    </section>
+      <p className="text-center text-secondary mt-3 mb-0">
+        ¿No tenés cuenta?{" "}
+        <button type="button" className="btn btn-link p-0 align-baseline" onClick={onShowRegister}>
+          Registrate
+        </button>
+      </p>
+    </>
   );
 }

@@ -1,18 +1,30 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
+import {
+  Badge,
+  Button,
+  Card,
+  ConfirmDialog,
+  DataTable,
+  Modal,
+  PageHeader,
+  Spinner,
+  useToast,
+} from "../../ui/index.js";
 import { listCourses, setCourseActive } from "./api.js";
 import CourseForm from "./CourseForm.jsx";
 
-const NEW_COURSE = "new";
-
 export default function CoursesPage() {
+  const { notify } = useToast();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [editingId, setEditingId] = useState(null);
-  const [togglingId, setTogglingId] = useState(null);
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingCourse, setEditingCourse] = useState(null);
+  const [confirming, setConfirming] = useState(null);
+  const [toggling, setToggling] = useState(false);
 
-  const loadCourses = useCallback(async () => {
+  async function loadCourses() {
     setLoading(true);
     setError("");
     try {
@@ -23,92 +35,170 @@ export default function CoursesPage() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }
 
   useEffect(() => {
     loadCourses();
-  }, [loadCourses]);
+  }, []);
 
-  function handleSaved() {
-    setEditingId(null);
-    loadCourses();
+  function openCreate() {
+    setEditingCourse(null);
+    setFormOpen(true);
   }
 
-  async function handleToggle(course) {
-    setError("");
-    setTogglingId(course.id);
+  function openEdit(course) {
+    setEditingCourse(course);
+    setFormOpen(true);
+  }
+
+  function handleSaved(saved) {
+    setFormOpen(false);
+    loadCourses();
+    notify({
+      tone: "success",
+      title: editingCourse ? "Curso actualizado" : "Curso creado",
+      message: `El curso "${saved.name}" se guardó correctamente.`,
+    });
+  }
+
+  async function confirmToggle() {
+    const course = confirming;
+    if (!course) {
+      return;
+    }
+    setToggling(true);
     try {
       const updated = await setCourseActive(course.id, !course.active);
       setCourses((previous) => previous.map((item) => (item.id === updated.id ? updated : item)));
+      notify({
+        tone: "success",
+        title: updated.active ? "Curso activado" : "Curso desactivado",
+        message: `El curso "${updated.name}" cambió de estado.`,
+      });
     } catch (requestError) {
-      setError(requestError.message);
+      notify({
+        tone: "danger",
+        title: "No se pudo cambiar el estado",
+        message: requestError.message,
+      });
     } finally {
-      setTogglingId(null);
+      setToggling(false);
+      setConfirming(null);
     }
   }
 
-  const editingCourse = courses.find((course) => course.id === editingId) ?? null;
+  const columns = [
+    {
+      key: "code",
+      header: "Código",
+      render: (course) => <span className="font-monospace fw-semibold">{course.code}</span>,
+    },
+    { key: "name", header: "Nombre" },
+    {
+      key: "description",
+      header: "Descripción",
+      render: (course) => course.description || <span className="text-secondary">—</span>,
+    },
+    {
+      key: "active",
+      header: "Estado",
+      render: (course) => (
+        <Badge
+          tone={course.active ? "success" : "neutral"}
+          icon={course.active ? "check-circle-fill" : "slash-circle"}
+        >
+          {course.active ? "Activo" : "Inactivo"}
+        </Badge>
+      ),
+    },
+    {
+      key: "actions",
+      header: "",
+      className: "text-end",
+      render: (course) => (
+        <div className="d-flex justify-content-end gap-2">
+          <Button variant="soft" className="btn-sm" icon="pencil" onClick={() => openEdit(course)}>
+            Editar
+          </Button>
+          <Button
+            variant="soft"
+            className="btn-sm"
+            icon={course.active ? "toggle-off" : "toggle-on"}
+            onClick={() => setConfirming(course)}
+          >
+            {course.active ? "Desactivar" : "Activar"}
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <section>
-      <header>
-        <h2>Cursos</h2>
-        <button type="button" onClick={() => setEditingId(NEW_COURSE)}>
-          Nuevo curso
-        </button>
-      </header>
+    <div>
+      <PageHeader
+        title="Cursos"
+        subtitle="Alta, edición y estado de los cursos del campus"
+        icon="bi-journal-bookmark-fill"
+        actions={
+          <Button icon="plus-lg" onClick={openCreate}>
+            Nuevo curso
+          </Button>
+        }
+      />
 
-      {editingId !== null && (
-        <CourseForm
-          key={editingId}
-          course={editingCourse}
-          onSaved={handleSaved}
-          onCancel={() => setEditingId(null)}
-        />
+      {error && (
+        <div className="alert alert-danger d-flex align-items-center gap-2" role="alert">
+          <i className="bi bi-exclamation-triangle-fill" aria-hidden="true" />
+          {error}
+        </div>
       )}
 
-      {error && <p role="alert">{error}</p>}
+      <Card className="p-0 overflow-hidden">
+        {loading ? (
+          <div className="d-flex justify-content-center py-5">
+            <Spinner label="Cargando cursos..." />
+          </div>
+        ) : (
+          <DataTable
+            columns={columns}
+            rows={courses}
+            empty="Todavía no hay cursos. Creá el primero con el botón de arriba."
+            emptyIcon="bi-journal-x"
+          />
+        )}
+      </Card>
 
-      {loading ? (
-        <p>Cargando cursos...</p>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Nombre</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.map((course) => (
-              <tr key={course.id}>
-                <td>{course.code}</td>
-                <td>{course.name}</td>
-                <td>{course.active ? "Activo" : "Inactivo"}</td>
-                <td>
-                  <button type="button" onClick={() => setEditingId(course.id)}>
-                    Editar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleToggle(course)}
-                    disabled={togglingId === course.id}
-                  >
-                    {course.active ? "Desactivar" : "Activar"}
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {courses.length === 0 && (
-              <tr>
-                <td colSpan={4}>No hay cursos.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      )}
-    </section>
+      <Modal
+        open={formOpen}
+        title={editingCourse ? "Editar curso" : "Nuevo curso"}
+        onClose={() => setFormOpen(false)}
+      >
+        {formOpen && (
+          <CourseForm
+            key={editingCourse?.id ?? "new"}
+            course={editingCourse}
+            onSaved={handleSaved}
+            onCancel={() => setFormOpen(false)}
+          />
+        )}
+      </Modal>
+
+      <ConfirmDialog
+        open={Boolean(confirming)}
+        title={confirming?.active ? "Desactivar curso" : "Activar curso"}
+        tone={confirming?.active ? "danger" : "brand"}
+        icon={confirming?.active ? "toggle-off" : "toggle-on"}
+        confirmVariant={confirming?.active ? "danger" : "brand"}
+        confirmLabel={confirming?.active ? "Desactivar" : "Activar"}
+        loading={toggling}
+        message={
+          confirming
+            ? `¿Confirmás ${confirming.active ? "desactivar" : "activar"} el curso "${confirming.name}"?`
+            : ""
+        }
+        onConfirm={confirmToggle}
+        onCancel={() => setConfirming(null)}
+      />
+    </div>
   );
 }

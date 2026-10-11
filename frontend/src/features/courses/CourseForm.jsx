@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { Button, FormField } from "../../ui/index.js";
 import { createCourse, updateCourse } from "./api.js";
 
 const EMPTY_FORM = { name: "", code: "", description: "" };
@@ -15,8 +16,6 @@ export default function CourseForm({ course, onSaved, onCancel }) {
   const [form, setForm] = useState(() => toForm(course));
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
-  const isEditing = Boolean(course);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -39,46 +38,49 @@ export default function CourseForm({ course, onSaved, onCancel }) {
 
   // Native validation is disabled so the backend stays the source of truth.
   return (
-    <section>
-      <h3>{isEditing ? "Editar curso" : "Nuevo curso"}</h3>
-      <form onSubmit={handleSubmit} noValidate>
-        <label htmlFor="course-name">Nombre</label>
-        <input
-          id="course-name"
-          name="name"
-          type="text"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
+    <form onSubmit={handleSubmit} noValidate>
+      <FormField
+        id="course-name"
+        name="name"
+        label="Nombre"
+        value={form.name}
+        onChange={handleChange}
+        required
+      />
 
-        <label htmlFor="course-code">Código</label>
-        <input
-          id="course-code"
-          name="code"
-          type="text"
-          value={form.code}
-          onChange={handleChange}
-          required
-        />
+      <FormField
+        id="course-code"
+        name="code"
+        label="Código"
+        value={form.code}
+        onChange={handleChange}
+        required
+      />
 
-        <label htmlFor="course-description">Descripción</label>
-        <textarea
-          id="course-description"
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-        />
+      <FormField
+        id="course-description"
+        name="description"
+        type="textarea"
+        rows={3}
+        label="Descripción"
+        value={form.description}
+        onChange={handleChange}
+      />
 
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Guardando..." : "Guardar"}
-        </button>
-        <button type="button" onClick={onCancel} disabled={submitting}>
+      {error && (
+        <div className="alert alert-danger py-2" role="alert">
+          {error}
+        </div>
+      )}
+
+      <div className="d-flex justify-content-end gap-2">
+        <Button variant="soft" onClick={onCancel} disabled={submitting}>
           Cancelar
-        </button>
-      </form>
-
-      {error && <p role="alert">{error}</p>}
-    </section>
+        </Button>
+        <Button type="submit" icon="save" disabled={submitting}>
+          {submitting ? "Guardando..." : "Guardar"}
+        </Button>
+      </div>
+    </form>
   );
 }

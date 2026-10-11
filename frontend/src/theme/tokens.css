@@ -1,0 +1,174 @@
+/* Design tokens del Campus Virtual. Tema claro en :root, tema oscuro en [data-bs-theme="dark"]. */
+
+:root {
+  --campus-font-stack:
+    "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --campus-brand: #4f46e5;
+  --campus-brand-hover: #4338ca;
+  --campus-brand-soft: #eef2ff;
+  --campus-brand-contrast: #ffffff;
+  --campus-brand-rgb: 79, 70, 229;
+
+  --role-student: #0ea5e9;
+  --role-student-soft: #e0f2fe;
+  --role-student-rgb: 14, 165, 233;
+  --role-teacher: #10b981;
+  --role-teacher-soft: #d1fae5;
+  --role-teacher-rgb: 16, 185, 129;
+  --role-admin: #db2777;
+  --role-admin-soft: #fce7f3;
+  --role-admin-rgb: 219, 39, 119;
+
+  --campus-success: #16a34a;
+  --campus-success-soft: #dcfce7;
+  --campus-warning: #d97706;
+  --campus-warning-soft: #fef3c7;
+  --campus-danger: #dc2626;
+  --campus-danger-soft: #fee2e2;
+
+  --campus-bg: #f6f7fb;
+  --campus-surface: #ffffff;
+  --campus-surface-2: #f1f3f9;
+  --campus-border: #e3e6ef;
+  --campus-text: #111827;
+  --campus-muted: #6b7280;
+
+  --campus-radius: 0.9rem;
+  --campus-shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+
+  /* Mapeo a variables de Bootstrap (5.3+) */
+  --bs-body-font-family: var(--campus-font-stack);
+  --bs-primary: var(--campus-brand);
+  --bs-primary-rgb: var(--campus-brand-rgb);
+  --bs-body-bg: var(--campus-bg);
+  --bs-body-color: var(--campus-text);
+  --bs-border-color: var(--campus-border);
+  --bs-link-color: var(--campus-brand);
+  --bs-link-hover-color: var(--campus-brand-hover);
+}
+
+[data-bs-theme="dark"] {
+  --campus-brand: #818cf8;
+  --campus-brand-hover: #a5b4fc;
+  --campus-brand-soft: #1e1b4b;
+  --campus-brand-contrast: #0b0d14;
+  --campus-brand-rgb: 129, 140, 248;
+
+  --role-student: #38bdf8;
+  --role-student-soft: #082f49;
+  --role-student-rgb: 56, 189, 248;
+  --role-teacher: #34d399;
+  --role-teacher-soft: #064e3b;
+  --role-teacher-rgb: 52, 211, 153;
+  --role-admin: #f472b6;
+  --role-admin-soft: #500724;
+  --role-admin-rgb: 244, 114, 182;
+
+  --campus-success: #4ade80;
+  --campus-success-soft: #052e16;
+  --campus-warning: #fbbf24;
+  --campus-warning-soft: #451a03;
+  --campus-danger: #f87171;
+  --campus-danger-soft: #450a0a;
+
+  --campus-bg: #0b0d14;
+  --campus-surface: #141824;
+  --campus-surface-2: #1b2130;
+  --campus-border: #252a3a;
+  --campus-text: #e6e8f0;
+  --campus-muted: #9aa1b4;
+
+  --bs-body-bg: var(--campus-bg);
+  --bs-body-color: var(--campus-text);
+  --bs-border-color: var(--campus-border);
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--campus-font-stack);
+  background-color: var(--campus-bg);
+  color: var(--campus-text);
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(var(--campus-brand-rgb), 0.14), transparent 42%),
+    radial-gradient(circle at 88% 0%, rgba(var(--role-student-rgb), 0.12), transparent 46%);
+  background-attachment: fixed;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+a {
+  text-decoration: none;
+}
+
+code {
+  color: var(--campus-brand);
+}
+
+/* Utilidades de color por rol */
+.text-role-student {
+  color: var(--role-student) !important;
+}
+
+.text-role-teacher {
+  color: var(--role-teacher) !important;
+}
+
+.text-role-admin {
+  color: var(--role-admin) !important;
+}
+
+.bg-role-student-soft {
+  background-color: var(--role-student-soft) !important;
+  color: var(--role-student) !important;
+}
+
+.bg-role-teacher-soft {
+  background-color: var(--role-teacher-soft) !important;
+  color: var(--role-teacher) !important;
+}
+
+.bg-role-admin-soft {
+  background-color: var(--role-admin-soft) !important;
+  color: var(--role-admin) !important;
+}
+
+.text-brand {
+  color: var(--campus-brand) !important;
+}
+
+.bg-brand-soft {
+  background-color: var(--campus-brand-soft) !important;
+  color: var(--campus-brand) !important;
+}
+
+/* Accesibilidad: foco visible y respeto por prefers-reduced-motion */
+:focus-visible {
+  outline: 3px solid rgba(var(--campus-brand-rgb), 0.45);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
