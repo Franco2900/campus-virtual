@@ -13,7 +13,8 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 - Registro y autenticación de usuarios (**CU-01 y CU-02 implementados**): alta de cuenta, login con cookie de sesión firmada, sesión actual, cierre de sesión.
 - Interfaz con **design system propio**: temas claro/oscuro, color por rol (Estudiante/Profesor/Administrador), componentes reutilizables (`src/ui/`) y animaciones con `motion`.
 - Gestión de cursos (**CU-03 implementado**): listado (incluye inactivos), alta, edición y activar/desactivar con baja lógica, restringido al Administrador.
-- Gestión de usuarios e inscripciones (CU-04, CU-05).
+- Gestión de usuarios (**CU-04 implementado**): listado (incluye inactivos), edición de datos y rol, activar/desactivar (baja lógica) y reset de contraseña; asignación de Profesor por curso. Restringido al Administrador.
+- Gestión de inscripciones (CU-05).
 - Gestión de tareas, entregas y correcciones (CU-06, CU-07, CU-08).
 - Consulta de calificaciones y filtrado de usuarios (CU-09, CU-10).
 - Chatbot asistente integrado con LangChain + Ollama.
@@ -63,6 +64,18 @@ npm run dev        # Windows: cmd /c npm run dev
 
 El servidor de desarrollo de Vite proxea `/api` hacia `http://localhost:5000`.
 
+### Migraciones de esquema
+
+El esquema se versiona con migraciones (Flask-Migrate/Alembic, `backend/migrations/`). Sobre una base nueva o desactualizada hay que aplicar las migraciones pendientes:
+
+```bash
+# Desde backend/ (Windows)
+..\.venv\Scripts\python.exe -m flask --app app db upgrade
+# Linux/macOS: ../.venv/bin/python -m flask --app app db upgrade
+```
+
+El seed del Administrador (`scripts/seed_admin.py`) aplica las migraciones pendientes de forma automática antes de sembrar.
+
 ## Testing
 
 ```bash
@@ -80,6 +93,7 @@ npm run lint:format                           # frontend (desde frontend/)
 ..\.venv\Scripts\python.exe scripts\verify.py                 # Linux/macOS: .venv/bin/python ...
 ..\.venv\Scripts\python.exe scripts\verify.py --diagnose     # estado de puertos/pids (read-only)
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu03      # siembra admin + cursos y corre smoke_cu03
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu04      # smoke de gestión de usuarios y profesores
 ```
 
 ## Estructura
@@ -96,7 +110,7 @@ npm run lint:format                           # frontend (desde frontend/)
 ├── prompts_log.md     # auditoría de prompts
 ├── tiempos.md         # medición de tiempos
 ├── openspec/          # specs spec-driven (fuente de verdad de specs)
-├── backend/           # API Flask (app.py, config/, models/, services/, blueprints/, tests/)
+├── backend/           # API Flask (app.py, config/, models/, services/, blueprints/, migrations/, tests/)
 └── frontend/          # SPA React + Vite (src/api/, src/features/, src/theme/, src/ui/, src/app/)
 ```
 
@@ -113,6 +127,14 @@ npm run lint:format                           # frontend (desde frontend/)
 | GET | `/api/courses/<id>` | CU-03 | Obtener un curso (200/404) | Sesión + Administrador |
 | PUT | `/api/courses/<id>` | CU-03 | Editar un curso (200/400/404/409) | Sesión + Administrador |
 | PATCH | `/api/courses/<id>` | CU-03 | Activar/desactivar un curso — body `{"active": <bool>}` | Sesión + Administrador |
+| GET | `/api/users` | CU-04 | Listar usuarios (incluye inactivos) | Sesión + Administrador |
+| GET | `/api/users/<id>` | CU-04 | Obtener un usuario (200/404) | Sesión + Administrador |
+| PUT | `/api/users/<id>` | CU-04 | Editar datos y rol (200/400/404/409) | Sesión + Administrador |
+| PATCH | `/api/users/<id>` | CU-04 | Activar/desactivar — body `{"active": <bool>}` (200/400/404) | Sesión + Administrador |
+| POST | `/api/users/<id>/password` | CU-04 | Resetear contraseña — body `{"password": "..."}` (200/400/404) | Sesión + Administrador |
+| GET | `/api/courses/<id>/teachers` | CU-04 | Listar profesores del curso (200/404) | Sesión + Administrador |
+| POST | `/api/courses/<id>/teachers` | CU-04 | Asignar profesor — body `{"teacher_id": <id>}` (201/400/404/409) | Sesión + Administrador |
+| DELETE | `/api/courses/<id>/teachers/<teacher_id>` | CU-04 | Quitar profesor del curso (200/404) | Sesión + Administrador |
 
 ## Configuración
 
@@ -168,7 +190,7 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Roadmap
 
-- CU-01 (Registrarse), CU-02 (Autenticarse) y CU-03 (Gestionar cursos) implementados end-to-end (backend Flask + frontend React/Vite con ruteo + tests + smoke HTTP y UI con Playwright).
+- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos) y CU-04 (Gestionar usuarios) implementados end-to-end (backend Flask + frontend React/Vite con ruteo + tests + smoke HTTP y UI con Playwright). El esquema se versiona con migraciones (Alembic).
 - Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
 - Plugin de medición automática de tiempos.
 - Integración completa del chatbot.

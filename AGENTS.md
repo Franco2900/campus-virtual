@@ -19,6 +19,7 @@ Comandos reales (verificados al implementar CU-01). En Windows, `npm` y `openspe
   - Windows: `.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt`
   - Linux/macOS: `.venv/bin/python -m pip install -r backend/requirements.txt`
 - **Backend (dev):** `python backend/app.py` → `http://127.0.0.1:5000`. Base SQLite en `backend/instance/campus.db` (override con `CAMPUS_DB_PATH`; `SECRET_KEY` por entorno).
+- **Backend — migraciones:** desde `backend/`, Windows `..\.venv\Scripts\python.exe -m flask --app app db upgrade`; Linux/macOS `../.venv/bin/python -m flask --app app db upgrade`. Aplica las migraciones pendientes (`scripts/seed_admin.py` y `scripts/verify.py` también las aplican). Esquema versionado con Flask-Migrate/Alembic (D-023).
 - **Frontend (dev):** dentro de `frontend/`, `npm install` y `npm run dev` (Windows: `cmd /c npm install`, `cmd /c npm run dev`) → `http://localhost:5173`, con proxy de desarrollo `/api` → `http://localhost:5000`. Build: `npm run build`.
 - **Tests (backend):** dentro de `backend/`, Windows `..\.venv\Scripts\python.exe -m pytest`; Linux/macOS `../.venv/bin/python -m pytest`.
 - **Lint / formato (backend):** desde la raíz, Windows `.\.venv\Scripts\python.exe -m ruff check backend` y `.\.venv\Scripts\python.exe -m ruff format --check backend`; Linux/macOS `.venv/bin/python -m ruff ...`. Aplicar: `-m ruff check backend --fix` y `-m ruff format backend`.
@@ -36,12 +37,13 @@ backend/
 ├── blueprints/       # una por dominio: auth, courses, users, tasks, enrollments, grades
 ├── services/         # lógica de negocio y validaciones
 ├── models/           # entidades SQLAlchemy
-└── config/           # configuración (DB path, secretos por env)
+├── config/           # configuración (DB path, secretos por env)
+└── migrations/       # migraciones Alembic (Flask-Migrate)
 ```
 
 - **Persistencia:** toda consulta a la base se hace desde `services/` a través de los modelos SQLAlchemy. No hay SQL crudo en `routes/`.
 - **Validaciones:** en la capa `services/`.
-- **Esquema:** SQLite inicializado con `db.create_all()` desde el factory (`create_app()`). Sin migraciones formales todavía (ver D-010); se introducirán (skill `create-migration`) cuando un CU modifique un esquema con datos.
+- **Esquema:** SQLite versionado con migraciones (Flask-Migrate/Alembic, `backend/migrations/`, D-023); `flask db upgrade` aplica lo pendiente, y `db.create_all()` queda sólo para tests (`app.config["TESTING"]`). Un CU que cambie el esquema con datos genera una migración (skill `create-migration`); `migrations/` se versiona y queda excluido de ruff.
 - **Frontend:** organización por feature (`src/features/<feature>/`), con `src/api/client.js` como cliente HTTP base; componentes en `PascalCase`. Las validaciones de servidor son la fuente de verdad: el cliente solo envía y muestra los errores devueltos por el backend.
 - **Frontend — design system:** UI construida sobre un design system propio sobre Bootstrap (D-019): tokens en `src/theme/tokens.css` (color por rol, semánticos, neutros; claro/oscuro), tema con `src/theme/ThemeProvider.jsx` (`data-bs-theme` + `localStorage` `campus-theme`), componentes reutilizables en `src/ui/` (`Button`, `Card`, `Badge`, `RoleBadge`, `PageHeader`, `Spinner`, `EmptyState`, `DataTable`, `FormField`, `Modal`, `ConfirmDialog`, `Toast`) y shell de app en `src/app/` (`AppLayout`, `Navbar`, `Sidebar`, `ProtectedRoute`, `HomePage`). Animaciones con `motion` (D-020). Regla: reutilizar tokens y componentes, sin colores hardcodeados ni CDN; usar `data-testid` en los elementos que la evidencia necesita. Contrato detallado en la skill `design-system`.
 - **Chatbot:** PENDIENTE DE DEFINIR el punto de integración con LangChain + Ollama.
@@ -87,7 +89,7 @@ Resumen (detalle completo en `casos_de_uso.md`):
 ├── tiempos.md           # medición de tiempos de desarrollo
 ├── evidencias/          # screenshots de verificación por CU (evidencia visual)
 ├── reviews/             # artefactos de revisión por CU (hallazgos, veredicto, mapa de evidencia)
-├── backend/             # API Flask (app.py, config/, models/, services/, blueprints/, tests/)
+├── backend/             # API Flask (app.py, config/, models/, services/, blueprints/, migrations/, tests/)
 ├── frontend/            # SPA React + Vite (src/api/, src/features/, src/theme/, src/ui/, src/app/)
 ├── openspec/            # specs spec-driven (openspec): fuente de verdad de specs
 ├── .atl/
@@ -113,6 +115,14 @@ Resumen (detalle completo en `casos_de_uso.md`):
 | GET | `/api/courses/<id>` | CU-03 | Obtener un curso (200/404) | Sesión + Administrador |
 | PUT | `/api/courses/<id>` | CU-03 | Editar un curso (200/400/404/409) | Sesión + Administrador |
 | PATCH | `/api/courses/<id>` | CU-03 | Activar/desactivar un curso — body `{"active": <bool>}` (200/400/404) | Sesión + Administrador |
+| GET | `/api/users` | CU-04 | Listar usuarios (incluye inactivos) | Sesión + Administrador |
+| GET | `/api/users/<id>` | CU-04 | Obtener un usuario (200/404) | Sesión + Administrador |
+| PUT | `/api/users/<id>` | CU-04 | Editar datos y rol (200/400/404/409) | Sesión + Administrador |
+| PATCH | `/api/users/<id>` | CU-04 | Activar/desactivar — body `{"active": <bool>}` (200/400/404) | Sesión + Administrador |
+| POST | `/api/users/<id>/password` | CU-04 | Resetear contraseña — body `{"password": "..."}` (200/400/404) | Sesión + Administrador |
+| GET | `/api/courses/<id>/teachers` | CU-04 | Listar profesores del curso (200/404) | Sesión + Administrador |
+| POST | `/api/courses/<id>/teachers` | CU-04 | Asignar profesor — body `{"teacher_id": <id>}` (201/400/404/409) | Sesión + Administrador |
+| DELETE | `/api/courses/<id>/teachers/<teacher_id>` | CU-04 | Quitar profesor del curso (200/404) | Sesión + Administrador |
 
 > Se completa a medida que se implementan los CU. No inventar endpoints.
 
@@ -180,11 +190,10 @@ Comandos reales (verificados en CU-01):
 
 ## Roadmap
 
-- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse) y CU-03 (Gestionar cursos) implementadas, verificadas y cerradas**, y **design system de frontend implementado y verificado** (cambio `add-frontend-design-system`: tokens claro/oscuro, `src/ui`, shell `src/app`, `motion`, D-019/D-020). CU-03: smoke HTTP 13/13 + evidencia UI Playwright, revisión APROBADA y cambio `add-course-management` archivado como `2026-10-10-add-course-management`. Próximo: CU-04.
-- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Bootstrap del Administrador con `scripts/seed_admin.py` (`CAMPUS_ADMIN_EMAIL`/`CAMPUS_ADMIN_PASSWORD` obligatorias, D-017); `scripts/verify.py --cu cu0X` corre contra una base temporal aislada sembrada. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01, CU-02 y CU-03 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
+- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos) y CU-04 (Gestionar usuarios) implementadas y verificadas**; **design system de frontend implementado y verificado** (cambio `add-frontend-design-system`: tokens claro/oscuro, `src/ui`, shell `src/app`, `motion`, D-019/D-020). CU-04 (cambio `add-user-management`): gestión de usuarios (listado/edición/rol/activar/desactivar/reset) + asignación de Profesor por curso, migraciones Alembic adoptadas (D-021/D-022/D-023), **90 tests** backend, smoke HTTP 21/21 y evidencia UI Playwright (claro/oscuro); cierre (revisión + archive) en curso. Próximo: CU-05.
+- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Bootstrap del Administrador con `scripts/seed_admin.py` (`CAMPUS_ADMIN_EMAIL`/`CAMPUS_ADMIN_PASSWORD` obligatorias, D-017); `scripts/verify.py --cu cu0X` corre contra una base temporal aislada sembrada y migrada. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01, CU-02 y CU-03 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
 - **Futuro:** plugin de opencode para medir tiempos por tool-call de forma automática.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
-- **Pendiente:** introducir migraciones cuando un CU cambie el esquema con datos.
 
 ## Límites
 

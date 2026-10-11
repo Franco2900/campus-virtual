@@ -113,7 +113,7 @@ Formato:
 - **Alternativas consideradas:** (a) `passlib`+`bcrypt` para hashing (descartado: wheel incierto en Python 3.14.6 en Windows; `werkzeug.security` es puro Python y valida en CU-02); (b) Flask-Migrate/Alembic desde el inicio (descartado: no hay esquema ni datos previos); (c) `flask-cors` (descartado: el proxy de Vite lo vuelve innecesario en dev); (d) frontend por tipo con carpetas `components/` (descartado: bolsa de gato a 10 CU).
 - **Criterios:** dependencias mínimas, portabilidad, ceremonia proporcional.
 - **Consecuencias / impacto:** las versiones quedan pinned y no se cambian sin autorización; las migraciones se introducirán (skill `create-migration`) cuando un CU modifique un esquema con datos. El mecanismo de sesión/token se decide en CU-02 (CU-01 no autentica).
-- **Estado:** Vigente.
+- **Estado:** Vigente (el punto «esquema inicial con `db.create_all()` / sin migraciones todavía» queda superado por D-023).
 
 ## D-011 — Mecanismo de sesión: cookie firmada de Flask
 
@@ -213,4 +213,32 @@ Formato:
 - **Alternativas consideradas:** (a) Framer Motion (predecesor; `motion` es su sucesor más liviano); (b) solo CSS (suficiente para micro-interacciones, pobre para transición de páginas y exit de listas); (c) `motion` (elegida: API declarativa, `AnimatePresence`, respeto nativo de `prefers-reduced-motion`).
 - **Criterios:** animaciones declarativas y acotadas, respeto de accesibilidad, dependencia única y liviana, sin JS imperativo de animación en pantallas.
 - **Consecuencias / impacto:** las transiciones viven en el shell y en los componentes del design system, no en cada pantalla; los CUs nuevos heredan el comportamiento sin código extra.
+- **Estado:** Vigente.
+
+## D-021 — Gestión de usuarios por el Administrador (CU-04)
+
+- **Fecha:** 2026-10-11.
+- **Decisión:** el Administrador gestiona las cuentas: listado (incluye inactivas), detalle, edición de datos y rol, activar/desactivar (baja lógica con `User.active`) y reset de contraseña (el Admin fija la nueva). Endpoints `GET /api/users`, `GET /api/users/<id>`, `PUT /api/users/<id>`, `PATCH /api/users/<id>` (body `{"active": <bool>}`), `POST /api/users/<id>/password`, todos con `@login_required` + `@require_roles(UserRole.ADMIN)` (403 por rol). La **autogestión está bloqueada**: el Admin no puede desactivarse ni cambiarse el rol a sí mismo (400 vía `ValidationError`, decisión explícita: es validación de entrada, no de autorización). Una cuenta **inactiva no puede autenticarse** (`authenticate_user` y `get_current_user` la rechazan).
+- **Contexto / problema:** CU-04 exige que el Administrador administre las cuentas; hasta ahora sólo el registro público creaba usuarios con rol Estudiante forzado, y no había forma de asignar otros roles ni de dar de baja.
+- **Alternativas consideradas:** (a) borrado físico (pierde trazabilidad y rompe referencias); (b) baja lógica con `active` (elegida); (c) reset de contraseña por correo con token y expiración (fuera de alcance: el TP no envía correos); (d) 403 para la autogestión (se prefirió 400).
+- **Criterios:** exclusividad de rol, email único case-insensitive, baja lógica reversible, sin notificaciones por correo (regla del TP), validaciones en `services/`, contraseña con longitud mínima.
+- **Consecuencias / impacto:** `active` incide en el login y en la sesión vigente; el listado **no** filtra todavía (eso es CU-10); el reset de contraseña no emite correo (el Admin comunica el valor).
+
+## D-022 — Relación Profesor↔curso (tabla asociativa)
+
+- **Fecha:** 2026-10-11.
+- **Decisión:** modelar la asignación Profesor↔curso con la tabla asociativa `course_teacher` (`course_id` FK, `teacher_id` FK, `UNIQUE(course_id, teacher_id)`), gestionada por `GET/POST /api/courses/<id>/teachers` y `DELETE /api/courses/<id>/teachers/<teacher_id>` (solo Administrador). Las validaciones viven en `services/course_teacher_service.py`: curso existente (404), `teacher_id` requerido (400), usuario existente (404), rol Profesor (400), duplicado (409). El listado expone id, nombre, apellido, email y rol.
+- **Contexto / problema:** la regla de negocio «un Profesor sólo opera sobre los cursos en los que trabaja» (CU-06/07/08) exige persistir la relación; se incorporó en CU-04 por decisión explícita (no estaba en el alcance mínimo del CU, pero desbloquea los CU por rol).
+- **Alternativas consideradas:** (a) FK simple `Course.teacher_id` (un curso = un solo profesor; insuficiente); (b) tabla asociativa N:M (elegida); (c) lista JSON dentro de `Course` (sin integridad referencial).
+- **Criterios:** relación N:M realista (varios profesores por curso y un profesor en varios cursos), integridad referencial y unicidad garantizadas por la base.
+- **Consecuencias / impacto:** los CUs que operan según el profesor (CU-06, CU-07, CU-08) autorizarán consultando esta tabla; la relación se administra sólo por el Administrador.
+
+## D-023 — Migraciones de esquema con Flask-Migrate (Alembic)
+
+- **Fecha:** 2026-10-11.
+- **Decisión:** adoptar **Flask-Migrate** (`4.1.0`) con **Alembic** (`1.20.0`) integrado al factory (`Migrate(app, db)`) para evolucionar el esquema con migraciones versionadas en `backend/migrations/`. `db.create_all()` queda limitado a `app.config["TESTING"]`. La base existente se llevó al esquema pre-CU-04 con un **baseline** (`0001_baseline_pre_cu_04`) + `flask db stamp`; los cambios de CU-04 se aplican con migraciones incrementales (`0002` agrega `user.active` con `server_default` para el backfill de filas existentes; `0003` crea `course_teacher`). `scripts/verify.py` y `scripts/seed_admin.py` corren `flask db upgrade` sobre la base (temporal o real) antes de usarla. El código generado de `backend/migrations/` queda **excluido de ruff** (`extend-exclude` en `backend/pyproject.toml`).
+- **Contexto / problema:** D-010 y AGENTS dejaban las migraciones para el primer CU que cambiara el esquema con datos; CU-04 agrega `user.active` (NOT NULL) sobre una tabla con filas y una tabla nueva —el primer cambio de esquema con datos—.
+- **Alternativas consideradas:** (a) seguir con `db.create_all()` (no agrega columnas nuevas ni hace backfill); (b) SQL manual (no portable ni versionado); (c) Flask-Migrate/Alembic (elegida).
+- **Criterios:** versionado del esquema, portabilidad Windows/Linux/macOS, backfill reproducible, tooling estándar de Flask.
+- **Consecuencias / impacto:** todo CU que cambie el esquema debe generar una migración (skill `create-migration`); `migrations/` se versiona en git (no se ignora); `db.create_all()` queda sólo para tests; el baseline pre-CU-04 documenta el punto de arranque.
 - **Estado:** Vigente.
