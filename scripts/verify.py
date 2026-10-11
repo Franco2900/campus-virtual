@@ -111,6 +111,24 @@ def build_run_env(db_dir):
     return run_env
 
 
+def migrate_database(run_env):
+    """Apply Alembic migrations to the isolated DB before it is used."""
+    result = subprocess.run(
+        [sys.executable, "-m", "flask", "--app", "app", "db", "upgrade"],
+        cwd=str(BACKEND_DIR),
+        env=run_env,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        print("[FAIL] La migración de la base falló.")
+        print(result.stdout)
+        print(result.stderr)
+        return False
+    print("[OK] Migraciones aplicadas (flask db upgrade)")
+    return True
+
+
 def seed_database(run_env):
     """Provision the admin and demo data into the isolated DB before startup."""
     if not SEED_SCRIPT.exists():
@@ -242,7 +260,7 @@ def main():
 
     db_dir = tempfile.mkdtemp(prefix=f"verify-{args.cu}-db-")
     run_env = build_run_env(db_dir)
-    if not seed_database(run_env):
+    if not migrate_database(run_env) or not seed_database(run_env):
         shutil.rmtree(db_dir, ignore_errors=True)
         return 1
 

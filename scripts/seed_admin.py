@@ -12,10 +12,12 @@ import os
 import sys
 from pathlib import Path
 
+from flask_migrate import upgrade as apply_migrations
 from werkzeug.security import generate_password_hash
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 BACKEND_DIR = PROJECT_ROOT / "backend"
+MIGRATIONS_DIR = BACKEND_DIR / "migrations"
 sys.path.insert(0, str(BACKEND_DIR))
 
 from app import create_app  # noqa: E402
@@ -110,6 +112,12 @@ def seed_demo_courses(app):
     return created
 
 
+def ensure_schema(app):
+    """Aplica las migraciones pendientes para garantizar el esquema vigente."""
+    with app.app_context():
+        apply_migrations(directory=str(MIGRATIONS_DIR))
+
+
 def main():
     try:
         email, password = read_credentials()
@@ -118,6 +126,7 @@ def main():
         return 1
 
     app = create_app()
+    ensure_schema(app)
     created = provision_admin(app, email, password)
     if not created:
         print("El administrador ya existe; no se realizan cambios.")

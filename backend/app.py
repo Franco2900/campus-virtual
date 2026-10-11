@@ -1,11 +1,14 @@
 from pathlib import Path
 
 from flask import Flask
+from flask_migrate import Migrate
 
 from config.config import Config
 from models.base import db
 
 SQLITE_PREFIX = "sqlite:///"
+
+migrate = Migrate()
 
 
 def _ensure_sqlite_directory(database_uri):
@@ -25,6 +28,7 @@ def create_app(config=None):
     _ensure_sqlite_directory(app.config["SQLALCHEMY_DATABASE_URI"])
 
     db.init_app(app)
+    migrate.init_app(app, db)
 
     from blueprints.auth import auth_bp
     from blueprints.courses import courses_bp
@@ -34,7 +38,8 @@ def create_app(config=None):
     app.register_blueprint(courses_bp)
 
     with app.app_context():
-        db.create_all()
+        if app.config.get("TESTING"):
+            db.create_all()
 
     return app
 
