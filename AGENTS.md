@@ -43,6 +43,7 @@ backend/
 - **Validaciones:** en la capa `services/`.
 - **Esquema:** SQLite inicializado con `db.create_all()` desde el factory (`create_app()`). Sin migraciones formales todavía (ver D-010); se introducirán (skill `create-migration`) cuando un CU modifique un esquema con datos.
 - **Frontend:** organización por feature (`src/features/<feature>/`), con `src/api/client.js` como cliente HTTP base; componentes en `PascalCase`. Las validaciones de servidor son la fuente de verdad: el cliente solo envía y muestra los errores devueltos por el backend.
+- **Frontend — design system:** UI construida sobre un design system propio sobre Bootstrap (D-019): tokens en `src/theme/tokens.css` (color por rol, semánticos, neutros; claro/oscuro), tema con `src/theme/ThemeProvider.jsx` (`data-bs-theme` + `localStorage` `campus-theme`), componentes reutilizables en `src/ui/` (`Button`, `Card`, `Badge`, `RoleBadge`, `PageHeader`, `Spinner`, `EmptyState`, `DataTable`, `FormField`, `Modal`, `ConfirmDialog`, `Toast`) y shell de app en `src/app/` (`AppLayout`, `Navbar`, `Sidebar`, `ProtectedRoute`, `HomePage`). Animaciones con `motion` (D-020). Regla: reutilizar tokens y componentes, sin colores hardcodeados ni CDN; usar `data-testid` en los elementos que la evidencia necesita. Contrato detallado en la skill `design-system`.
 - **Chatbot:** PENDIENTE DE DEFINIR el punto de integración con LangChain + Ollama.
 
 ## Casos de uso
@@ -87,14 +88,14 @@ Resumen (detalle completo en `casos_de_uso.md`):
 ├── evidencias/          # screenshots de verificación por CU (evidencia visual)
 ├── reviews/             # artefactos de revisión por CU (hallazgos, veredicto, mapa de evidencia)
 ├── backend/             # API Flask (app.py, config/, models/, services/, blueprints/, tests/)
-├── frontend/            # SPA React + Vite (src/api/, src/features/)
+├── frontend/            # SPA React + Vite (src/api/, src/features/, src/theme/, src/ui/, src/app/)
 ├── openspec/            # specs spec-driven (openspec): fuente de verdad de specs
 ├── .atl/
 │   └── skill-registry.md  # índice de skills (generado)
 └── .opencode/
     ├── agents/          # subagentes: backend, frontend, database, tester, reviewer
     ├── commands/        # comandos /opsx-* del CLI openspec (generados)
-    └── skills/          # skills: track-time, new-use-case, create-crud, create-migration, run-verification, openspec-*
+    └── skills/          # skills: track-time, new-use-case, create-crud, create-migration, run-verification, design-system, openspec-*
 ```
 
 > No documentar ni referenciar archivos que no existan todavía.
@@ -179,11 +180,11 @@ Comandos reales (verificados en CU-01):
 
 ## Roadmap
 
-- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse) y CU-03 (Gestionar cursos) implementadas, verificadas y cerradas**. CU-03: smoke HTTP 13/13 + evidencia UI Playwright, revisión APROBADA y cambio `add-course-management` archivado como `2026-10-10-add-course-management`. Próximo: CU-04.
+- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse) y CU-03 (Gestionar cursos) implementadas, verificadas y cerradas**, y **design system de frontend implementado y verificado** (cambio `add-frontend-design-system`: tokens claro/oscuro, `src/ui`, shell `src/app`, `motion`, D-019/D-020). CU-03: smoke HTTP 13/13 + evidencia UI Playwright, revisión APROBADA y cambio `add-course-management` archivado como `2026-10-10-add-course-management`. Próximo: CU-04.
 - **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Bootstrap del Administrador con `scripts/seed_admin.py` (`CAMPUS_ADMIN_EMAIL`/`CAMPUS_ADMIN_PASSWORD` obligatorias, D-017); `scripts/verify.py --cu cu0X` corre contra una base temporal aislada sembrada. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01, CU-02 y CU-03 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
 - **Futuro:** plugin de opencode para medir tiempos por tool-call de forma automática.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
-- **Pendiente:** definir lint/formato automático; introducir migraciones cuando un CU cambie el esquema con datos.
+- **Pendiente:** introducir migraciones cuando un CU cambie el esquema con datos.
 
 ## Límites
 
@@ -214,6 +215,7 @@ Skills del proyecto (`.opencode/skills/`, registradas en `.atl/skill-registry.md
 | `create-migration` | Cambios de esquema con migraciones |
 | `run-verification` | Verificar tests/build antes de declarar algo terminado |
 | `review-use-case` | Checklist de revisión de un CU (inline del subagente `reviewer`, con gate de evidencia) |
+| `design-system` | Construir UI sobre `src/ui/` + tokens (`src/theme`) + shell (`src/app`) + `motion`; cómo agregar componentes, color por rol, temas claro/oscuro y evidencia |
 | `openspec-*` (6) | Vía nativa del CLI openspec: propose, explore, update-change, apply-change, sync-specs, archive-change (comandos `/opsx-*`) |
 
 Subagentes (`.opencode/agents/`): `backend`, `frontend`, `database`, `tester`, `reviewer` (read-only). Usarlos delegando trabajo específico; el `reviewer` es obligatorio antes de marcar un CU como Completo (si el subagente no está disponible por error de tier del proveedor, ejecutar la skill `review-use-case` inline).

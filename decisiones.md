@@ -194,3 +194,23 @@ Formato:
 - **Criterios:** URLs navegables, guard de sesión/rol en un solo lugar, dependencia estándar y liviana, cambio incremental sobre `App.jsx`.
 - **Consecuencias / impacto:** el servidor de dev de Vite debe servir el fallback de SPA (ya lo hace por defecto); las próximas pantallas se agregan como features con su ruta y su guard. El registro queda como acción previa al login (coherente con que la cookie sólo se emite en login).
 - **Estado:** Vigente.
+
+## D-019 — Design system propio sobre Bootstrap (tokens + tema claro/oscuro)
+
+- **Fecha:** 2026-10-11.
+- **Decisión:** el frontend usa `bootstrap` (CSS + API JS) y `bootstrap-icons` como dependencias npm (sin CDN, sin `react-bootstrap`), y una capa propia de design system: tokens CSS en `frontend/src/theme/tokens.css` (marca, colores por rol, semánticos y neutros en claro y oscuro, mapeados a variables de Bootstrap 5.3) y componentes reutilizables en `frontend/src/ui/` (`Button`, `Card`, `Badge`, `RoleBadge`, `DataTable`, `FormField`, `Modal`, `ConfirmDialog`, `Toast`+`ThemeProvider`). El tema se resuelve con `ThemeProvider` (`src/theme/ThemeProvider.jsx`): setea `data-bs-theme` en `<html>`, persiste en `localStorage` (`campus-theme`) y por defecto usa `prefers-color-scheme`; un script inline anti-flash en `index.html` aplica el tema antes del primer render. La estructura del frontend queda `src/app/` (shell: `AppLayout`, `Navbar`, `Sidebar`, `ProtectedRoute`), `src/ui/` (design system) y `src/theme/` (tokens + provider). Tipografía Plus Jakarta Sans vía `@fontsource`.
+- **Contexto / problema:** el frontend era HTML sin estilos ni librería de UI; con 10 CU por delante (varios con pantallas) no era viable reescribir estilos en cada uno. Se necesitaba una base visual coherente, accesible, con temas claro/oscuro y color por rol (Estudiante/Profesor/Administrador), sin acoplarse a una librería de componentes React.
+- **Alternativas consideradas:** (a) Bootstrap por CDN (rompe el flujo Vite/npm y la portabilidad offline); (b) `react-bootstrap` (capa React extra que no se necesita; más dependencias); (c) Tailwind + componentes propios (reescritura total y más curva); (d) Bootstrap npm + tokens CSS propios + componentes mínimos en `src/ui/` (elegida: control total del look, pocas dependencias, reutilizable por los CUs).
+- **Criterios:** reutilización entre CUs, accesibilidad (foco visible, `role`, `prefers-reduced-motion`), temas claro/oscuro sin duplicar CSS, color por rol como tokens, cero colores hardcodeados en pantallas, portabilidad (deps npm, no CDN).
+- **Consecuencias / impacto:** cada CU con UI construye sobre `src/ui/` y tokens; el revisor agrega checklist de design system/accesibilidad/temas; la evidencia UI se captura en claro y oscuro. Bootstrap JS se envuelve con refs (`Modal`), no se usa la API imperativa suelta en pantallas.
+- **Estado:** Vigente.
+
+## D-020 — Animaciones con `motion` y micro-interacciones CSS
+
+- **Fecha:** 2026-10-11.
+- **Decisión:** usar `motion` (paquete npm, import `motion/react`) para animaciones de mayor nivel —transición de página en `AppLayout` y entrada/salida de toasts (`AnimatePresence`)— y CSS del design system para micro-interacciones (hover de nav, transición de tema). Se respeta `prefers-reduced-motion` (override CSS global y `useReducedMotion` en los componentes animados).
+- **Contexto / problema:** el frontend no tenía ninguna noción de movimiento; se quería una app que se sintiera viva (transiciones y feedback) sin cargar una librería pesada ni degradar la accesibilidad de quienes piden menos movimiento.
+- **Alternativas consideradas:** (a) Framer Motion (predecesor; `motion` es su sucesor más liviano); (b) solo CSS (suficiente para micro-interacciones, pobre para transición de páginas y exit de listas); (c) `motion` (elegida: API declarativa, `AnimatePresence`, respeto nativo de `prefers-reduced-motion`).
+- **Criterios:** animaciones declarativas y acotadas, respeto de accesibilidad, dependencia única y liviana, sin JS imperativo de animación en pantallas.
+- **Consecuencias / impacto:** las transiciones viven en el shell y en los componentes del design system, no en cada pantalla; los CUs nuevos heredan el comportamiento sin código extra.
+- **Estado:** Vigente.

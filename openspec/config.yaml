@@ -7,6 +7,7 @@ context: |
   Campus Virtual - TP Integrador (UNLa), Grupo 12.
   Stack: backend Python 3.14.6 + Flask (API REST), frontend React + Vite (Node v24.19.0), SQLite vía SQLAlchemy, chatbot LangChain + Ollama local.
   Arquitectura backend: Blueprints por dominio (auth, courses, users, tasks, enrollments, grades) y capas routes -> services -> models. Lógica de negocio y validaciones solo en services/.
+  Arquitectura frontend: features en src/features/, design system en src/ui/ (componentes reutilizables) y src/theme/ (tokens claro/oscuro + ThemeProvider), shell de app en src/app/. UI sobre Bootstrap (npm, sin CDN) + tokens propios; animaciones con motion. Reutilizar tokens/componentes, sin colores hardcodeados.
   Reglas de negocio: roles excluyentes (Estudiante, Profesor, Administrador), email único, calificaciones 1..10, tareas no entregadas fuera de plazo cuentan como 1.
   Portabilidad: la app corre en Windows, Linux y macOS; rutas relativas y sin comandos exclusivos de una plataforma en el código.
 

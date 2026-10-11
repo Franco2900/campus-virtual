@@ -48,16 +48,20 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 
 | T-014 | 2026-10-10T10:26:49 | 2026-10-10T10:39:00 | 00:12:11 | IMP | CU-03 | Humano+Agente | CU-03 (propose + apply): cambio `add-course-management` (proposal/specs/design/tasks); backend (modelo `Course`, `course_service` con validaciones, blueprint `courses` con `@login_required`+`@require_roles`, `seed_admin.py` con env obligatorio e idempotente); frontend (ruteo con `react-router-dom`, `features/courses` API/`CoursesPage`/`CourseForm`); tests (23 nuevos); `scripts/verify.py` con base temporal aislada + seed |
 | T-015 | 2026-10-10T10:39:00 | 2026-10-10T10:42:34 | 00:03:34 | TST | CU-03 | Agente | CU-03 (verify): `pytest` 55 passed; `ruff check`/`format` y Prettier OK; `npm run build` OK; smoke end-to-end `Smoke CU-03: 13/13 PASS` (y regresión CU-02 10/10 PASS); evidencia UI Playwright (7 screenshots en `evidencias/cu-03/`); bug detectado y corregido (registro no inicia sesión → navegar a `/login`, D-018) |
+| T-016 | 2026-10-11T12:51:11 | 2026-10-11T12:56:41 | 00:05:30 | DIS | DS | Humano+Agente | Design system (planning): cambio `add-frontend-design-system` (proposal/specs/design/tasks, D-019/D-020); tooling (skill `design-system`, agentes `frontend`/`reviewer`, skills `run-verification`/`create-crud`/`new-use-case`, registry); validado con `openspec validate --strict` |
+| T-017 | 2026-10-11T12:56:41 | 2026-10-11T13:05:11 | 00:08:30 | IMP | DS | Agente | Design system (apply): deps npm (bootstrap, bootstrap-icons, motion, plus-jakarta-sans); `src/theme` (tokens claro/oscuro + ThemeProvider + anti-flash); `src/ui` (Button, Card, Badge, RoleBadge, PageHeader, Spinner, EmptyState, DataTable, FormField, Modal, ConfirmDialog, Toast); shell `src/app` (AppLayout, Navbar, Sidebar, ProtectedRoute, HomePage) con transición `motion`; migración de pantallas auth y cursos |
+| T-018 | 2026-10-11T13:05:11 | 2026-10-11T13:08:41 | 00:03:30 | TST | DS | Agente | Design system (verify): `npm run build` OK; `npm run lint:format` OK (tras `--fix`); smoke HTTP CU-03 13/13 sin regresiones vía `scripts/verify.py --keep`; evidencia UI Playwright claro/oscuro (login, shell+tabla, modal, confirmación, toast) en `evidencias/design-system/`; favicon agregado (sin 404) |
+| T-019 | 2026-10-11T13:08:41 | 2026-10-11T13:11:01 | 00:02:20 | DOC | DS | Agente | Design system (docs): `decisiones.md` D-019/D-020, `progreso.md`, `tiempos.md`, `prompts_log.md`, `AGENTS.md`, `README.md`, `openspec/config.yaml`, `tasks.md` |
 
 ## Totales
 
 | Categoría | Duración acumulada |
 |-----------|--------------------|
 | DEC | 00:10:08 |
-| DIS | 00:06:18 |
-| IMP | 00:41:42 |
-| TST | 00:03:34 |
-| DOC | 00:05:28 |
+| DIS | 00:11:48 |
+| IMP | 00:50:12 |
+| TST | 00:07:04 |
+| DOC | 00:07:48 |
 | CFG | 00:35:04 |
 | REV | 00:10:08 |
-| **Total** | **01:52:22** |
+| **Total** | **02:12:12** |

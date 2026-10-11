@@ -2,7 +2,7 @@
 
 Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloqueada**.
 
-Última actualización: 2026-10-10.
+Última actualización: 2026-10-11.
 
 ## Fases de configuración del entorno
 
@@ -14,6 +14,12 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 | Fase 4 | Skills reutilizables en `.opencode/skills/` | Completada |
 | Fase 5 | Git + repositorio en GitHub | Completada |
 | Fase 6 | Implementación de casos de uso (requiere OK docente y openspec inicializado) | En progreso |
+
+## Infraestructura transversal
+
+| Componente | Estado | Notas |
+|------------|--------|-------|
+| Design system de frontend (`src/theme`, `src/ui`, shell `src/app`) | Completada | Bootstrap + tokens claro/oscuro + `motion`; ciclo `add-frontend-design-system` (D-019, D-020) |
 
 ## Casos de uso
 
@@ -48,15 +54,15 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 - **CU-03 (Gestionar cursos) implementado y verificado (cierre en curso):** ciclo spec-driven `add-course-management` (proposal/specs/design/tasks). Backend: modelo `Course` (`code` único case-insensitive, `active` con baja lógica), `course_service` con validaciones en `services/` (400/403/404/409) y blueprint `courses` (`GET/POST /api/courses`, `GET/PUT/PATCH /api/courses/<id>`) protegido por `@login_required` + `@require_roles(UserRole.ADMIN)`. Bootstrap del Administrador con `scripts/seed_admin.py` (env obligatorio, idempotente, 4 cursos demo) — D-017. Frontend: ruteo con `react-router-dom` y pantalla de cursos (listado con estado, alta, edición, activar/desactivar) — D-018. Verificación: **55 tests** backend, `npm run build` + Prettier OK, smoke end-to-end **13/13 PASS** y evidencia UI Playwright (7 screenshots en `evidencias/cu-03/`). `scripts/verify.py` ahora corre contra una **base temporal aislada** con seed del admin.
 - **Bug detectado y corregido vía evidencia UI:** el registro no emite cookie de sesión, pero el frontend asumía sesión al registrar; se corrigió para navegar a `/login` tras el registro (ver D-018).
 - **CU-03 cerrado:** revisión APROBADA (skill `review-use-case` inline, sin bloqueantes; `reviews/cu-03.md`), cambio archivado como `2026-10-10-add-course-management` (`openspec validate --specs --strict` → 2 passed), y commits por unidad de trabajo. Próximo: **CU-04 (Gestionar usuarios)**.
+- **Design system de frontend implementado y verificado:** ciclo spec-driven `add-frontend-design-system` (proposal/specs/design/tasks). Dependencias npm (`bootstrap`, `bootstrap-icons`, `motion`, `@fontsource/plus-jakarta-sans`, sin CDN). `src/theme/tokens.css` (tokens de marca/rol/semánticos/neutros en claro y oscuro, mapeo a Bootstrap 5.3) y `ThemeProvider` (`data-bs-theme` + `localStorage` `campus-theme` + `prefers-color-scheme` + script anti-flash). Design system en `src/ui/` (`Button`, `Card`, `Badge`, `RoleBadge`, `PageHeader`, `Spinner`, `EmptyState`, `DataTable`, `FormField`, `Modal`, `ConfirmDialog`, `Toast`+`ToastProvider`). Shell en `src/app/` (`AppLayout`, `Navbar` con chip de rol y toggle de tema, `Sidebar` por rol, `ProtectedRoute`, `HomePage`) con transición de página vía `motion`. Pantallas de auth y cursos migradas al design system (lógica y validación backend-as-source-of-truth intactas). Tooling: skill `design-system` + agentes/skills actualizados + registry. Decisión D-019 y D-020. Verificación: `npm run build` y `npm run lint:format` OK; smoke HTTP CU-03 13/13 sin regresiones; evidencia Playwright claro/oscuro (login, shell+tabla, modal, confirmación, toast) en `evidencias/design-system/`. Próximo: revisión y archivo del cambio.
 
 ## Próximos pasos
 
 1. **CU-04 (Gestionar usuarios)** orquestado por la skill `new-use-case`.
-2. Resolver el tier del proveedor para el subagente `reviewer` (falló en CU-01, CU-02 y CU-03; se cerró con revisión inline) y reintentarlo en el próximo CU.
+2. Cerrar el ciclo `add-frontend-design-system` (revisión + archivo + commits).
+3. Resolver el tier del proveedor para el subagente `reviewer` (falló en CU-01, CU-02 y CU-03; se cerró con revisión inline) y reintentarlo en el próximo CU.
 
 ## Pendientes de definición
 
-- Lint/formato automático.
-- Organización de carpetas del frontend (parcial: definida por feature en CU-01).
+- Introducir migraciones (Alembic) cuando un CU cambie el esquema con datos.
 - Punto de integración del chatbot.
-- Convenciones de formato/indentación.

@@ -11,6 +11,7 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 ## Características
 
 - Registro y autenticación de usuarios (**CU-01 y CU-02 implementados**): alta de cuenta, login con cookie de sesión firmada, sesión actual, cierre de sesión.
+- Interfaz con **design system propio**: temas claro/oscuro, color por rol (Estudiante/Profesor/Administrador), componentes reutilizables (`src/ui/`) y animaciones con `motion`.
 - Gestión de cursos (**CU-03 implementado**): listado (incluye inactivos), alta, edición y activar/desactivar con baja lógica, restringido al Administrador.
 - Gestión de usuarios e inscripciones (CU-04, CU-05).
 - Gestión de tareas, entregas y correcciones (CU-06, CU-07, CU-08).
@@ -96,7 +97,7 @@ npm run lint:format                           # frontend (desde frontend/)
 ├── tiempos.md         # medición de tiempos
 ├── openspec/          # specs spec-driven (fuente de verdad de specs)
 ├── backend/           # API Flask (app.py, config/, models/, services/, blueprints/, tests/)
-└── frontend/          # SPA React + Vite (src/api/, src/features/)
+└── frontend/          # SPA React + Vite (src/api/, src/features/, src/theme/, src/ui/, src/app/)
 ```
 
 ## API
