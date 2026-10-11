@@ -79,3 +79,15 @@ Formato de cada entrada:
 - **Solución aplicada:** ninguna sobre la config (no hay defecto reproducible). Se restauró `reviewer.md` a su estado en HEAD y se eliminó el clon diagnóstico `.opencode/agents/revcheck.md`. Repo limpio (`git status` sin cambios).
 - **Verificación posterior:** invocación en sesión del subagente `reviewer` vía task tool → `REVIEWER_OK` (sin bloque) y `REVIEWER_OK_2` (con bloque original). `git diff .opencode/agents/reviewer.md` vacío.
 - **Estado final:** Resuelto (no es un defecto reproducible; el error de tier es transitorio del proveedor. Volver a usar `reviewer` con normalidad; si reaparece, reintentar o caer al checklist inline de `review-use-case`).
+
+## 2026-10-11 — `reviewer` vuelve a fallar por tier en el cierre de CU-04
+
+- **Fecha:** 2026-10-11.
+- **Error exacto:** `Subagent failed (task_id: ses_ed33a1d2bffezhpeTyCMCylL80): OpenCode's free tier can only be used from within OpenCode`.
+- **Contexto:** cierre de CU-04 (cambio `add-user-management`), al intentar la revisión obligatoria con el subagente `reviewer` (read-only) antes del commit final. Contradice la conclusión de la entrada anterior (que en la sesión de CU-03 `reviewer` había respondido).
+- **Causa probable (confirmada):** el error de tier del proveedor es **intermitente**, no de configuración (coincide con las entradas previas). No depende del cambio revisado.
+- **Archivos involucrados:** `.opencode/agents/reviewer.md` (sin cambios; ya descartado como causa).
+- **Diagnóstico:** el `task tool` devolvió el error del gateway de forma inmediata (antes de ejecutar herramientas), igual que en CU-01/CU-02/CU-03.
+- **Solución aplicada:** revisión equivalente inline por el orquestador (skill `review-use-case`) sobre el cambio `add-user-management` → sin bloqueantes (APROBADO), persistida en `reviews/cu-04.md`.
+- **Verificación posterior:** `pytest` 90 passed, `ruff`/Prettier OK, `npm run build` OK, smoke CU-04 21/21 PASS y 9 screenshots de evidencia verificables.
+- **Estado final:** Resuelto (se cierra con revisión inline; el subagente `reviewer` queda pendiente de tier del proveedor).

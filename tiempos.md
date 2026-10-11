@@ -52,6 +52,7 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 | T-017 | 2026-10-11T12:56:41 | 2026-10-11T13:05:11 | 00:08:30 | IMP | DS | Agente | Design system (apply): deps npm (bootstrap, bootstrap-icons, motion, plus-jakarta-sans); `src/theme` (tokens claro/oscuro + ThemeProvider + anti-flash); `src/ui` (Button, Card, Badge, RoleBadge, PageHeader, Spinner, EmptyState, DataTable, FormField, Modal, ConfirmDialog, Toast); shell `src/app` (AppLayout, Navbar, Sidebar, ProtectedRoute, HomePage) con transición `motion`; migración de pantallas auth y cursos |
 | T-018 | 2026-10-11T13:05:11 | 2026-10-11T13:08:41 | 00:03:30 | TST | DS | Agente | Design system (verify): `npm run build` OK; `npm run lint:format` OK (tras `--fix`); smoke HTTP CU-03 13/13 sin regresiones vía `scripts/verify.py --keep`; evidencia UI Playwright claro/oscuro (login, shell+tabla, modal, confirmación, toast) en `evidencias/design-system/`; favicon agregado (sin 404) |
 | T-019 | 2026-10-11T13:08:41 | 2026-10-11T13:11:01 | 00:02:20 | DOC | DS | Agente | Design system (docs): `decisiones.md` D-019/D-020, `progreso.md`, `tiempos.md`, `prompts_log.md`, `AGENTS.md`, `README.md`, `openspec/config.yaml`, `tasks.md` |
+| T-020 | 2026-10-11T13:31:57 | 2026-10-11T14:00:31 | 00:28:34 | IMP | CU-04 | Humano+Agente | CU-04 (propose + apply + verify + docs + cierre): cambio `add-user-management` (proposal/specs/design/tasks); migraciones Flask-Migrate/Alembic (baseline `0001` + stamp, `0002` `user.active`, `0003` `course_teacher`, D-023); backend (`user_service` + `blueprints/users.py`, `course_teacher_service` + endpoints `/api/courses/<id>/teachers`, `auth_service` bloquea inactivos, guards de autogestión 400); frontend (`features/users/*`, `CourseTeachers` + botón "Profesores", ruta `/users`, ítem de sidebar); tests (90), smoke `21/21 PASS`, evidencia UI Playwright 9 screenshots claro/oscuro; docs (AGENTS/README/progreso/decisiones D-010/D-021/D-022/D-023/prompts_log); revisión inline APROBADA (`reviews/cu-04.md`) y archive (`2026-10-11-add-user-management`) |
 
 ## Totales
 
@@ -59,9 +60,9 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 |-----------|--------------------|
 | DEC | 00:10:08 |
 | DIS | 00:11:48 |
-| IMP | 00:50:12 |
+| IMP | 01:18:46 |
 | TST | 00:07:04 |
 | DOC | 00:07:48 |
 | CFG | 00:35:04 |
 | REV | 00:10:08 |
-| **Total** | **02:12:12** |
+| **Total** | **02:40:46** |

@@ -34,10 +34,10 @@
 
 ## 6. Documentación
 
-- [ ] 6.1 Actualizar `AGENTS.md` (tabla API de usuarios y profesores, flujo de migraciones en "Cómo ejecutar", roadmap, blueprint `users`), `decisiones.md` (gestión de usuarios, profesor↔curso, Flask-Migrate y ajuste de D-010), `README.md`, `progreso.md`, `prompts_log.md`; verificar que cada documento refleja el estado real
+- [x] 6.1 Actualizar `AGENTS.md` (tabla API de usuarios y profesores, flujo de migraciones en "Cómo ejecutar", roadmap, blueprint `users`), `decisiones.md` (gestión de usuarios, profesor↔curso, Flask-Migrate y ajuste de D-010), `README.md`, `progreso.md`, `prompts_log.md`; verificar que cada documento refleja el estado real
 
 ## 7. Revisión, archivo y commits
 
-- [ ] 7.1 Revisar con el subagente `reviewer` (o skill `review-use-case` inline si falla por tier) y corregir bloqueantes hasta APROBADO; persistir `reviews/cu-04.md` con hallazgos, severidad, veredicto y mapa de evidencia
-- [ ] 7.2 Archivar el cambio openspec (`openspec archive add-user-management --yes`) y verificar `openspec validate --specs --strict` sin errores
-- [ ] 7.3 Registrar tiempos en `tiempos.md`, cerrar `track-time` y commitear por unidad de trabajo (conventional commits); verificar `git status` limpio y `git log` coherente
+- [x] 7.1 Revisar con el subagente `reviewer` (o skill `review-use-case` inline si falla por tier) y corregir bloqueantes hasta APROBADO; persistir `reviews/cu-04.md` con hallazgos, severidad, veredicto y mapa de evidencia
+- [x] 7.2 Archivar el cambio openspec (`openspec archive add-user-management --yes`) y verificar `openspec validate --specs --strict` sin errores
+- [x] 7.3 Registrar tiempos en `tiempos.md`, cerrar `track-time` y commitear por unidad de trabajo (conventional commits); verificar `git status` limpio y `git log` coherente
