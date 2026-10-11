@@ -58,3 +58,7 @@ export function patch(path, body) {
 export function get(path) {
   return request("GET", path);
 }
+
+export function del(path) {
+  return request("DELETE", path);
+}

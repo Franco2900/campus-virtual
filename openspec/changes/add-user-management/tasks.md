@@ -22,10 +22,10 @@
 
 ## 4. Frontend — pantalla de usuarios y profesores por curso
 
-- [ ] 4.1 Crear `frontend/src/features/users/api.js` (list/get/update/setActive/resetPassword) sobre `src/api/client.js`; verificar que `cmd /c npm run build` compila
-- [ ] 4.2 Crear `UsersPage.jsx` sobre el design system (DataTable, Modal, ConfirmDialog, RoleBadge, FormField, Toast) con edición de datos/rol, activar/desactivar, reset de contraseña y errores del backend renderizados; `data-testid` por elemento
-- [ ] 4.3 Agregar la gestión de profesores por curso en `frontend/src/features/courses/` (asignar/quitar, listar asignados); verificar que el build compila
-- [ ] 4.4 Agregar la ruta `/users` (guard Administrador) en `src/App.jsx` y el ítem "Usuarios" en `Sidebar.jsx`; verificar que el build compila y que un rol no admin no ve la vista
+- [x] 4.1 Crear `frontend/src/features/users/api.js` (list/get/update/setActive/resetPassword) sobre `src/api/client.js`; verificar que `cmd /c npm run build` compila
+- [x] 4.2 Crear `UsersPage.jsx` sobre el design system (DataTable, Modal, ConfirmDialog, RoleBadge, FormField, Toast) con edición de datos/rol, activar/desactivar, reset de contraseña y errores del backend renderizados; `data-testid` por elemento
+- [x] 4.3 Agregar la gestión de profesores por curso en `frontend/src/features/courses/` (asignar/quitar, listar asignados); verificar que el build compila
+- [x] 4.4 Agregar la ruta `/users` (guard Administrador) en `src/App.jsx` y el ítem "Usuarios" en `Sidebar.jsx`; verificar que el build compila y que un rol no admin no ve la vista
 
 ## 5. Verificación integrada y evidencia
 

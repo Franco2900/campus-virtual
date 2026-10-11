@@ -1,4 +1,4 @@
-import { get, patch, post, put } from "../../api/client.js";
+import { del, get, patch, post, put } from "../../api/client.js";
 
 export function listCourses() {
   return get("/api/courses");
@@ -18,4 +18,16 @@ export function updateCourse(id, { name, code, description }) {
 
 export function setCourseActive(id, active) {
   return patch(`/api/courses/${id}`, { active });
+}
+
+export function listCourseTeachers(courseId) {
+  return get(`/api/courses/${courseId}/teachers`);
+}
+
+export function assignCourseTeacher(courseId, teacherId) {
+  return post(`/api/courses/${courseId}/teachers`, { teacher_id: teacherId });
+}
+
+export function removeCourseTeacher(courseId, teacherId) {
+  return del(`/api/courses/${courseId}/teachers/${teacherId}`);
 }

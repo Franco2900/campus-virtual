@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 const NAV_ITEMS = [
   { to: "/", label: "Inicio", icon: "bi-house-door-fill", end: true },
   { to: "/courses", label: "Cursos", icon: "bi-journal-bookmark-fill", roles: ["admin"] },
+  { to: "/users", label: "Usuarios", icon: "bi-people-fill", roles: ["admin"] },
 ];
 
 export default function Sidebar({ user }) {

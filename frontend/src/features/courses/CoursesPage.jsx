@@ -13,6 +13,7 @@ import {
 } from "../../ui/index.js";
 import { listCourses, setCourseActive } from "./api.js";
 import CourseForm from "./CourseForm.jsx";
+import CourseTeachers from "./CourseTeachers.jsx";
 
 export default function CoursesPage() {
   const { notify } = useToast();
@@ -21,6 +22,7 @@ export default function CoursesPage() {
   const [error, setError] = useState("");
   const [formOpen, setFormOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
+  const [teachersCourse, setTeachersCourse] = useState(null);
   const [confirming, setConfirming] = useState(null);
   const [toggling, setToggling] = useState(false);
 
@@ -123,6 +125,15 @@ export default function CoursesPage() {
           <Button
             variant="soft"
             className="btn-sm"
+            icon="people-fill"
+            onClick={() => setTeachersCourse(course)}
+            data-testid={`course-teachers-${course.id}`}
+          >
+            Profesores
+          </Button>
+          <Button
+            variant="soft"
+            className="btn-sm"
             icon={course.active ? "toggle-off" : "toggle-on"}
             onClick={() => setConfirming(course)}
           >
@@ -179,6 +190,20 @@ export default function CoursesPage() {
             course={editingCourse}
             onSaved={handleSaved}
             onCancel={() => setFormOpen(false)}
+          />
+        )}
+      </Modal>
+
+      <Modal
+        open={Boolean(teachersCourse)}
+        title={teachersCourse ? `Profesores de "${teachersCourse.name}"` : "Profesores"}
+        onClose={() => setTeachersCourse(null)}
+      >
+        {teachersCourse && (
+          <CourseTeachers
+            key={teachersCourse.id}
+            course={teachersCourse}
+            onClose={() => setTeachersCourse(null)}
           />
         )}
       </Modal>
