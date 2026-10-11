@@ -30,7 +30,7 @@
 ## 5. Verificación integrada y evidencia
 
 - [x] 5.1 Crear `scripts/smoke_cu04.py` (login admin → listar usuarios → promover estudiante a Profesor → asignar a curso → listar profesores → desactivar → reset de contraseña → autogestión bloqueada 400) y correr `scripts/verify.py --cu cu04`; verificar salida sin fallos y cleanup
-- [ ] 5.2 Capturar evidencia de UI con Playwright en `evidencias/cu-04/` (`NN-accion.png`) en claro y oscuro: listado, edición, cambio de rol, desactivación, reset, asignación de profesor y error de autogestión; verificar consola sin errores inesperados
+- [x] 5.2 Capturar evidencia de UI con Playwright en `evidencias/cu-04/` (`NN-accion.png`) en claro y oscuro: listado, edición, cambio de rol, desactivación, reset, asignación de profesor y error de autogestión; verificar consola sin errores inesperados
 
 ## 6. Documentación
 
