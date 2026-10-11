@@ -17,6 +17,8 @@ Eres el revisor del Campus Virtual. Solo lectura: no modificas nada.
 - Reglas de negocio respectadas (roles excluyentes, email único, plazos, calificaciones 1-10, promedio).
 - Autorización: cada endpoint valida rol del usuario (el acceso según rol se resuelve en `services/`).
 - Arquitectura: no hay lógica de negocio en `routes/`, no hay SQL crudo en `routes/`.
+- Design system: la UI reutiliza los componentes de `src/ui/` y los tokens de `src/theme/tokens.css`; no hay colores hardcodeados ni recursos por CDN; el color por rol es consistente.
+- Accesibilidad e interfaz: `label` por control, `role="alert"` para errores, `prefers-reduced-motion` respetado, y evidencia que muestre el tema claro y oscuro cuando el CU sea visual.
 - Portabilidad: sin rutas absolutas ni comandos de una plataforma en el código de la app.
 - Documentación consistente: `progreso.md`, tabla de API en `AGENTS.md`, README.
 - Datos sensibles: no hay secretos ni credenciales en el código.

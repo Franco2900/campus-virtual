@@ -13,7 +13,8 @@ Cargar ante cualquier "¿funciona?", "verificá", "corré los tests" o antes de 
 
 ## Hard Rules
 
-- NO inventar comandos: leer la sección "Cómo ejecutar" de `AGENTS.md` (los comandos reales se definen en Fase 6).
+- NO inventar comandos: leer la sección "Cómo ejecutar" de `AGENTS.md` (comandos reales y verificados del proyecto).
+- Frontend: `npm run build` + `npm run lint:format` (Windows con prefijo `cmd /c`).
 - Ejecutar primero la verificación más pequeña y relevante; luego las generales.
 - No afirmar que un test pasa o un build funciona sin haberlo ejecutado.
 - Conservar los mensajes de error completos y registrar en `errores.md` los fallos relevantes.
@@ -21,8 +22,8 @@ Cargar ante cualquier "¿funciona?", "verificá", "corré los tests" o antes de 
 ## Execution Steps
 
 1. Leer comandos reales de backend/frontend/tests en `AGENTS.md`.
-2. Correr la verificación más acotada al cambio.
-3. Correr la suite general (si existe) y el build.
+2. Correr la verificación más acotada al cambio (web: `npm run build` y `npm run lint:format`; backend: el subconjunto de tests relevante).
+3. Correr la suite general (smoke con `scripts/verify.py --cu CU-0X` cuando aplique y el build del frontend).
 4. Reportar: comandos ejecutados, resultados, y en caso de falla, el error exacto.
 
 ## Output Contract
