@@ -67,3 +67,15 @@ Formato de cada entrada:
 - **Solución aplicada:** wrapper portable `scripts/verify_cu02.py` (generalizado luego a `scripts/verify.py` con `--cu` y `--diagnose`): pre-condición de puertos libres (aborta si hay duplicados, sin matar a ciegas), arranca backend + Vite, readiness con timeout, corre el smoke contra el proxy, y hace cleanup **del árbol de procesos** (`taskkill /F /T /PID` en Windows, `os.killpg` + `start_new_session` en POSIX). Modos `--keep` (servicios vivos, pids en `scripts/.verify-pids`) y `--cleanup` (los detiene).
 - **Verificación posterior:** `verify.py` → `Smoke CU-02: 10/10 PASS`, exit 0; `--keep` → 2 PIDs registrados; `--cleanup` → 0 servicios vivos, puertos libres; smoke UI con Playwright sin procesos residuales.
 - **Estado final:** Resuelto.
+
+## 2026-10-11 — `reviewer` re-falla por tier: investigado y descartado como defecto de configuración
+
+- **Fecha:** 2026-10-11.
+- **Error exacto:** `AI_APICallError: Error from provider (Console): OpenCode's free tier can only be used from within OpenCode` (registrado en `~/.local/share/opencode/log/opencode.log` como `stream error`, `providerID=opencode modelID=big-pickle agent=reviewer mode=subagent`).
+- **Contexto:** cierre de CU-03; antes de hacer push, el usuario pidió investigar por qué el subagente `reviewer` fallaba mientras `backend`/`tester`/`database`/`frontend`/`general` arrancaban bien.
+- **Causa probable (confirmada):** error intermitente del gateway del proveedor (free tier de opencode), **no** un defecto del agente ni de su configuración. El mensaje "Console" proviene del gateway, no del CLI local.
+- **Archivos involucrados:** `.opencode/agents/reviewer.md` (descartado: el bloque `permission:` no es la causa; el frontmatter era YAML válido).
+- **Diagnóstico:** (1) grep del log → 14 ocurrencias del error en fechas dispares (2026-09-17 con `agent=title`; 2026-10-09 ×2 y 2026-10-10 ×3 con `agent=reviewer`), todas `providerID=opencode`; (2) descartado el allowlist de `task` (la denegación por permisos produce otro mensaje, no el de tier); (3) prueba de causalidad en sesión: con el bloque `permission:` original **re-agregado**, `reviewer` respondió (`REVIEWER_OK_2`) igual que sin él (`REVIEWER_OK`) → el bloque no influye.
+- **Solución aplicada:** ninguna sobre la config (no hay defecto reproducible). Se restauró `reviewer.md` a su estado en HEAD y se eliminó el clon diagnóstico `.opencode/agents/revcheck.md`. Repo limpio (`git status` sin cambios).
+- **Verificación posterior:** invocación en sesión del subagente `reviewer` vía task tool → `REVIEWER_OK` (sin bloque) y `REVIEWER_OK_2` (con bloque original). `git diff .opencode/agents/reviewer.md` vacío.
+- **Estado final:** Resuelto (no es un defecto reproducible; el error de tier es transitorio del proveedor. Volver a usar `reviewer` con normalidad; si reaparece, reintentar o caer al checklist inline de `review-use-case`).
