@@ -32,10 +32,12 @@ def create_app(config=None):
 
     from blueprints.auth import auth_bp
     from blueprints.courses import courses_bp
+    from blueprints.users import users_bp
     from models import course, user  # noqa: F401  (registers the User and Course tables)
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(courses_bp)
+    app.register_blueprint(users_bp)
 
     with app.app_context():
         if app.config.get("TESTING"):

@@ -16,6 +16,8 @@ def authenticate_user(email, password):
     ).scalar_one_or_none()
     if user is None:
         return None
+    if not user.active:
+        return None
     if not check_password_hash(user.password_hash, password):
         return None
     return user
@@ -26,6 +28,8 @@ def get_current_user():
     if user_id is None:
         return None
     user = db.session.execute(db.select(User).where(User.id == user_id)).scalar_one_or_none()
+    if user is None or not user.active:
+        return None
     return user
 
 

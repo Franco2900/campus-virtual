@@ -23,6 +23,7 @@ class User(db.Model):
         nullable=False,
         default=UserRole.STUDENT,
     )
+    active = db.Column(db.Boolean, nullable=False, default=True)
     created_at = db.Column(
         db.DateTime(timezone=True),
         nullable=False,

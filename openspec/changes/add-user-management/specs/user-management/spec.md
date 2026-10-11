@@ -62,7 +62,7 @@ El sistema SHALL permitir al Administrador modificar el nombre, apellido, correo
 
 ### Requirement: Activación y desactivación lógica de usuarios
 
-El sistema SHALL permitir al Administrador cambiar el estado de una cuenta entre activa e inactiva mediante `PATCH /api/users/<id>` con body `{"active": <bool>}`, sin borrado físico. Operar sobre una cuenta inexistente MUST responder HTTP 404; un body sin booleano `active` MUST responder HTTP 400; en caso de éxito la respuesta MUST reflejar el nuevo estado.
+El sistema SHALL permitir al Administrador cambiar el estado de una cuenta entre activa e inactiva mediante `PATCH /api/users/<id>` con body `{"active": <bool>}`, sin borrado físico. Operar sobre una cuenta inexistente MUST responder HTTP 404; un body sin booleano `active` MUST responder HTTP 400; en caso de éxito la respuesta MUST reflejar el nuevo estado. Una cuenta inactiva MUST NOT poder iniciar sesión y MUST NOT poder operar con una sesión activa previa.
 
 #### Scenario: Desactivación de usuario
 - **GIVEN** que existe una cuenta activa
@@ -73,6 +73,16 @@ El sistema SHALL permitir al Administrador cambiar el estado de una cuenta entre
 - **GIVEN** que existe una cuenta inactiva
 - **WHEN** el Administrador envía `PATCH /api/users/<id>` indicando activar
 - **THEN** el sistema responde con éxito y la cuenta queda activa
+
+#### Scenario: Cuenta inactiva no puede autenticarse
+- **GIVEN** que existe una cuenta inactiva con credenciales correctas
+- **WHEN** esa cuenta intenta iniciar sesión
+- **THEN** el sistema rechaza la autenticación y no crea sesión
+
+#### Scenario: Sesión previa invalidada al desactivar
+- **GIVEN** que una cuenta tiene sesión activa y el Administrador la desactiva
+- **WHEN** esa cuenta envía un request autenticado
+- **THEN** el sistema responde HTTP 401 y no ejecuta la operación
 
 #### Scenario: Operación sobre usuario inexistente
 - **WHEN** el Administrador envía `PATCH /api/users/<id>` con un identificador que no existe
