@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash
 
 from models.base import db
 from models.user import User, UserRole
+from services.course_teacher_service import clear_teacher_assignments
 from services.errors import ConflictError, NotFoundError, ValidationError
 
 EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
@@ -106,10 +107,14 @@ def update_user(user_id, data, current_user=None):
     if _email_in_use(email, exclude_id=user.id):
         raise ConflictError("El correo electrónico ya está registrado")
 
+    demoting_teacher = user.role == UserRole.TEACHER and role != UserRole.TEACHER
+
     user.first_name = first_name
     user.last_name = last_name
     user.email = email
     user.role = role
+    if demoting_teacher:
+        clear_teacher_assignments(user.id)
     try:
         db.session.commit()
     except IntegrityError:

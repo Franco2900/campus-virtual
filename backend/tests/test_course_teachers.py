@@ -142,3 +142,24 @@ def test_remove_teacher_missing_course(client, app):
     _login_as(client, app, ADMIN, UserRole.ADMIN)
     response = client.delete("/api/courses/9999/teachers/1")
     assert response.status_code == 404
+
+
+def test_demoting_teacher_clears_course_assignments(client, app):
+    _login_as(client, app, ADMIN, UserRole.ADMIN)
+    course_id = _seed_course(app)
+    teacher_id = _create_user(app, TEACHER, UserRole.TEACHER)
+    client.post(f"/api/courses/{course_id}/teachers", json={"teacher_id": teacher_id})
+
+    demote = client.put(
+        f"/api/users/{teacher_id}",
+        json={
+            "first_name": "Nombre",
+            "last_name": "Apellido",
+            "email": TEACHER["email"],
+            "role": "student",
+        },
+    )
+    assert demote.status_code == 200
+
+    listed = client.get(f"/api/courses/{course_id}/teachers")
+    assert listed.get_json() == []

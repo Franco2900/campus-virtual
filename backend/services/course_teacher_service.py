@@ -30,11 +30,23 @@ def list_teachers(course_id):
             db.select(User)
             .join(CourseTeacher, CourseTeacher.teacher_id == User.id)
             .where(CourseTeacher.course_id == course_id)
+            .where(User.role == UserRole.TEACHER)
             .order_by(User.id)
         )
         .scalars()
         .all()
     )
+
+
+def clear_teacher_assignments(teacher_id):
+    links = (
+        db.session.execute(db.select(CourseTeacher).where(CourseTeacher.teacher_id == teacher_id))
+        .scalars()
+        .all()
+    )
+    for link in links:
+        db.session.delete(link)
+    return len(links)
 
 
 def assign_teacher(course_id, teacher_id):
