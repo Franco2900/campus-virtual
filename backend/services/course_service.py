@@ -2,6 +2,8 @@ from sqlalchemy.exc import IntegrityError
 
 from models.base import db
 from models.course import Course
+from models.course_teacher import CourseTeacher
+from models.user import UserRole
 from services.errors import ConflictError, NotFoundError, ValidationError
 
 NAME_MAX_LENGTH = 200
@@ -11,6 +13,21 @@ DESCRIPTION_MAX_LENGTH = 1000
 
 def list_courses():
     return db.session.execute(db.select(Course).order_by(Course.id)).scalars().all()
+
+
+def list_courses_for_user(current_user):
+    if current_user.role == UserRole.TEACHER:
+        return (
+            db.session.execute(
+                db.select(Course)
+                .join(CourseTeacher, CourseTeacher.course_id == Course.id)
+                .where(CourseTeacher.teacher_id == current_user.id)
+                .order_by(Course.id)
+            )
+            .scalars()
+            .all()
+        )
+    return list_courses()
 
 
 def get_course_or_404(course_id):

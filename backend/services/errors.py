@@ -8,3 +8,7 @@ class ConflictError(Exception):
 
 class NotFoundError(Exception):
     pass
+
+
+class ForbiddenError(Exception):
+    pass

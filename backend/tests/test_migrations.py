@@ -5,7 +5,11 @@ from alembic.migration import MigrationContext
 from flask_migrate import upgrade as migrate_upgrade
 
 from app import create_app
-from models import course, user  # noqa: F401  (registers all model tables on the metadata)
+from models import (  # noqa: F401  (registers all model tables on the metadata)
+    course,
+    enrollment,
+    user,
+)
 from models.base import db
 
 MIGRATIONS_DIR = Path(__file__).resolve().parent.parent / "migrations"

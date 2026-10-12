@@ -7,6 +7,7 @@ from services.course_service import (
     create_course,
     get_course_or_404,
     list_courses,
+    list_courses_for_user,
     set_course_active,
     update_course,
 )
@@ -55,6 +56,15 @@ def create_course_endpoint(current_user):
     except ConflictError as error:
         return jsonify({"error": str(error)}), 409
     return jsonify(_serialize_course(course)), 201
+
+
+@courses_bp.get("/mine")
+@login_required
+@require_roles(UserRole.ADMIN, UserRole.TEACHER)
+def list_my_courses_endpoint(current_user):
+    return jsonify(
+        [_serialize_course(course) for course in list_courses_for_user(current_user)]
+    ), 200
 
 
 @courses_bp.get("/<int:course_id>")
