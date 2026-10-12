@@ -4,12 +4,14 @@ export default function DataTable({
   columns,
   rows,
   rowKey = (row) => row.id,
+  rowTestId,
+  testId,
   empty = "No hay datos para mostrar.",
   emptyIcon = "bi-inbox",
 }) {
   return (
     <div className="table-responsive">
-      <table className="table campus-table align-middle mb-0">
+      <table className="table campus-table align-middle mb-0" data-testid={testId}>
         <thead>
           <tr>
             {columns.map((column) => (
@@ -21,7 +23,7 @@ export default function DataTable({
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={rowKey(row)}>
+            <tr key={rowKey(row)} data-testid={rowTestId ? rowTestId(row) : undefined}>
               {columns.map((column) => (
                 <td key={column.key} className={column.className}>
                   {column.render ? column.render(row) : row[column.key]}

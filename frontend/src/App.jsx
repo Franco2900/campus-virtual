@@ -8,6 +8,7 @@ import { getMe, logout } from "./features/auth/api.js";
 import LoginPage from "./features/auth/LoginPage.jsx";
 import RegisterPage from "./features/auth/RegisterPage.jsx";
 import CoursesPage from "./features/courses/CoursesPage.jsx";
+import EnrollmentsPage from "./features/enrollments/EnrollmentsPage.jsx";
 import UsersPage from "./features/users/UsersPage.jsx";
 import { ThemeProvider } from "./theme/ThemeProvider.jsx";
 import { ToastProvider } from "./ui/index.js";
@@ -49,6 +50,14 @@ function AppRoutes({ user, loading, onLogin, onLogout }) {
           element={
             <ProtectedRoute user={user} loading={loading} role="admin">
               <UsersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/enrollments"
+          element={
+            <ProtectedRoute user={user} loading={loading} roles={["admin", "teacher"]}>
+              <EnrollmentsPage user={user} />
             </ProtectedRoute>
           }
         />

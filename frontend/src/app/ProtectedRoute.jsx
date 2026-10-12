@@ -2,7 +2,7 @@ import { Navigate, useLocation } from "react-router-dom";
 
 import { Spinner } from "../ui/index.js";
 
-export default function ProtectedRoute({ user, loading, role, children }) {
+export default function ProtectedRoute({ user, loading, role, roles, children }) {
   const location = useLocation();
 
   if (loading) {
@@ -17,7 +17,9 @@ export default function ProtectedRoute({ user, loading, role, children }) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />;
   }
 
-  if (role && user.role !== role) {
+  const forbidden = (role && user.role !== role) || (roles && !roles.includes(user.role));
+
+  if (forbidden) {
     return (
       <div className="campus-card p-4 d-flex align-items-center gap-3" role="alert">
         <i className="bi bi-shield-slash fs-3 text-role-admin" aria-hidden="true" />
