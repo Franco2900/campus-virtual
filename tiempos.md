@@ -53,6 +53,7 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 | T-018 | 2026-10-11T13:05:11 | 2026-10-11T13:08:41 | 00:03:30 | TST | DS | Agente | Design system (verify): `npm run build` OK; `npm run lint:format` OK (tras `--fix`); smoke HTTP CU-03 13/13 sin regresiones vía `scripts/verify.py --keep`; evidencia UI Playwright claro/oscuro (login, shell+tabla, modal, confirmación, toast) en `evidencias/design-system/`; favicon agregado (sin 404) |
 | T-019 | 2026-10-11T13:08:41 | 2026-10-11T13:11:01 | 00:02:20 | DOC | DS | Agente | Design system (docs): `decisiones.md` D-019/D-020, `progreso.md`, `tiempos.md`, `prompts_log.md`, `AGENTS.md`, `README.md`, `openspec/config.yaml`, `tasks.md` |
 | T-020 | 2026-10-11T13:31:57 | 2026-10-11T14:00:31 | 00:28:34 | IMP | CU-04 | Humano+Agente | CU-04 (propose + apply + verify + docs + cierre): cambio `add-user-management` (proposal/specs/design/tasks); migraciones Flask-Migrate/Alembic (baseline `0001` + stamp, `0002` `user.active`, `0003` `course_teacher`, D-023); backend (`user_service` + `blueprints/users.py`, `course_teacher_service` + endpoints `/api/courses/<id>/teachers`, `auth_service` bloquea inactivos, guards de autogestión 400); frontend (`features/users/*`, `CourseTeachers` + botón "Profesores", ruta `/users`, ítem de sidebar); tests (90), smoke `21/21 PASS`, evidencia UI Playwright 9 screenshots claro/oscuro; docs (AGENTS/README/progreso/decisiones D-010/D-021/D-022/D-023/prompts_log); revisión inline APROBADA (`reviews/cu-04.md`) y archive (`2026-10-11-add-user-management`) |
+| T-021 | 2026-10-11T17:11:09 | 2026-10-11T17:42:25 | 00:31:16 | IMP | CU-05 | Humano+Agente | CU-05 (propose + apply + verify + evidencia + cierre): cambio `add-enrollment-management` (proposal, specs `enrollment-management`/`course-management`, design D-A..D-K, tasks 5 grupos/14 tareas); backend (modelo `Enrollment` + migración `0004`, `enrollment_service` con orden de validaciones D-D, `list_courses_for_user`, `blueprints/enrollments.py` 5 endpoints, `GET /api/courses/mine`, `ForbiddenError`, 31 tests); frontend (`features/enrollments/*`, `ProtectedRoute` con `roles`, `DataTable` con `testId`/`rowTestId`, ruta `/enrollments` e ítem de sidebar); 122 tests, smoke `28/28 PASS`, evidencia UI Playwright 10 screenshots claro/oscuro; docs (AGENTS/README/progreso/decisiones D-024/D-025/prompts_log); revisión inline APROBADA (`reviews/cu-05.md`) y archive (`2026-10-11-add-enrollment-management`) |
 
 ## Totales
 
@@ -60,9 +61,9 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 |-----------|--------------------|
 | DEC | 00:10:08 |
 | DIS | 00:11:48 |
-| IMP | 01:18:46 |
+| IMP | 01:50:02 |
 | TST | 00:07:04 |
 | DOC | 00:07:48 |
 | CFG | 00:35:04 |
 | REV | 00:10:08 |
-| **Total** | **02:40:46** |
+| **Total** | **03:12:02** |
