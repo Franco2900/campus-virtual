@@ -109,6 +109,7 @@ npm run lint:format                           # frontend (desde frontend/)
 ├── progreso.md        # control de progreso
 ├── prompts_log.md     # auditoría de prompts
 ├── tiempos.md         # medición de tiempos
+├── docs/              # documentación de soporte (docs/er-diagrama.md: diagrama entidad-relación)
 ├── openspec/          # specs spec-driven (fuente de verdad de specs)
 ├── backend/           # API Flask (app.py, config/, models/, services/, blueprints/, migrations/, tests/)
 └── frontend/          # SPA React + Vite (src/api/, src/features/, src/theme/, src/ui/, src/app/)
@@ -174,6 +175,8 @@ CAMPUS_ADMIN_EMAIL=admin@example.com CAMPUS_ADMIN_PASSWORD=una-clave-segura .ven
 ```
 
 Si el Administrador ya existe, el script no duplica nada. El registro público (`/api/auth/register`) siempre crea rol Estudiante; un Administrador sólo se crea por este seed.
+
+El diagrama entidad-relación de la base (tablas, columnas, restricciones e invariantes de negocio) y cómo poblar datos de prueba están en [`docs/er-diagrama.md`](docs/er-diagrama.md).
 
 ## Servidores MCP (Model Context Protocol)
 

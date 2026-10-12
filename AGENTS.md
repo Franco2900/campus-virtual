@@ -19,7 +19,7 @@ Comandos reales (verificados al implementar CU-01). En Windows, `npm` y `openspe
   - Windows: `.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt`
   - Linux/macOS: `.venv/bin/python -m pip install -r backend/requirements.txt`
 - **Backend (dev):** `python backend/app.py` → `http://127.0.0.1:5000`. Base SQLite en `backend/instance/campus.db` (override con `CAMPUS_DB_PATH`; `SECRET_KEY` por entorno).
-- **Backend — migraciones:** desde `backend/`, Windows `..\.venv\Scripts\python.exe -m flask --app app db upgrade`; Linux/macOS `../.venv/bin/python -m flask --app app db upgrade`. Aplica las migraciones pendientes (`scripts/seed_admin.py` y `scripts/verify.py` también las aplican). Esquema versionado con Flask-Migrate/Alembic (D-023).
+- **Backend — migraciones:** desde `backend/`, Windows `..\.venv\Scripts\python.exe -m flask --app app db upgrade`; Linux/macOS `../.venv/bin/python -m flask --app app db upgrade`. Aplica las migraciones pendientes (`scripts/seed_admin.py`, `scripts/seed_demo.py` y `scripts/verify.py` también las aplican). Esquema versionado con Flask-Migrate/Alembic (D-023).
 - **Frontend (dev):** dentro de `frontend/`, `npm install` y `npm run dev` (Windows: `cmd /c npm install`, `cmd /c npm run dev`) → `http://localhost:5173`, con proxy de desarrollo `/api` → `http://localhost:5000`. Build: `npm run build`.
 - **Tests (backend):** dentro de `backend/`, Windows `..\.venv\Scripts\python.exe -m pytest`; Linux/macOS `../.venv/bin/python -m pytest`.
 - **Lint / formato (backend):** desde la raíz, Windows `.\.venv\Scripts\python.exe -m ruff check backend` y `.\.venv\Scripts\python.exe -m ruff format --check backend`; Linux/macOS `.venv/bin/python -m ruff ...`. Aplicar: `-m ruff check backend --fix` y `-m ruff format backend`.
@@ -89,6 +89,8 @@ Resumen (detalle completo en `casos_de_uso.md`):
 ├── tiempos.md           # medición de tiempos de desarrollo
 ├── evidencias/          # screenshots de verificación por CU (evidencia visual)
 ├── reviews/             # artefactos de revisión por CU (hallazgos, veredicto, mapa de evidencia)
+├── docs/                # documentación de soporte (docs/er-diagrama.md: diagrama entidad-relación)
+├── scripts/             # utilidades portables: verify.py, seed_admin.py, seed_demo.py, smoke_cu0X.py
 ├── backend/             # API Flask (app.py, config/, models/, services/, blueprints/, migrations/, tests/)
 ├── frontend/            # SPA React + Vite (src/api/, src/features/, src/theme/, src/ui/, src/app/)
 ├── openspec/            # specs spec-driven (openspec): fuente de verdad de specs
@@ -195,8 +197,8 @@ Comandos reales (verificados en CU-01):
 
 ## Roadmap
 
-- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos) y CU-04 (Gestionar usuarios) implementadas, verificadas y cerradas**; **design system de frontend implementado y verificado** (cambio `add-frontend-design-system` archivado, D-019/D-020). CU-04 (cambio `add-user-management`): gestión de usuarios (listado/edición/rol/activar/desactivar/reset) + asignación de Profesor por curso, migraciones Alembic adoptadas (D-021/D-022/D-023), **90 tests** backend, smoke HTTP 21/21, evidencia UI Playwright (claro/oscuro), revisión APROBADA (`reviews/cu-04.md`) y cambio archivado como `2026-10-11-add-user-management`. Próximo: CU-05.
-- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Bootstrap del Administrador con `scripts/seed_admin.py` (`CAMPUS_ADMIN_EMAIL`/`CAMPUS_ADMIN_PASSWORD` obligatorias, D-017); `scripts/verify.py --cu cu0X` corre contra una base temporal aislada sembrada y migrada. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01, CU-02, CU-03 y CU-04 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
+- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios) y CU-05 (Gestionar inscripciones) implementadas, verificadas y cerradas**; **design system de frontend implementado y verificado** (cambio `add-frontend-design-system` archivado, D-019/D-020). CU-05 (cambio `add-enrollment-management`): modelo `Enrollment` + migración `0004`, endpoints de inscripciones, `GET /api/courses/mine`, pantalla `/enrollments`, **122 tests** backend, smoke HTTP 28/28, evidencia UI Playwright (claro/oscuro), revisión APROBADA (`reviews/cu-05.md`) y cambio archivado como `2026-10-11-add-enrollment-management`. Próximo: CU-06.
+- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Bootstrap del Administrador con `scripts/seed_admin.py` (`CAMPUS_ADMIN_EMAIL`/`CAMPUS_ADMIN_PASSWORD` obligatorias, D-017) y datos de prueba ampliados con `scripts/seed_demo.py` (idempotente; Profesores/Estudiantes/asignaciones/inscripciones); `scripts/verify.py --cu cu0X` corre contra una base temporal aislada sembrada y migrada. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01, CU-02, CU-03, CU-04 y CU-05 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
 - **Futuro:** plugin de opencode para medir tiempos por tool-call de forma automática.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
 
