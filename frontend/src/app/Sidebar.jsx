@@ -10,6 +10,7 @@ const NAV_ITEMS = [
     icon: "bi-person-plus-fill",
     roles: ["admin", "teacher"],
   },
+  { to: "/tasks", label: "Tareas", icon: "bi-journal-text", roles: ["teacher"] },
 ];
 
 export default function Sidebar({ user }) {
