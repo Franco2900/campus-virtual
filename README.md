@@ -57,7 +57,8 @@ npm install        # Windows: cmd /c npm install
 
 ```bash
 # Backend (desde la raíz) → http://127.0.0.1:5000
-python backend/app.py
+.\.venv\Scripts\python.exe backend\app.py   # Windows
+.venv/bin/python backend/app.py             # Linux/macOS
 
 # Frontend (desde frontend/) → http://localhost:5173
 npm run dev        # Windows: cmd /c npm run dev
@@ -110,8 +111,6 @@ npm run lint:format                           # frontend (desde frontend/)
 ├── decisiones.md      # registro de decisiones
 ├── errores.md         # bitácora de errores
 ├── progreso.md        # control de progreso
-├── prompts_log.md     # auditoría de prompts
-├── tiempos.md         # medición de tiempos
 ├── docs/              # documentación de soporte (docs/er-diagrama.md: diagrama entidad-relación)
 ├── openspec/          # specs spec-driven (fuente de verdad de specs)
 ├── backend/           # API Flask (app.py, config/, models/, services/, blueprints/, migrations/, tests/)
@@ -220,7 +219,6 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 - CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones) y CU-06 (Gestionar tareas) implementados end-to-end (backend Flask + frontend React/Vite con ruteo + tests + smoke HTTP y UI con Playwright). El esquema se versiona con migraciones (Alembic).
 - Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
-- Plugin de medición automática de tiempos.
 - Integración completa del chatbot.
 - Tests automatizados de frontend.
 

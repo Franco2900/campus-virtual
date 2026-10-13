@@ -16,7 +16,7 @@ Cargar cuando se trabaja sobre un caso de uso específico del proyecto (CU-01..C
 - Trabajar UN caso de uso a la vez.
 - No marcar un CU como Completado sin: funcionalidad implementada, código ejecutándose, tests ejecutados, documentación y progreso actualizados.
 - Respetar reglas de negocio de `casos_de_uso.md` y la arquitectura de `AGENTS.md` (routes → services → models).
-- Registrar tiempos con la skill `track-time` y decisiones con `decisiones.md`.
+- Registrar decisiones con `decisiones.md`.
 
 ## Decision Gates
 
@@ -32,14 +32,13 @@ Cargar cuando se trabaja sobre un caso de uso específico del proyecto (CU-01..C
 ## Execution Steps
 
 1. Leer el CU en `casos_de_uso.md` y el estado en `progreso.md`.
-2. Arrancar `track-time`.
-3. Diseño mínimo: modelo, flujo, endpoints afectados.
-4. Implementar backend, luego frontend (sobre el design system), luego tests (delegar según tabla).
-5. Verificar con `run-verification`.
-6. Capturar evidencia: screenshots por estado clave del CU (pantalla por rol, alta/edición, error renderizado, logout) en `evidencias/cu-0X/`, en tema claro y oscuro; si el CU no es visual, evidencia = salida de smoke/tests. Gate: consola sin errores inesperados.
-7. Revisar con `reviewer` (o `review-use-case` inline); corregir bloqueantes y persistir `reviews/cu-0X.md` (hallazgos, severidades, veredicto, mapa de evidencia).
-8. Actualizar `progreso.md`, `decisiones.md` (si hay decisión), tabla de API en `AGENTS.md`, README si corresponde, `prompts_log.md`. Archive del cambio openspec.
-9. Cerrar `track-time`. Si el contexto se extendió, cerrar sesión con `mem_session_summary` y retomar en una sesión nueva (ver "Fases y sesiones" en AGENTS.md).
+2. Diseño mínimo: modelo, flujo, endpoints afectados.
+3. Implementar backend, luego frontend (sobre el design system), luego tests (delegar según tabla).
+4. Verificar con `run-verification`.
+5. Capturar evidencia: screenshots por estado clave del CU (pantalla por rol, alta/edición, error renderizado, logout) en `evidencias/cu-0X/`, en tema claro y oscuro; si el CU no es visual, evidencia = salida de smoke/tests. Gate: consola sin errores inesperados.
+6. Revisar con `reviewer` (o `review-use-case` inline); corregir bloqueantes y persistir `reviews/cu-0X.md` (hallazgos, severidades, veredicto, mapa de evidencia).
+7. Actualizar `progreso.md`, `decisiones.md` (si hay decisión), tabla de API en `AGENTS.md`, README si corresponde. Archive del cambio openspec.
+8. Si el contexto se extendió, cerrar sesión con `mem_session_summary` y retomar en una sesión nueva (ver "Fases y sesiones" en AGENTS.md).
 
 ## Output Contract
 

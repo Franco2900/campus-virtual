@@ -18,7 +18,7 @@ Comandos reales (verificados al implementar CU-01). En Windows, `npm` y `openspe
   - `python -m venv .venv`
   - Windows: `.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt`
   - Linux/macOS: `.venv/bin/python -m pip install -r backend/requirements.txt`
-- **Backend (dev):** `python backend/app.py` → `http://127.0.0.1:5000`. Base SQLite en `backend/instance/campus.db` (override con `CAMPUS_DB_PATH`; `SECRET_KEY` por entorno).
+- **Backend (dev):** `.\.venv\Scripts\python.exe backend\app.py` (Windows) / `.venv/bin/python backend/app.py` (Linux/macOS) → `http://127.0.0.1:5000`. Base SQLite en `backend/instance/campus.db` (override con `CAMPUS_DB_PATH`; `SECRET_KEY` por entorno).
 - **Backend — migraciones:** desde `backend/`, Windows `..\.venv\Scripts\python.exe -m flask --app app db upgrade`; Linux/macOS `../.venv/bin/python -m flask --app app db upgrade`. Aplica las migraciones pendientes (`scripts/seed_admin.py`, `scripts/seed_demo.py` y `scripts/verify.py` también las aplican). Esquema versionado con Flask-Migrate/Alembic (D-023).
 - **Frontend (dev):** dentro de `frontend/`, `npm install` y `npm run dev` (Windows: `cmd /c npm install`, `cmd /c npm run dev`) → `http://localhost:5173`, con proxy de desarrollo `/api` → `http://localhost:5000`. Build: `npm run build`.
 - **Tests (backend):** dentro de `backend/`, Windows `..\.venv\Scripts\python.exe -m pytest`; Linux/macOS `../.venv/bin/python -m pytest`.
@@ -85,8 +85,6 @@ Resumen (detalle completo en `casos_de_uso.md`):
 ├── decisiones.md        # registro de decisiones técnicas/arquitectónicas
 ├── errores.md           # bitácora de errores
 ├── progreso.md          # control de progreso
-├── prompts_log.md       # auditoría de prompts
-├── tiempos.md           # medición de tiempos de desarrollo
 ├── evidencias/          # screenshots de verificación por CU (evidencia visual)
 ├── reviews/             # artefactos de revisión por CU (hallazgos, veredicto, mapa de evidencia)
 ├── docs/                # documentación de soporte (docs/er-diagrama.md: diagrama entidad-relación)
@@ -99,7 +97,7 @@ Resumen (detalle completo en `casos_de_uso.md`):
 └── .opencode/
     ├── agents/          # subagentes: backend, frontend, database, tester, reviewer
     ├── commands/        # comandos /opsx-* del CLI openspec (generados)
-    └── skills/          # skills: track-time, new-use-case, create-crud, create-migration, run-verification, design-system, openspec-*
+    └── skills/          # skills: new-use-case, create-crud, create-migration, run-verification, design-system, openspec-*
 ```
 
 > No documentar ni referenciar archivos que no existan todavía.
@@ -180,13 +178,13 @@ Comandos reales (verificados en CU-01):
 
 ## Fases y sesiones
 
-- Trabajar **un CU por fase** y, en lo posible, **una sesión por CU** (o por unidad de trabajo grande). Las sesiones largas sin corte degradan el contexto del agente y distorsionan la medición de tiempos.
+- Trabajar **un CU por fase** y, en lo posible, **una sesión por CU** (o por unidad de trabajo grande). Las sesiones largas sin corte degradan el contexto del agente.
 - Señales para iniciar una sesión nueva:
   - El contexto del agente está muy cargado: respuestas degradadas, tool outputs truncados con frecuencia o aviso de "contexto extenso" en la sesión actual.
   - Se cierra un hito: un CU completo (después del archive y los commits) o una unidad de trabajo grande.
   - Antes de arrancar un CU nuevo (sprint de CU = sesión limpia).
 - Protocolo de cierre de sesión:
-  1. Commitear la unidad en curso (skill `work-unit-commits`) y cerrar `track-time`.
+  1. Commitear la unidad en curso (skill `work-unit-commits`).
   2. Pedir al agente que ejecute `mem_session_summary` con el estado completo.
   3. Cerrar y abrir una sesión nueva.
   4. Al retomar, el agente carga `mem_context`/`mem_search`, lee `progreso.md` y `AGENTS.md`, y continúa donde quedó (nunca asumir que el estado anterior sigue vivo).
@@ -204,7 +202,6 @@ Comandos reales (verificados en CU-01):
 
 - **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones) y CU-06 (Gestionar tareas) implementadas, verificadas y cerradas**; **design system de frontend implementado y verificado** (cambio `add-frontend-design-system` archivado, D-019/D-020). CU-06 (cambio `add-task-management`): modelo `Task` + migración `0005`, endpoints anidados de tareas (Profesor-only), refactor de `get_manageable_course` a `course_service`, pantalla `/tasks`, **153 tests** backend, smoke HTTP 29/29, evidencia UI Playwright (claro/oscuro), revisión APROBADA (`reviews/cu-06.md`) y cambio archivado como `2026-10-13-add-task-management`. Próximo: CU-07.
 - **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Bootstrap del Administrador con `scripts/seed_admin.py` (`CAMPUS_ADMIN_EMAIL`/`CAMPUS_ADMIN_PASSWORD` obligatorias, D-017) y datos de prueba ampliados con `scripts/seed_demo.py` (idempotente; Profesores/Estudiantes/asignaciones/inscripciones); `scripts/verify.py --cu cu0X` corre contra una base temporal aislada sembrada y migrada. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01, CU-02, CU-03, CU-04 y CU-05 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
-- **Futuro:** plugin de opencode para medir tiempos por tool-call de forma automática.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
 
 ## Límites
@@ -230,7 +227,6 @@ Skills del proyecto (`.opencode/skills/`, registradas en `.atl/skill-registry.md
 
 | Skill | Cuándo |
 |-------|--------|
-| `track-time` | Iniciar/cerrar unidades de trabajo y actualizar `tiempos.md` |
 | `new-use-case` | Ciclo completo de un CU (planificar e implementar) |
 | `create-crud` | Abm/CRUD de una entidad (modelo + servicio + rutas + React) |
 | `create-migration` | Cambios de esquema con migraciones |

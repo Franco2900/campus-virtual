@@ -282,3 +282,23 @@ Formato:
 - **Criterios:** fidelidad a `casos_de_uso.md`, concentración del filtro de alcance por curso (señalado en `reviews/cu-05.md`), coherencia con el patrón de subrecurso de CU-05 y el orden de validaciones ya fijado.
 - **Consecuencias / impacto:** el frontend usa `GET /api/courses/mine` para el selector de curso y bloquea crear/modificar en cursos inactivos; el mismo filtro `get_manageable_course` queda listo para CU-08; `enrollment_service` importa `get_manageable_course` desde `course_service` (mismo comportamiento, sin cambios en sus tests).
 - **Estado:** Vigente.
+
+## D-028 — Eliminación de la medición de tiempos y la skill `track-time`
+
+- **Fecha:** 2026-10-13.
+- **Decisión:** eliminar `tiempos.md` y la skill `track-time` (`.opencode/skills/track-time/`) y dejar de registrar tiempos por unidad de trabajo, por decisión del usuario al optimizar el uso de tokens: calcular el tiempo no es necesario para el proyecto. **Supersede a D-004.** Se limpian todas las referencias activas (tabla de skills en `AGENTS.md`, mapa de archivos en `AGENTS.md`/`README.md`, protocolo de "Fases y sesiones", pasos de `new-use-case` y `.atl/skill-registry.md`); los archivos eliminados siguen recuperables desde git; las entradas históricas (archived openspec, `reviews/`, `errores.md`, `prompts_log.md`) no se reescriben.
+- **Contexto / problema:** la medición manual de tiempos consumía varios tool calls por CU y perdía marcas por compactación de contexto (p. ej. T-024 quedó PENDIENTE); el "plugin de medición automática" del roadmap quedaba descartado porque la medición ya no es un requisito.
+- **Alternativas consideradas:** (a) automatizar la medición con un plugin de opencode (descartado: sobre-ingeniería para algo que el usuario declaró innecesario); (b) mantener `tiempos.md` sin skill (descartado: la skill era su único mantenimiento y ambas quedan sin consumidores); (c) eliminar ambos (elegido).
+- **Criterios:** ahorro real de tokens y contexto de sesión, ausencia de dependencias de código/scripts, decidido por el dueño del proyecto.
+- **Consecuencias / impacto:** `new-use-case` pierde los pasos de arranque/cierre de tiempo; `progreso.md` y los docs dejan de referenciar `tiempos.md`; el ciclo de CU queda igual en lo funcional.
+- **Estado:** Vigente.
+
+## D-029 — Eliminación de `prompts_log.md`
+
+- **Fecha:** 2026-10-13.
+- **Decisión:** eliminar `prompts_log.md` y dejar de registrar el historial de prompts por CU, por decisión del usuario al optimizar el uso de tokens. El archivo era solo un artefacto de auditoría humana: el desarrollo no lo lee (el estado vive en `progreso.md` y en memoria/engram), así que mantenerlo costaba tokens de escritura sin aportar al flujo.
+- **Contexto / problema:** se buscaba reducir el gasto de tokens del ciclo por CU; `prompts_log.md` era la única referencia pendiente tras D-028.
+- **Alternativas consideradas:** (a) conservarlo con entradas mínimas (descartado: el usuario lo declara opcional y prefiere no mantenerlo); (b) eliminar el archivo y sus referencias activas (elegido).
+- **Criterios:** ahorro real de tokens, cero dependencias de código/scripts (verificado por búsqueda en el repo).
+- **Consecuencias / impacto:** se limpian las referencias en `AGENTS.md`, `README.md` y `new-use-case`; las entradas históricas de archived openspec/reviews que mencionaban `prompts_log.md` no se reescriben; el archivo sigue recuperable desde git.
+- **Estado:** Vigente.
