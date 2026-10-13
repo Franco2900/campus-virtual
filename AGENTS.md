@@ -123,16 +123,19 @@ Resumen (detalle completo en `casos_de_uso.md`):
 | GET | `/api/courses/<id>/teachers` | CU-04 | Listar profesores del curso (200/404) | Sesión + Administrador |
 | POST | `/api/courses/<id>/teachers` | CU-04 | Asignar profesor — body `{"teacher_id": <id>}` (201/400/404/409) | Sesión + Administrador |
 | DELETE | `/api/courses/<id>/teachers/<teacher_id>` | CU-04 | Quitar profesor del curso (200/404) | Sesión + Administrador |
-| GET | `/api/courses/mine` | CU-05 | Listar los cursos gestionables del usuario (Profesor: asignados; Admin: todos) | Sesión + Administrador/Profesor |
+| GET | `/api/courses/mine` | CU-05 | Listar los cursos del usuario (Profesor: asignados; Estudiante: inscritos; Admin: todos) | Sesión + Administrador/Profesor/Estudiante |
 | GET | `/api/courses/<id>/students` | CU-05 | Listar estudiantes activos con su inscripción (200/403/404) | Sesión + Administrador/Profesor |
 | POST | `/api/courses/<id>/students` | CU-05 | Inscribir estudiante — body `{"student_id": <id>}` (201/400/403/404/409) | Sesión + Administrador/Profesor |
 | PATCH | `/api/courses/<id>/students/<student_id>` | CU-05 | Activar/desactivar inscripción — body `{"active": <bool>}` (200/400/403/404/409) | Sesión + Administrador/Profesor |
 | DELETE | `/api/courses/<id>/students/<student_id>` | CU-05 | Eliminar inscripción (200/403/404) | Sesión + Administrador/Profesor |
-| GET | `/api/courses/<id>/tasks` | CU-06 | Listar tareas del curso (activas e inactivas) (200/403/404) | Sesión + Profesor |
+| GET | `/api/courses/<id>/tasks` | CU-06/07 | Listar tareas del curso (Profesor: activas e inactivas; Estudiante: disponibles + entrega propia) (200/403/404) | Sesión + Profesor/Estudiante |
 | POST | `/api/courses/<id>/tasks` | CU-06 | Crear una tarea (201/400/403/404/409) | Sesión + Profesor |
 | GET | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Obtener una tarea (200/403/404) | Sesión + Profesor |
 | PUT | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Editar una tarea, incl. fecha límite (200/400/403/404/409) | Sesión + Profesor |
 | PATCH | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Activar/desactivar tarea — body `{"active": <bool>}` (200/400/403/404) | Sesión + Profesor |
+| POST | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Entregar una tarea — body `{"content", "links"}` (201/400/403/404/409) | Sesión + Estudiante |
+| PUT | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Modificar la entrega propia (200/400/403/404/409) | Sesión + Estudiante |
+| DELETE | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Eliminar la entrega propia (200/403/404/409) | Sesión + Estudiante |
 
 > Se completa a medida que se implementan los CU. No inventar endpoints.
 
@@ -208,8 +211,8 @@ Comandos reales (verificados en CU-01):
 
 ## Roadmap
 
-- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones) y CU-06 (Gestionar tareas) implementadas, verificadas y cerradas**; **design system de frontend implementado y verificado** (cambio `add-frontend-design-system` archivado, D-019/D-020). CU-06 (cambio `add-task-management`): modelo `Task` + migración `0005`, endpoints anidados de tareas (Profesor-only), refactor de `get_manageable_course` a `course_service`, pantalla `/tasks`, **153 tests** backend, smoke HTTP 29/29, evidencia UI Playwright (claro/oscuro), revisión APROBADA (`reviews/cu-06.md`) y cambio archivado como `2026-10-13-add-task-management`. Próximo: CU-07.
-- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Bootstrap del Administrador con `scripts/seed_admin.py` (`CAMPUS_ADMIN_EMAIL`/`CAMPUS_ADMIN_PASSWORD` obligatorias, D-017) y datos de prueba ampliados con `scripts/seed_demo.py` (idempotente; Profesores/Estudiantes/asignaciones/inscripciones); `scripts/verify.py --cu cu0X` corre contra una base temporal aislada sembrada y migrada. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01, CU-02, CU-03, CU-04 y CU-05 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
+- **Ahora:** Fase 6 en marcha — **CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones), CU-06 (Gestionar tareas) y CU-07 (Entregar tarea) implementadas, verificadas y cerradas**; **design system de frontend implementado y verificado** (cambio `add-frontend-design-system` archivado, D-019/D-020). CU-06 (cambio `add-task-management`): modelo `Task` + migración `0005`, endpoints anidados de tareas (Profesor-only), refactor de `get_manageable_course` a `course_service`, pantalla `/tasks`, **153 tests** backend, smoke HTTP 29/29, evidencia UI Playwright (claro/oscuro), revisión APROBADA (`reviews/cu-06.md`) y cambio archivado como `2026-10-13-add-task-management`. CU-07 (cambio `add-task-submission`): modelo `Submission` + migración `0006`, endpoints de entrega (Estudiante-only), listado de tareas role-aware y `/api/courses/mine` extendido al Estudiante, pantalla `/submissions`, **181 tests** backend, smoke HTTP 39/39, evidencia UI Playwright (claro/oscuro), revisión APROBADA (`reviews/cu-07.md`) y cambio archivado como `2026-10-13-add-task-submission`. Próximo: CU-08.
+- **Activo:** pipeline spec-driven por CU vía `new-use-case` (propose → specs → design → tasks → apply → verify → archive) con revisión obligatoria antes de marcar Completo. Bootstrap del Administrador con `scripts/seed_admin.py` (`CAMPUS_ADMIN_EMAIL`/`CAMPUS_ADMIN_PASSWORD` obligatorias, D-017) y datos de prueba ampliados con `scripts/seed_demo.py` (idempotente; Profesores/Estudiantes/asignaciones/inscripciones); `scripts/verify.py --cu cu0X` corre contra una base temporal aislada sembrada y migrada. Nota: el subagente `reviewer` falló por tier del proveedor en CU-01 a CU-07 (ver `errores.md`); se revisa inline con la skill `review-use-case`.
 - **Futuro:** chatbot LangChain + Ollama integrado en la app.
 
 ## Límites

@@ -16,7 +16,8 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 - Gestión de usuarios (**CU-04 implementado**): listado (incluye inactivos), edición de datos y rol, activar/desactivar (baja lógica) y reset de contraseña; asignación de Profesor por curso. Restringido al Administrador.
 - Gestión de inscripciones (**CU-05 implementado**): pantalla `/enrollments` para elegir un curso gestionable, ver los estudiantes con su estado de inscripción, inscribir, activar/desactivar y eliminar inscripciones. Disponible para Administrador y Profesor.
 - Gestión de tareas (**CU-06 implementado**): pantalla `/tasks` para elegir un curso gestionable, listar las tareas (activas e inactivas), crear, editar (incl. la fecha límite) y activar/desactivar. Disponible para el Profesor.
-- Entregas y correcciones de tareas (CU-07, CU-08).
+- Entrega de tareas (**CU-07 implementado**): pantalla `/submissions` para elegir un curso, ver las tareas disponibles con su estado de entrega, entregar (texto y/o links), editar y eliminar con confirmación. Disponible para el Estudiante.
+- Correcciones de tareas (CU-08).
 - Consulta de calificaciones y filtrado de usuarios (CU-09, CU-10).
 - Chatbot asistente integrado con LangChain + Ollama.
 
@@ -138,16 +139,19 @@ npm run lint:format                           # frontend (desde frontend/)
 | GET | `/api/courses/<id>/teachers` | CU-04 | Listar profesores del curso (200/404) | Sesión + Administrador |
 | POST | `/api/courses/<id>/teachers` | CU-04 | Asignar profesor — body `{"teacher_id": <id>}` (201/400/404/409) | Sesión + Administrador |
 | DELETE | `/api/courses/<id>/teachers/<teacher_id>` | CU-04 | Quitar profesor del curso (200/404) | Sesión + Administrador |
-| GET | `/api/courses/mine` | CU-05 | Listar los cursos gestionables del usuario (Admin: todos; Profesor: asignados) | Sesión + Administrador/Profesor |
+| GET | `/api/courses/mine` | CU-05 | Listar los cursos del usuario (Admin: todos; Profesor: asignados; Estudiante: inscritos) | Sesión + Administrador/Profesor/Estudiante |
 | GET | `/api/courses/<id>/students` | CU-05 | Listar estudiantes activos con su inscripción (200/403/404) | Sesión + Administrador/Profesor |
 | POST | `/api/courses/<id>/students` | CU-05 | Inscribir estudiante — body `{"student_id": <id>}` (201/400/403/404/409) | Sesión + Administrador/Profesor |
 | PATCH | `/api/courses/<id>/students/<student_id>` | CU-05 | Activar/desactivar inscripción — body `{"active": <bool>}` (200/400/403/404/409) | Sesión + Administrador/Profesor |
 | DELETE | `/api/courses/<id>/students/<student_id>` | CU-05 | Eliminar inscripción (200/403/404) | Sesión + Administrador/Profesor |
-| GET | `/api/courses/<id>/tasks` | CU-06 | Listar tareas del curso (activas e inactivas) (200/403/404) | Sesión + Profesor |
+| GET | `/api/courses/<id>/tasks` | CU-06/07 | Listar tareas del curso (Profesor: activas e inactivas; Estudiante: disponibles + entrega propia) (200/403/404) | Sesión + Profesor/Estudiante |
 | POST | `/api/courses/<id>/tasks` | CU-06 | Crear una tarea (201/400/403/404/409) | Sesión + Profesor |
 | GET | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Obtener una tarea (200/403/404) | Sesión + Profesor |
 | PUT | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Editar una tarea, incl. fecha límite (200/400/403/404/409) | Sesión + Profesor |
 | PATCH | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Activar/desactivar tarea — body `{"active": <bool>}` (200/400/403/404) | Sesión + Profesor |
+| POST | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Entregar una tarea — body `{"content", "links"}` (201/400/403/404/409) | Sesión + Estudiante |
+| PUT | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Modificar la entrega propia (200/400/403/404/409) | Sesión + Estudiante |
+| DELETE | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Eliminar la entrega propia (200/403/404/409) | Sesión + Estudiante |
 
 ### Pantallas del frontend (rutas)
 
@@ -160,6 +164,7 @@ npm run lint:format                           # frontend (desde frontend/)
 | `/users` | Gestión de usuarios (CU-04) | Administrador |
 | `/enrollments` | Gestión de inscripciones (CU-05) | Administrador / Profesor |
 | `/tasks` | Gestión de tareas (CU-06) | Profesor |
+| `/submissions` | Entrega de tareas (CU-07) | Estudiante |
 
 ## Configuración
 
