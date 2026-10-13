@@ -15,7 +15,8 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 - Gestión de cursos (**CU-03 implementado**): listado (incluye inactivos), alta, edición y activar/desactivar con baja lógica, restringido al Administrador.
 - Gestión de usuarios (**CU-04 implementado**): listado (incluye inactivos), edición de datos y rol, activar/desactivar (baja lógica) y reset de contraseña; asignación de Profesor por curso. Restringido al Administrador.
 - Gestión de inscripciones (**CU-05 implementado**): pantalla `/enrollments` para elegir un curso gestionable, ver los estudiantes con su estado de inscripción, inscribir, activar/desactivar y eliminar inscripciones. Disponible para Administrador y Profesor.
-- Gestión de tareas, entregas y correcciones (CU-06, CU-07, CU-08).
+- Gestión de tareas (**CU-06 implementado**): pantalla `/tasks` para elegir un curso gestionable, listar las tareas (activas e inactivas), crear, editar (incl. la fecha límite) y activar/desactivar. Disponible para el Profesor.
+- Entregas y correcciones de tareas (CU-07, CU-08).
 - Consulta de calificaciones y filtrado de usuarios (CU-09, CU-10).
 - Chatbot asistente integrado con LangChain + Ollama.
 
@@ -94,6 +95,8 @@ npm run lint:format                           # frontend (desde frontend/)
 ..\.venv\Scripts\python.exe scripts\verify.py --diagnose     # estado de puertos/pids (read-only)
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu03      # siembra admin + cursos y corre smoke_cu03
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu04      # smoke de gestión de usuarios y profesores
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu05      # smoke de gestión de inscripciones
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu06      # smoke de gestión de tareas
 ```
 
 ## Estructura
@@ -141,6 +144,11 @@ npm run lint:format                           # frontend (desde frontend/)
 | POST | `/api/courses/<id>/students` | CU-05 | Inscribir estudiante — body `{"student_id": <id>}` (201/400/403/404/409) | Sesión + Administrador/Profesor |
 | PATCH | `/api/courses/<id>/students/<student_id>` | CU-05 | Activar/desactivar inscripción — body `{"active": <bool>}` (200/400/403/404/409) | Sesión + Administrador/Profesor |
 | DELETE | `/api/courses/<id>/students/<student_id>` | CU-05 | Eliminar inscripción (200/403/404) | Sesión + Administrador/Profesor |
+| GET | `/api/courses/<id>/tasks` | CU-06 | Listar tareas del curso (activas e inactivas) (200/403/404) | Sesión + Profesor |
+| POST | `/api/courses/<id>/tasks` | CU-06 | Crear una tarea (201/400/403/404/409) | Sesión + Profesor |
+| GET | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Obtener una tarea (200/403/404) | Sesión + Profesor |
+| PUT | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Editar una tarea, incl. fecha límite (200/400/403/404/409) | Sesión + Profesor |
+| PATCH | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Activar/desactivar tarea — body `{"active": <bool>}` (200/400/403/404) | Sesión + Profesor |
 
 ### Pantallas del frontend (rutas)
 
@@ -152,6 +160,7 @@ npm run lint:format                           # frontend (desde frontend/)
 | `/courses` | Gestión de cursos (CU-03) | Administrador |
 | `/users` | Gestión de usuarios (CU-04) | Administrador |
 | `/enrollments` | Gestión de inscripciones (CU-05) | Administrador / Profesor |
+| `/tasks` | Gestión de tareas (CU-06) | Profesor |
 
 ## Configuración
 
@@ -209,7 +218,7 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Roadmap
 
-- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos) y CU-04 (Gestionar usuarios) implementados end-to-end (backend Flask + frontend React/Vite con ruteo + tests + smoke HTTP y UI con Playwright). El esquema se versiona con migraciones (Alembic).
+- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones) y CU-06 (Gestionar tareas) implementados end-to-end (backend Flask + frontend React/Vite con ruteo + tests + smoke HTTP y UI con Playwright). El esquema se versiona con migraciones (Alembic).
 - Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
 - Plugin de medición automática de tiempos.
 - Integración completa del chatbot.

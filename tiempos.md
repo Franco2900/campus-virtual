@@ -55,16 +55,18 @@ El tiempo del agente se mide por **límites de unidad en tiempo real (wall-clock
 | T-020 | 2026-10-11T13:31:57 | 2026-10-11T14:00:31 | 00:28:34 | IMP | CU-04 | Humano+Agente | CU-04 (propose + apply + verify + docs + cierre): cambio `add-user-management` (proposal/specs/design/tasks); migraciones Flask-Migrate/Alembic (baseline `0001` + stamp, `0002` `user.active`, `0003` `course_teacher`, D-023); backend (`user_service` + `blueprints/users.py`, `course_teacher_service` + endpoints `/api/courses/<id>/teachers`, `auth_service` bloquea inactivos, guards de autogestión 400); frontend (`features/users/*`, `CourseTeachers` + botón "Profesores", ruta `/users`, ítem de sidebar); tests (90), smoke `21/21 PASS`, evidencia UI Playwright 9 screenshots claro/oscuro; docs (AGENTS/README/progreso/decisiones D-010/D-021/D-022/D-023/prompts_log); revisión inline APROBADA (`reviews/cu-04.md`) y archive (`2026-10-11-add-user-management`) |
 | T-021 | 2026-10-11T17:11:09 | 2026-10-11T17:42:25 | 00:31:16 | IMP | CU-05 | Humano+Agente | CU-05 (propose + apply + verify + evidencia + cierre): cambio `add-enrollment-management` (proposal, specs `enrollment-management`/`course-management`, design D-A..D-K, tasks 5 grupos/14 tareas); backend (modelo `Enrollment` + migración `0004`, `enrollment_service` con orden de validaciones D-D, `list_courses_for_user`, `blueprints/enrollments.py` 5 endpoints, `GET /api/courses/mine`, `ForbiddenError`, 31 tests); frontend (`features/enrollments/*`, `ProtectedRoute` con `roles`, `DataTable` con `testId`/`rowTestId`, ruta `/enrollments` e ítem de sidebar); 122 tests, smoke `28/28 PASS`, evidencia UI Playwright 10 screenshots claro/oscuro; docs (AGENTS/README/progreso/decisiones D-024/D-025/prompts_log); revisión inline APROBADA (`reviews/cu-05.md`) y archive (`2026-10-11-add-enrollment-management`) |
 | T-022 | PENDIENTE | 2026-10-11T18:02:29 | PENDIENTE | CFG | - | Humano+Agente | Regeneración de la base dev SQLite (borrado de `backend/instance/campus.db` corrupta + `flask db upgrade` a head `0004` + seed de admin/cursos), `scripts/seed_demo.py` (seed idempotente de Profesores/Estudiantes/asignaciones/inscripciones) y `docs/er-diagrama.md` (ERD) con enlace en README/AGENTS |
+| T-023 | 2026-10-11T19:58:13 | 2026-10-11T20:00:48 | 00:02:35 | DIS | CU-06 | Agente | CU-06 (planning): cambio openspec `add-task-management` — proposal, delta `specs/task-management/spec.md`, design D-A..D-J, tasks; validado con `openspec validate add-task-management --strict` |
+| T-024 | PENDIENTE | PENDIENTE | PENDIENTE | IMP | CU-06 | Humano+Agente | CU-06 (apply + verify + evidencia + cierre): modelo `Task` + migración `0005`, `task_service` con orden D-J, `blueprints/tasks.py` (5 endpoints Profesor-only), refactor de `get_manageable_course` a `course_service`, frontend `features/tasks` (ruta `/tasks` + sidebar), 31 tests, smoke `29/29 PASS`, evidencia UI Playwright (10 screenshots claro/oscuro), `reviews/cu-06.md` y archive. Marcas de inicio/fin no capturadas (sesión previa compactada) |
 
 ## Totales
 
 | Categoría | Duración acumulada |
 |-----------|--------------------|
 | DEC | 00:10:08 |
-| DIS | 00:11:48 |
+| DIS | 00:14:23 |
 | IMP | 01:50:02 |
 | TST | 00:07:04 |
 | DOC | 00:07:48 |
 | CFG | 00:35:04 |
 | REV | 00:10:08 |
-| **Total** | **03:12:02** |
+| **Total** | **03:14:37** |

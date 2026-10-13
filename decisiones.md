@@ -262,3 +262,23 @@ Formato:
 - **Criterios:** respeto de la restricción admin-only de CU-03, alcance por rol explícito, coherencia con el patrón de subrecurso `/teachers`, blueprint por dominio (D-002).
 - **Consecuencias / impacto:** la spec `course-management` se modifica para acotar la restricción admin-only exceptuando `GET /api/courses/mine`; la autorización del Profesor se resuelve consultando `course_teacher`; los CU que operen por profesor (CU-06/07/08) pueden reusar `list_courses_for_user`/`/mine`.
 - **Estado:** Vigente.
+
+## D-026 — Modelo de tarea y su semántica (CU-06)
+
+- **Fecha:** 2026-10-13.
+- **Decisión:** modelar la tarea con la entidad `Task` (`id` PK, `course_id` FK→`course.id`, `title` obligatorio no vacío ≤200, `description` opcional default `""` ≤1000, `due_date` obligatoria ISO 8601, `active` default `True`, `created_at` UTC, migración `0005_add_task`). Semántica: **alta** con `POST` (siempre activa, asociada al curso), **modificación** con `PUT` (incluye la fecha límite, flujo alternativo A1) y **activación/desactivación** con `PATCH {"active": <bool>}` (baja lógica reversible; una tarea inactiva no se considera disponible para los estudiantes). La `due_date` debe estar presente y ser parseable (se tolera el sufijo `Z`), pero **no** se exige que sea futura: la vigencia del plazo se resuelve en CU-07.
+- **Contexto / problema:** CU-06 exige que el Profesor cree, consulte, modifique y desactive tareas; no existía ninguna entidad de tarea, base necesaria para CU-07 (entrega), CU-08 (corrección) y CU-09 (calificaciones).
+- **Alternativas consideradas:** (a) exigir fecha futura ya en CU-06 (rechazado: sobre-construye una regla que el propio CU delega a la entrega e impide ajustes legítimos de fecha en A1); (b) modelar "desactivar" como borrado físico (rechazado: el CU dice "cambia el estado a inactivo", es baja lógica).
+- **Criterios:** fidelidad a `casos_de_uso.md`, disponibilidad de la tarea para el Estudiante como derivada de `active` + `due_date`, versionado de esquema (D-023).
+- **Consecuencias / impacto:** `Task` se registra en `app.py` y en `tests/test_migrations.py` (paridad modelos↔migraciones); CU-07/CU-08 dependen de `Task.active` y `Task.due_date`; la columna `due_date` es `DateTime(timezone=True)` pero SQLite no preserva el offset en el round-trip (limitación conocida, se difiere a CU-07).
+- **Estado:** Vigente.
+
+## D-027 — Endpoints anidados de tareas y alcance Profesor-only (CU-06)
+
+- **Fecha:** 2026-10-13.
+- **Decisión:** los endpoints de tareas son subrecursos de curso en un blueprint nuevo `blueprints/tasks.py` con `url_prefix="/api/courses"` e `@login_required` + `@require_roles(UserRole.TEACHER)`: `GET/POST /api/courses/<id>/tasks` y `GET/PUT/PATCH /api/courses/<id>/tasks/<task_id>`. Solo el **Profesor** opera (Estudiante y Administrador reciben 403) y únicamente sobre los cursos en los que está asignado (si no, 403). Orden de validaciones determinista (design D-J): 401 → 403 rol → 404 curso inexistente → 403 Profesor no asignado → 409 curso inactivo (solo POST/PUT) → 400 datos → 404 tarea. Se habilita `PATCH` aun con el curso inactivo. `get_manageable_course` se mueve de `enrollment_service` a `course_service` para que `task_service` lo reutilice sin depender del dominio de inscripciones.
+- **Contexto / problema:** CU-06 define al Profesor como único actor y la regla «un Profesor solo opera sobre los cursos en los que trabaja»; había que decidir el recorte de autorización y la ubicación del filtro de alcance.
+- **Alternativas consideradas:** (a) habilitar también al Administrador (como en CU-05) — rechazado por decisión de alcance acordada con el usuario: fidelidad al CU y menor superficie; (b) duplicar `get_manageable_course` en `task_service` — rechazado por duplicar una regla de negocio; (c) moverla a `course_service` y reutilizarla (elegida).
+- **Criterios:** fidelidad a `casos_de_uso.md`, concentración del filtro de alcance por curso (señalado en `reviews/cu-05.md`), coherencia con el patrón de subrecurso de CU-05 y el orden de validaciones ya fijado.
+- **Consecuencias / impacto:** el frontend usa `GET /api/courses/mine` para el selector de curso y bloquea crear/modificar en cursos inactivos; el mismo filtro `get_manageable_course` queda listo para CU-08; `enrollment_service` importa `get_manageable_course` desde `course_service` (mismo comportamiento, sin cambios en sus tests).
+- **Estado:** Vigente.
