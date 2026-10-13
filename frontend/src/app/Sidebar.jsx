@@ -11,6 +11,7 @@ const NAV_ITEMS = [
     roles: ["admin", "teacher"],
   },
   { to: "/tasks", label: "Tareas", icon: "bi-journal-text", roles: ["teacher"] },
+  { to: "/submissions", label: "Mis entregas", icon: "bi-upload", roles: ["student"] },
 ];
 
 export default function Sidebar({ user }) {
