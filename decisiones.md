@@ -302,3 +302,16 @@ Formato:
 - **Criterios:** ahorro real de tokens, cero dependencias de código/scripts (verificado por búsqueda en el repo).
 - **Consecuencias / impacto:** se limpian las referencias en `AGENTS.md`, `README.md` y `new-use-case`; las entradas históricas de archived openspec/reviews que mencionaban `prompts_log.md` no se reescriben; el archivo sigue recuperable desde git.
 - **Estado:** Vigente.
+
+## D-030 — Alcance acordado de CU-07 (entrega de tareas)
+
+- **Fecha:** 2026-10-13.
+- **Decisión (acordada con el usuario; a formalizar en el design de CU-07):**
+  1. **Naturaleza de la entrega:** solo texto y links (sin archivos adjuntos) por ahora; el modelo debe quedar preparado para admitir adjuntos en el futuro.
+  2. **Cardinalidad:** una entrega por par (tarea, estudiante) con unique constraint; se modifica (A1) o elimina (A2) dentro del plazo.
+  3. **Semántica de plazo:** la tarea se considera disponible con `active` y `due_date` no vencida, comparando en UTC normalizado; la entrega solo se permite antes de la fecha límite. Resuelve la limitación de tz de SQLite diferida desde CU-06.
+  4. **Endpoints:** anidados y Estudiante-only: listar las tareas del curso con la entrega propia y `POST/PUT/DELETE /api/courses/<id>/tasks/<task_id>/submission`; listar entregas de otros queda para CU-08 (corrección).
+- **Contexto / problema:** decisiones de diseño pedidas por el usuario antes de arrancar el ciclo `new-use-case` de CU-07.
+- **Criterios:** fidelidad a `casos_de_uso.md` CU-07, simplicidad de alcance (sin infra de archivos), reutilización del modelo `Task` y de `get_manageable_course`.
+- **Consecuencias / impacto:** CU-08 consumirá `Submission` para corregir y aplicará la regla "no corregida" de A1; CU-09 usará la entrega/no-entrega para el promedio.
+- **Estado:** Acordada (pendiente de implementación en CU-07).
