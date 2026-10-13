@@ -187,8 +187,16 @@ Comandos reales (verificados en CU-01):
   1. Commitear la unidad en curso (skill `work-unit-commits`).
   2. Pedir al agente que ejecute `mem_session_summary` con el estado completo.
   3. Cerrar y abrir una sesión nueva.
-  4. Al retomar, el agente carga `mem_context`/`mem_search`, lee `progreso.md` y `AGENTS.md`, y continúa donde quedó (nunca asumir que el estado anterior sigue vivo).
+  4. Al retomar, el agente carga `mem_context`/`mem_search`, lee de `progreso.md` solo la sección del CU activo y continúa donde quedó (nunca asumir que el estado anterior sigue vivo; ver "Optimización de tokens").
 - Gotcha operativo: "no ver avance en el terminal" NO significa cuelgue (ver `errores.md`); antes de asumir una traba, consultar `python scripts/verify.py --diagnose` y el estado del working tree.
+
+## Optimización de tokens (convenciones)
+
+- **Tests acotados en iteración:** durante la implementación correr solo los tests del dominio afectado (p. ej. `..\.venv\Scripts\python.exe -m pytest tests/test_tasks.py -q`); el suite completo (`-m pytest`) y el build/lint solo en el gate de cierre del CU.
+- **Salida acotada:** pytest con `-q`; no imprimir salidas de éxito largas ni logs completos; si la salida es enorme, buscar con grep en el archivo capturado en vez de imprimirla entera.
+- **Retomar sesión sin releer todo:** al retomar, cargar `mem_context`/`mem_search` y leer de `progreso.md` solo la sección del CU activo; no releer `AGENTS.md` a mano (el runtime ya lo inyecta).
+- **Playwright quirúrgico:** si un paso de evidencia falla o se pierde, re-capturar solo las pantallas afectadas, no el flujo completo.
+- **Delegar el "¿qué cambió?" al retomar:** si la comprensión del sprint anterior requiere leer 4+ archivos, delegar a un subagente el resumen del diff (~10 líneas) en vez de llenar el contexto del orquestador.
 
 ## Portabilidad
 
