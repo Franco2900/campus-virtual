@@ -1,31 +1,10 @@
 from sqlalchemy.exc import IntegrityError
 
 from models.base import db
-from models.course import Course
-from models.course_teacher import CourseTeacher
 from models.enrollment import Enrollment
 from models.user import User, UserRole
-from services.errors import ConflictError, ForbiddenError, NotFoundError, ValidationError
-
-
-def get_manageable_course(course_id, current_user):
-    course = db.session.execute(
-        db.select(Course).where(Course.id == course_id)
-    ).scalar_one_or_none()
-    if course is None:
-        raise NotFoundError("El curso no existe")
-
-    if current_user.role == UserRole.TEACHER:
-        assignment = db.session.execute(
-            db.select(CourseTeacher).where(
-                CourseTeacher.course_id == course_id,
-                CourseTeacher.teacher_id == current_user.id,
-            )
-        ).scalar_one_or_none()
-        if assignment is None:
-            raise ForbiddenError("No trabajás en ese curso")
-
-    return course
+from services.course_service import get_manageable_course
+from services.errors import ConflictError, NotFoundError, ValidationError
 
 
 def list_students(course_id, current_user):
