@@ -25,7 +25,7 @@ El sistema SHALL restringir la gestión de inscripciones a los roles Administrad
 
 ### Requirement: Cursos disponibles para gestionar inscripciones
 
-El sistema SHALL permitir consultar, mediante `GET /api/courses/mine`, los cursos sobre los que el usuario autenticado puede gestionar inscripciones: para un Profesor, únicamente aquellos en los que está asignado; para un Administrador, todos los cursos del sistema. La respuesta MUST incluir los cursos junto con su estado activo/inactivo. Un request sin sesión MUST responder HTTP 401; un usuario con rol Estudiante MUST recibir HTTP 403.
+El sistema SHALL permitir consultar, mediante `GET /api/courses/mine`, los cursos sobre los que el usuario autenticado puede operar según su rol: para un Profesor, únicamente aquellos en los que está asignado; para un Administrador, todos los cursos del sistema; para un Estudiante, aquellos en los que tiene una inscripción activa. La respuesta MUST incluir los cursos junto con su estado activo/inactivo. Un request sin sesión MUST responder HTTP 401.
 
 #### Scenario: Cursos de un Profesor
 - **GIVEN** que un Profesor tiene sesión activa y está asignado a uno o más cursos
@@ -41,6 +41,16 @@ El sistema SHALL permitir consultar, mediante `GET /api/courses/mine`, los curso
 - **GIVEN** que un Administrador tiene sesión activa
 - **WHEN** envía `GET /api/courses/mine`
 - **THEN** el sistema responde HTTP 200 con todos los cursos del sistema
+
+#### Scenario: Cursos de un Estudiante
+- **GIVEN** que un Estudiante tiene sesión activa y tiene inscripciones activas e inactivas en distintos cursos
+- **WHEN** el Estudiante envía `GET /api/courses/mine`
+- **THEN** el sistema responde HTTP 200 con únicamente los cursos en los que su inscripción está activa
+
+#### Scenario: Estudiante sin inscripciones activas
+- **GIVEN** que un Estudiante tiene sesión activa pero ninguna inscripción activa
+- **WHEN** el Estudiante envía `GET /api/courses/mine`
+- **THEN** el sistema responde HTTP 200 con una lista vacía
 
 ### Requirement: Consulta de estudiantes e inscripciones de un curso
 
