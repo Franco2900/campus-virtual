@@ -93,7 +93,30 @@ def test_enrollments_forbidden_for_student(client, app):
         == 403
     )
     assert client.delete(f"/api/courses/{course_id}/students/1").status_code == 403
-    assert client.get("/api/courses/mine").status_code == 403
+
+
+def test_mine_student_lists_only_active_enrollments(client, app):
+    student_id = _create_user(app, STUDENT, UserRole.STUDENT)
+    active_course = _seed_course(app, code="PROG1")
+    inactive_course = _seed_course(app, code="PROG2")
+    _seed_course(app, code="PROG3")
+    _seed_enrollment(app, active_course, student_id, active=True)
+    _seed_enrollment(app, inactive_course, student_id, active=False)
+
+    _login(client, STUDENT)
+    response = client.get("/api/courses/mine")
+    assert response.status_code == 200
+    body = response.get_json()
+    assert [course["id"] for course in body] == [active_course]
+
+
+def test_mine_student_without_active_enrollments(client, app):
+    _login_as(client, app, STUDENT, UserRole.STUDENT)
+    _seed_course(app, code="PROG1")
+
+    response = client.get("/api/courses/mine")
+    assert response.status_code == 200
+    assert response.get_json() == []
 
 
 def test_mine_teacher_lists_only_assigned_courses(client, app):

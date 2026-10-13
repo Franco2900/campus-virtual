@@ -9,6 +9,7 @@ from models import (  # noqa: F401  (registers all model tables on the metadata)
     course,
     course_teacher,
     enrollment,
+    submission,
     task,
     user,
 )

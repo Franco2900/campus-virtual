@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from models.base import db
 from models.course import Course
 from models.course_teacher import CourseTeacher
+from models.enrollment import Enrollment
 from models.user import UserRole
 from services.errors import ConflictError, ForbiddenError, NotFoundError, ValidationError
 
@@ -42,6 +43,20 @@ def list_courses_for_user(current_user):
                 db.select(Course)
                 .join(CourseTeacher, CourseTeacher.course_id == Course.id)
                 .where(CourseTeacher.teacher_id == current_user.id)
+                .order_by(Course.id)
+            )
+            .scalars()
+            .all()
+        )
+    if current_user.role == UserRole.STUDENT:
+        return (
+            db.session.execute(
+                db.select(Course)
+                .join(Enrollment, Enrollment.course_id == Course.id)
+                .where(
+                    Enrollment.student_id == current_user.id,
+                    Enrollment.active.is_(True),
+                )
                 .order_by(Course.id)
             )
             .scalars()

@@ -60,7 +60,7 @@ def create_course_endpoint(current_user):
 
 @courses_bp.get("/mine")
 @login_required
-@require_roles(UserRole.ADMIN, UserRole.TEACHER)
+@require_roles(UserRole.ADMIN, UserRole.TEACHER, UserRole.STUDENT)
 def list_my_courses_endpoint(current_user):
     return jsonify(
         [_serialize_course(course) for course in list_courses_for_user(current_user)]

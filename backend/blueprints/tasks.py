@@ -8,8 +8,8 @@ from services.errors import ConflictError, ForbiddenError, NotFoundError, Valida
 tasks_bp = Blueprint("tasks", __name__, url_prefix="/api/courses")
 
 
-def _serialize_task(task):
-    return {
+def _serialize_task(task, submission=None, include_submission=False):
+    data = {
         "id": task.id,
         "course_id": task.course_id,
         "title": task.title,
@@ -17,19 +17,40 @@ def _serialize_task(task):
         "due_date": task.due_date.isoformat(),
         "active": task.active,
     }
+    if include_submission:
+        data["submission"] = _serialize_submission(submission)
+    return data
+
+
+def _serialize_submission(submission):
+    if submission is None:
+        return None
+    return {
+        "id": submission.id,
+        "task_id": submission.task_id,
+        "content": submission.content,
+        "links": submission.links,
+        "updated_at": submission.updated_at.isoformat(),
+    }
 
 
 @tasks_bp.get("/<int:course_id>/tasks")
 @login_required
-@require_roles(UserRole.TEACHER)
+@require_roles(UserRole.TEACHER, UserRole.STUDENT)
 def list_tasks_endpoint(current_user, course_id):
+    include_submission = current_user.role == UserRole.STUDENT
     try:
-        tasks = task_service.list_tasks(course_id, current_user)
+        rows = task_service.list_tasks(course_id, current_user)
     except NotFoundError as error:
         return jsonify({"error": str(error)}), 404
     except ForbiddenError as error:
         return jsonify({"error": str(error)}), 403
-    return jsonify([_serialize_task(task) for task in tasks]), 200
+    return (
+        jsonify(
+            [_serialize_task(task, submission, include_submission) for task, submission in rows]
+        ),
+        200,
+    )
 
 
 @tasks_bp.post("/<int:course_id>/tasks")
