@@ -7,7 +7,9 @@ from flask_migrate import upgrade as migrate_upgrade
 from app import create_app
 from models import (  # noqa: F401  (registers all model tables on the metadata)
     course,
+    course_teacher,
     enrollment,
+    task,
     user,
 )
 from models.base import db
