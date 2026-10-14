@@ -4,7 +4,7 @@ export default function PageHeader({ title, subtitle, icon, actions }) {
       <div className="d-flex align-items-center gap-3">
         {icon && (
           <span className="auth-brand__icon" aria-hidden="true">
-            <i className={`bi bi-${icon}`} />
+            <i className={`bi ${icon}`} />
           </span>
         )}
         <div>
