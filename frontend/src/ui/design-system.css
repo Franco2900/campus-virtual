@@ -241,6 +241,61 @@
   font-size: 0.85rem;
 }
 
+.campus-stat__detail {
+  color: var(--campus-muted);
+  font-size: 0.78rem;
+}
+
+/* Tarjeta de estadística navegable */
+.campus-stat-link {
+  display: block;
+  height: 100%;
+  color: inherit;
+  border-radius: var(--campus-radius);
+  transition: transform 0.2s ease;
+}
+
+.campus-stat-link:hover {
+  transform: translateY(-2px);
+}
+
+.campus-stat-link:hover .campus-card,
+.campus-stat-link:focus-visible .campus-card {
+  border-color: var(--campus-brand);
+  box-shadow: 0 14px 34px rgba(var(--campus-brand-rgb), 0.18);
+}
+
+/* Acceso rápido */
+.campus-link-tile {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  height: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--campus-border);
+  border-radius: var(--campus-radius);
+  background-color: var(--campus-surface);
+  color: var(--campus-text);
+  font-weight: 600;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.campus-link-tile i {
+  color: var(--campus-brand);
+  font-size: 1.1rem;
+}
+
+.campus-link-tile:hover {
+  transform: translateY(-2px);
+  border-color: var(--campus-brand);
+  background-color: var(--campus-brand-soft);
+  color: var(--campus-brand);
+}
+
 /* Responsive: el sidebar pasa a fila horizontal en pantallas chicas */
 @media (max-width: 767.98px) {
   .app-body {
