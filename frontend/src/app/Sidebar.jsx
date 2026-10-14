@@ -11,6 +11,12 @@ const NAV_ITEMS = [
   },
   { to: "/users", label: "Usuarios", icon: "bi-people-fill", roles: ["admin"] },
   { to: "/tasks", label: "Tareas", icon: "bi-journal-text", roles: ["teacher"] },
+  {
+    to: "/grading",
+    label: "Corregir tareas",
+    icon: "bi-check2-square",
+    roles: ["teacher"],
+  },
   { to: "/submissions", label: "Mis entregas", icon: "bi-upload", roles: ["student"] },
 ];
 

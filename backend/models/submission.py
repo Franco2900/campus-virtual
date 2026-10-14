@@ -14,6 +14,9 @@ class Submission(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     content = db.Column(db.Text, nullable=False, default="")
     links = db.Column(db.JSON, nullable=False, default=list)
+    grade = db.Column(db.Integer, nullable=True)
+    feedback = db.Column(db.Text, nullable=True, default="")
+    graded_at = db.Column(db.DateTime(timezone=True), nullable=True)
     created_at = db.Column(
         db.DateTime(timezone=True),
         nullable=False,

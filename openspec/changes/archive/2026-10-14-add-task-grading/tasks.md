@@ -1,0 +1,31 @@
+# Tasks
+
+## 1. Backend - Modelo y Migración
+- [x] 1.1 **Extender modelo Submission**: Actualizar `backend/models/submission.py` para agregar `grade` (Integer, nullable=True), `feedback` (Text, nullable=True, default=""), `graded_at` (DateTime(timezone=True), nullable=True). Verificar que el modelo conserve `task_id`, `student_id`, `content`, `links`, timestamps y `UNIQUE(task_id, student_id)`. Verificación: `backend/models/submission.py` contiene los nuevos campos con tipos correctos.
+- [x] 1.2 **Crear migración Alembic 0007_add_grading**: Generar migración que agregue las tres columnas a la tabla `submission` (nullable). Aplicar en entorno local con `flask db upgrade`. Verificación: migración `0007_add_grading.py` existe en `backend/migrations/versions/` y `flask db upgrade` completa sin errores.
+- [x] 1.3 **Actualizar modelo para reflejar nuevos campos**: Verificar que las relaciones y serialización existentes no se rompan. Verificación: imports/uso de `Submission` siguen funcionando; `backend/tests/test_submissions.py` existentes siguen siendo válidos (ajustar solo si fallan por serialización no intencional).
+
+## 2. Backend - Servicio de corrección (Grading)
+- [x] 2.1 **Crear `grading_service.py`**: Crear `backend/services/grading_service.py` con funciones para listar entregas de una tarea y corregir/modificar una corrección. Debe validar rol Profesor, curso asignado (`get_manageable_course`), tarea pertenece al curso, existencia de entrega y rango de `grade` (entero, 1..10). Verificación: módulo creado siguiendo patrón de otros servicios.
+- [x] 2.2 **Implementar `list_submissions_for_task`**: Retorna lista de entregas de la tarea con datos del estudiante (nombre/email) y campos de corrección. Debe seguir orden de validaciones (401→403→404→403→404). Verificación: lógica respeta permisos y devuelve estructura esperada.
+- [x] 2.3 **Implementar `grade_submission` / `update_grade`**: Permite asignar o modificar calificación con `grade` (1..10, entero) y `feedback` opcional. Actualiza `graded_at`. Valida datos inválidos con `ValidationError` (400). Verificación: valida rango/tipo correctamente; actualiza campos al modificar corrección existente.
+- [x] 2.4 **Agregar validación "no corregida" en `submission_service`**: En `update_submission` y `delete_submission`, si `submission.grade is not None` lanzar `ConflictError` (409). Aplicar después de validaciones existentes (tarea disponible). Verificación: modificación/eliminación de entrega ya corregida retorna 409; entrega no corregida sigue funcionando.
+
+## 3. Backend - Blueprints y registro
+- [x] 3.1 **Crear blueprint `grading`**: Crear `backend/blueprints/grading.py` con rutas `GET /api/courses/<id>/tasks/<task_id>/submissions` y `PUT /api/courses/<id>/tasks/<task_id>/submissions/<student_id>/grade`. Usar `@login_required` + `@require_roles(UserRole.TEACHER)`. Serializar entregas incluyendo datos del estudiante y campos de corrección. Verificación: blueprint sigue patrón de `submissions.py` y `tasks.py`.
+- [x] 3.2 **Registrar blueprint en `app.py`**: Registrar blueprint `grading` (o importar módulo correspondiente). Verificación: `app.py` importa/registro nuevo blueprint sin romper registros existentes.
+- [x] 3.3 **Ajustar serialización para respetar visibilidad**: Revisar `_serialize_submission` en `submissions.py` para asegurar que cuando el contexto es del Estudiante no se exponen `grade`, `feedback`, `graded_at`. Si el serializador se comparte con Profesor, crear serializador específico para listado de corrección. Verificación: entrega propia del Estudiante nunca devuelve campos de corrección; listado para Profesor sí los devuelve.
+
+## 4. Frontend - Feature `grading`
+- [x] 4.1 **Crear estructura de feature**: Crear directorio `frontend/src/features/grading/` con `api.js`, `GradingPage.jsx`, `GradeSubmissionModal.jsx`. Verificación: archivos creados siguiendo estructura de `tasks/` y `submissions/`.
+- [x] 4.2 **Implementar API client**: En `api.js`, funciones `getSubmissions(courseId, taskId)`, `gradeSubmission(courseId, taskId, studentId, data)`. Verificación: usa `client` existente y endpoints correctos.
+- [x] 4.3 **Implementar `GradingPage.jsx`**: Seleccionar curso (`GET /api/courses/mine`), seleccionar tarea (`GET /api/courses/<id>/tasks`), listar entregas con tabla (`DataTable`) mostrando estudiante, contenido/links, estado (Corregida/No corregida), nota, retroalimentación, acción "Corregir/Modificar". Verificación: integra con design system y maneja estados loading/empty/error.
+- [x] 4.4 **Implementar `GradeSubmissionModal.jsx`**: Modal con `FormField` para `grade` (número 1..10) y `feedback` (textarea). Valida entrada básica antes de enviar (rango). Usa `Toast` para feedback. Verificación: modal reutiliza componentes UI existentes.
+- [x] 4.5 **Integrar rutas y navegación**: Agregar ruta protegida `/grading` (rol teacher) en `App.jsx`/router correspondiente e ítem "Corregir tareas" en sidebar. Verificación: solo Profesor puede acceder; Estudiante/Admin redirigen según guard existente.
+
+## 5. Tests y Verificación
+- [x] 5.1 **Tests backend**: Agregar/actualizar tests para cubrir listado de entregas por Profesor, corrección con rango válido/inválido, modificación de corrección, restricción "no corregida" (Estudiante no puede modificar/eliminar entrega corregida), permisos (Estudiante/Admin no pueden corregir), 404/403 correctos. Verificación: `python -m pytest backend/tests/test_grading.py -v` (nuevo) o tests existentes relacionados pasan.
+- [x] 5.2 **Verificación backend completa**: Ejecutar suite de backend para asegurar no regresión. Verificación: `cd backend && ..\.venv\Scripts\python.exe -m pytest` (Windows) pasa sin fallas nuevas.
+- [x] 5.3 **Build frontend**: Verificar build sin errores. Verificación: `cd frontend && cmd /c npm run build` (Windows) finaliza exitosamente.
+- [x] 5.4 **Smoke/validación manual**: Verificar endpoints con script existente si aplica (`scripts/verify.py` o smoke correspondiente). Verificación: smoke para CU-08 si existe, o validación manual de flujos principales.
+- [x] 5.5 **Lint/format**: Aplicar `ruff format` y `ruff check` en backend; `npm run lint:format:fix` en frontend si configurado. Verificación: sin errores de lint/formato.

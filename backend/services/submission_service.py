@@ -126,6 +126,8 @@ def update_submission(course_id, task_id, data, current_user):
     content, links = _validate(data)
 
     submission = _get_submission_or_404(task_id, current_user.id)
+    if submission.grade is not None:
+        raise ConflictError("La entrega ya fue corregida")
     submission.content = content
     submission.links = links
     db.session.commit()
@@ -139,5 +141,7 @@ def delete_submission(course_id, task_id, current_user):
     ensure_task_available(task)
 
     submission = _get_submission_or_404(task_id, current_user.id)
+    if submission.grade is not None:
+        raise ConflictError("La entrega ya fue corregida")
     db.session.delete(submission)
     db.session.commit()

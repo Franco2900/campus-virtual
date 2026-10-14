@@ -325,3 +325,28 @@ Formato:
 - **Criterios:** fidelidad a `casos_de_uso.md` CU-07 (disponibilidad y plazo), reutilización del patrón de subrecurso de CU-05/CU-06, mínimo impacto en el contrato existente y concentración de la semántica de plazo en `services/`.
 - **Consecuencias / impacto:** CU-08 consumirá `Submission` (corrección) y aplicará la regla "no corregida todavía" del paso A1.4; CU-09 usará la entrega/no-entrega para el promedio; el frontend del Estudiante usa `GET /api/courses/mine` para el selector de curso y el listado role-aware para el estado de entrega.
 - **Estado:** Vigente.
+
+## D-032 — Alcance acordado de CU-08 (corrección de tareas)
+
+- **Fecha:** 2026-10-14.
+- **Decisión (acordada con el usuario; formalizada en el design de CU-08):**
+  1. **Aprobado/desaprobado derivado:** el estado se calcula de la calificación (aprobado con `grade >= 6`, desaprobado con `1 <= grade <= 5`) y **no se persiste**; se expone como `approved` calculado en el serializador.
+  2. **Contenido de la corrección:** calificación entera (1..10) obligatoria y retroalimentación de texto opcional (máximo 5000 caracteres); sin estados intermedios.
+  3. **Archivo corregido diferido:** el paso 10 de `casos_de_uso.md` CU-08 ("adjuntar un archivo corregido") queda fuera de alcance; el modelo no incorpora infraestructura de archivos.
+  4. **Visibilidad del Estudiante diferida a CU-09:** `grade`/`feedback`/`graded_at` no se exponen al Estudiante en CU-08 (los serializadores del Estudiante enumeran campos explícitos); la consulta de calificaciones es el CU-09.
+  5. **Sin requisito de inscripción activa:** la precondición es que exista la entrega; se puede corregir aunque la inscripción se haya desactivado después de entregar (D-030 punto 3).
+  6. **Entrega corregida inmutable para el Estudiante:** tras la corrección, `PUT`/`DELETE` de la entrega propia responden 409 (regla "no corregida todavía" de A1.4).
+- **Contexto / problema:** decisiones de diseño pedidas por el usuario antes de arrancar el ciclo `new-use-case` de CU-08; el CU-07 había diferido a CU-08 la regla "no corregida todavía" y a CU-09 la visibilidad de la nota.
+- **Criterios:** fidelidad a `casos_de_uso.md` CU-08 (flujo principal + A1), simplicidad de alcance (sin infra de archivos ni notificaciones), reutilización de `get_manageable_course`/`get_task_or_404` y respeto de la frontera con CU-09.
+- **Consecuencias / impacto:** el frontend del Profesor (pantalla `/grading`) consume los endpoints de corrección; CU-09 deberá decidir la forma en que el Estudiante ve su nota y retroalimentación; el promedio de CU-09 usa `grade` y la regla de no-entregadas fuera de plazo.
+- **Estado:** Vigente.
+
+## D-033 — Endpoints de corrección y derivación de la aprobación (CU-08)
+
+- **Fecha:** 2026-10-14.
+- **Decisión:** la corrección se expone en un blueprint nuevo `blueprints/grading.py` con `url_prefix="/api/courses"` e `@login_required` + `@require_roles(UserRole.TEACHER)`: `GET /api/courses/<id>/tasks/<task_id>/submissions` (listado con datos del estudiante y estado de corrección) y `PUT /api/courses/<id>/tasks/<task_id>/submissions/<student_id>/grade` (corregir o modificar). La lógica y las validaciones viven en `services/grading_service.py` (`list_submissions_for_task`, `grade_submission`, `_validate_grade`, `_is_approved`) con el orden curso asignado → tarea del curso → entrega existente → datos; `grade_submission` actualiza `grade`, `feedback` y `graded_at` (`datetime.now(UTC)`) tanto en el alta como en la modificación (A1). El estado aprobado/desaprobado se deriva en el serializador (`approved = grade is not None and grade >= 6`), sin columna propia ni migración de estado. La forma de la entrega del Estudiante no cambia: `_serialize_submission` en `blueprints/submissions.py` y `blueprints/tasks.py` enumeran campos explícitos y no incluyen los de corrección.
+- **Contexto / problema:** CU-08 introduce la corrección sobre `Submission`; había que decidir dónde se valida la pertenencia de la tarea al curso, si la aprobación se persiste y cómo se evita filtrar la nota al Estudiante antes de CU-09.
+- **Alternativas consideradas:** (a) persistir una columna `approved` — rechazado por redundante y propenso a desincronización respecto de `grade`; (b) reutilizar `blueprints/submissions.py` para el listado del Profesor — rechazado por mezclar dos actores y dos formas de respuesta en un blueprint Estudiante-only; (c) blueprint y servicio propios con derivación en el serializador (elegido), reutilizando `get_manageable_course` y `get_task_or_404`.
+- **Criterios:** fidelidad a `casos_de_uso.md` CU-08 (flujo principal y A1) y a las reglas de negocio (calificación 1..10, promedio simple, sin correo), reutilización del patrón de subrecurso y de la autorización por rol (D-011/D-021), y mínimo impacto en el contrato del Estudiante.
+- **Consecuencias / impacto:** el esquema cambia con la migración `0007_add_grading` (tres columnas nullable: `grade`, `feedback`, `graded_at`); el guard 409 en `submission_service.update_submission`/`delete_submission` (`submission.grade is not None`) cierra la regla A1.4 diferida desde CU-07; CU-09 reutilizará `grade`/`graded_at` para la consulta de calificaciones y el promedio.
+- **Estado:** Vigente.

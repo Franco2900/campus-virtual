@@ -17,7 +17,7 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 - Gestión de inscripciones (**CU-05 implementado**): pantalla `/enrollments` para elegir un curso gestionable, ver los estudiantes con su estado de inscripción, inscribir, activar/desactivar y eliminar inscripciones. Disponible para Administrador y Profesor.
 - Gestión de tareas (**CU-06 implementado**): pantalla `/tasks` para elegir un curso gestionable, listar las tareas (activas e inactivas), crear, editar (incl. la fecha límite) y activar/desactivar. Disponible para el Profesor.
 - Entrega de tareas (**CU-07 implementado**): pantalla `/submissions` para elegir un curso, ver las tareas disponibles con su estado de entrega, entregar (texto y/o links), editar y eliminar con confirmación. Disponible para el Estudiante.
-- Correcciones de tareas (CU-08).
+- Corrección de tareas (**CU-08 implementado**): pantalla `/grading` para elegir un curso y una tarea, corregir las entregas con una calificación de 1 a 10 y retroalimentación opcional (máx. 5000 caracteres), ver el estado derivado aprobado/desaprobado y modificar una corrección existente. Disponible para el Profesor.
 - Consulta de calificaciones y filtrado de usuarios (CU-09, CU-10).
 - Chatbot asistente integrado con LangChain + Ollama.
 
@@ -152,6 +152,8 @@ npm run lint:format                           # frontend (desde frontend/)
 | POST | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Entregar una tarea — body `{"content", "links"}` (201/400/403/404/409) | Sesión + Estudiante |
 | PUT | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Modificar la entrega propia (200/400/403/404/409) | Sesión + Estudiante |
 | DELETE | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Eliminar la entrega propia (200/403/404/409) | Sesión + Estudiante |
+| GET | `/api/courses/<id>/tasks/<task_id>/submissions` | CU-08 | Listar las entregas de la tarea con datos del estudiante y estado de corrección (200/403/404) | Sesión + Profesor |
+| PUT | `/api/courses/<id>/tasks/<task_id>/submissions/<student_id>/grade` | CU-08 | Corregir o modificar una entrega — body `{"grade": 1..10, "feedback"?: str}` (200/400/403/404) | Sesión + Profesor |
 
 ### Pantallas del frontend (rutas)
 
@@ -165,6 +167,7 @@ npm run lint:format                           # frontend (desde frontend/)
 | `/enrollments` | Gestión de inscripciones (CU-05) | Administrador / Profesor |
 | `/tasks` | Gestión de tareas (CU-06) | Profesor |
 | `/submissions` | Entrega de tareas (CU-07) | Estudiante |
+| `/grading` | Corrección de tareas (CU-08) | Profesor |
 
 ## Configuración
 
@@ -222,7 +225,7 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Roadmap
 
-- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones) y CU-06 (Gestionar tareas) implementados end-to-end (backend Flask + frontend React/Vite con ruteo + tests + smoke HTTP y UI con Playwright). El esquema se versiona con migraciones (Alembic).
+- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones), CU-06 (Gestionar tareas), CU-07 (Entregar tarea) y CU-08 (Corregir tarea) implementados end-to-end (backend Flask + frontend React/Vite con ruteo + tests + smoke HTTP y UI con Playwright). El esquema se versiona con migraciones (Alembic).
 - Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
 - Integración completa del chatbot.
 - Tests automatizados de frontend.
