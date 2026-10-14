@@ -3,13 +3,13 @@ import { NavLink } from "react-router-dom";
 const NAV_ITEMS = [
   { to: "/", label: "Inicio", icon: "bi-house-door-fill", end: true },
   { to: "/courses", label: "Cursos", icon: "bi-journal-bookmark-fill", roles: ["admin"] },
-  { to: "/users", label: "Usuarios", icon: "bi-people-fill", roles: ["admin"] },
   {
     to: "/enrollments",
     label: "Inscripciones",
     icon: "bi-person-plus-fill",
     roles: ["admin", "teacher"],
   },
+  { to: "/users", label: "Usuarios", icon: "bi-people-fill", roles: ["admin"] },
   { to: "/tasks", label: "Tareas", icon: "bi-journal-text", roles: ["teacher"] },
   { to: "/submissions", label: "Mis entregas", icon: "bi-upload", roles: ["student"] },
 ];

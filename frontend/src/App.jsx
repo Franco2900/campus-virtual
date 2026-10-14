@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import AdminHomePage from "./app/AdminHomePage.jsx";
 import AppLayout from "./app/AppLayout.jsx";
 import HomePage from "./app/HomePage.jsx";
 import ProtectedRoute from "./app/ProtectedRoute.jsx";
@@ -17,7 +18,7 @@ import { ToastProvider } from "./ui/index.js";
 
 function HomeRoute({ user }) {
   if (user.role === "admin") {
-    return <Navigate to="/courses" replace />;
+    return <AdminHomePage user={user} />;
   }
   return <HomePage user={user} />;
 }
