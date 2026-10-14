@@ -10,6 +10,7 @@ import {
   FormField,
   PageHeader,
   Spinner,
+  StatusBadge,
   useToast,
 } from "../../ui/index.js";
 import { listUsers } from "../users/api.js";
@@ -21,6 +22,14 @@ import {
   setEnrollmentActive,
 } from "./api.js";
 
+function normalizeText(value) {
+  return String(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
 function enrollmentBadge(enrollment) {
   if (!enrollment) {
     return (
@@ -29,23 +38,19 @@ function enrollmentBadge(enrollment) {
       </Badge>
     );
   }
-  if (enrollment.active) {
-    return (
-      <Badge tone="success" icon="check-circle-fill">
-        Inscripto activo
-      </Badge>
-    );
-  }
   return (
-    <Badge tone="warning" icon="pause-circle-fill">
-      Inscripto inactivo
-    </Badge>
+    <StatusBadge
+      active={enrollment.active}
+      activeLabel="Inscripto activo"
+      inactiveLabel="Inscripto inactivo"
+    />
   );
 }
 
 export default function EnrollmentsPage({ user }) {
   const { notify } = useToast();
   const isAdmin = user?.role === "admin";
+  const courseListLabel = isAdmin ? "Todos los cursos" : "Cursos asignados";
 
   const [courses, setCourses] = useState([]);
   const [loadingCourses, setLoadingCourses] = useState(true);
@@ -54,6 +59,7 @@ export default function EnrollmentsPage({ user }) {
   const [loadingStudents, setLoadingStudents] = useState(false);
   const [studentOptions, setStudentOptions] = useState([]);
   const [selection, setSelection] = useState("");
+  const [studentQuery, setStudentQuery] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [confirming, setConfirming] = useState(null);
@@ -146,9 +152,10 @@ export default function EnrollmentsPage({ user }) {
     setStudents(data);
   }
 
-  function handleCourseChange(event) {
-    setSelectedCourseId(event.target.value);
+  function handleCourseSelect(courseId) {
+    setSelectedCourseId(courseId);
     setSelection("");
+    setStudentQuery("");
     setError("");
   }
 
@@ -162,6 +169,7 @@ export default function EnrollmentsPage({ user }) {
     try {
       await enrollStudent(selectedCourseId, studentId);
       setSelection("");
+      setStudentQuery("");
       await reloadStudents();
       notify({
         tone: "success",
@@ -234,6 +242,23 @@ export default function EnrollmentsPage({ user }) {
 
   const enrolledIds = new Set(students.filter((student) => student.enrollment).map((s) => s.id));
   const availableStudents = studentOptions.filter((student) => !enrolledIds.has(student.id));
+
+  const candidateStudents = useMemo(() => {
+    const query = normalizeText(studentQuery);
+    return students.filter((student) => {
+      if (student.enrollment) {
+        return false;
+      }
+      if (!query) {
+        return true;
+      }
+      return normalizeText(`${student.first_name} ${student.last_name} ${student.email}`).includes(
+        query
+      );
+    });
+  }, [students, studentQuery]);
+
+  const courseStudents = isAdmin ? students : students.filter((student) => student.enrollment);
 
   const columns = [
     { key: "first_name", header: "Nombre" },
@@ -321,22 +346,30 @@ export default function EnrollmentsPage({ user }) {
       ) : (
         <>
           <Card className="p-3 mb-3">
-            <FormField id="course-select" label="Curso">
-              <select
-                id="course-select"
-                className="form-select"
-                value={selectedCourseId}
-                onChange={handleCourseChange}
-                data-testid="course-select"
-              >
-                <option value="">Seleccioná un curso</option>
-                {courses.map((course) => (
-                  <option key={course.id} value={course.id}>
-                    {course.name} ({course.code}){course.active ? "" : " — inactivo"}
-                  </option>
-                ))}
-              </select>
-            </FormField>
+            <h6 className="fw-semibold mb-3">{courseListLabel}</h6>
+            <div className="list-group" data-testid="course-list" aria-label={courseListLabel}>
+              {courses.map((course) => {
+                const value = String(course.id);
+                const selected = value === String(selectedCourseId);
+                return (
+                  <button
+                    key={course.id}
+                    type="button"
+                    aria-pressed={selected}
+                    className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-2${
+                      selected ? " active" : ""
+                    }`}
+                    onClick={() => handleCourseSelect(value)}
+                    data-testid={`course-option-${course.id}`}
+                  >
+                    <span className="fw-semibold">
+                      {course.name} <span className="fw-normal">({course.code})</span>
+                    </span>
+                    {!course.active && <StatusBadge active={false} />}
+                  </button>
+                );
+              })}
+            </div>
           </Card>
 
           {selectedCourse && (
@@ -354,11 +387,10 @@ export default function EnrollmentsPage({ user }) {
 
               {courseActive && (
                 <Card className="p-3 mb-3">
-                  <h6 className="fw-semibold">Inscribir estudiante</h6>
                   <div className="d-flex flex-wrap gap-2 align-items-end">
                     <div className="flex-grow-1">
                       {isAdmin ? (
-                        <FormField id="enroll-student" label="Estudiante">
+                        <FormField id="enroll-student" label="Inscribir estudiante">
                           <select
                             id="enroll-student"
                             className="form-select"
@@ -375,21 +407,67 @@ export default function EnrollmentsPage({ user }) {
                           </select>
                         </FormField>
                       ) : (
-                        <FormField
-                          id="enroll-student-id"
-                          label="ID de estudiante"
-                          hint="Ingresá el ID de la cuenta del estudiante a inscribir."
-                        >
-                          <input
-                            id="enroll-student-id"
-                            type="number"
-                            min="1"
-                            className="form-control"
-                            value={selection}
-                            onChange={(event) => setSelection(event.target.value)}
-                            data-testid="enroll-student-id"
-                          />
-                        </FormField>
+                        <>
+                          <FormField
+                            id="enroll-student-search"
+                            label="Inscribir estudiante"
+                            hint="Escribí el nombre, apellido o correo. Solo se listan estudiantes activos que todavía no pertenecen al curso."
+                          >
+                            <input
+                              id="enroll-student-search"
+                              type="search"
+                              className="form-control"
+                              value={studentQuery}
+                              onChange={(event) => setStudentQuery(event.target.value)}
+                              autoComplete="off"
+                              data-testid="enroll-student-search"
+                            />
+                          </FormField>
+                          <div
+                            className="list-group mb-3 overflow-auto"
+                            style={{ maxHeight: "18rem" }}
+                            data-testid="student-results"
+                            aria-label="Estudiantes disponibles para inscribir"
+                          >
+                            {candidateStudents.length === 0 ? (
+                              <div className="list-group-item" data-testid="student-results-empty">
+                                <span style={{ color: "var(--campus-muted)" }}>
+                                  {studentQuery
+                                    ? "Sin coincidencias."
+                                    : "Todos los estudiantes ya están inscriptos."}
+                                </span>
+                              </div>
+                            ) : (
+                              candidateStudents.map((student) => {
+                                const selected = String(student.id) === String(selection);
+                                return (
+                                  <button
+                                    key={student.id}
+                                    type="button"
+                                    aria-pressed={selected}
+                                    className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center gap-2${
+                                      selected ? " active" : ""
+                                    }`}
+                                    onClick={() => setSelection(String(student.id))}
+                                    data-testid={`student-option-${student.id}`}
+                                  >
+                                    <span className="fw-semibold">
+                                      {student.first_name} {student.last_name}
+                                    </span>
+                                    <span
+                                      className="small"
+                                      style={
+                                        selected ? undefined : { color: "var(--campus-muted)" }
+                                      }
+                                    >
+                                      {student.email}
+                                    </span>
+                                  </button>
+                                );
+                              })
+                            )}
+                          </div>
+                        </>
                       )}
                     </div>
                     <Button
@@ -406,6 +484,15 @@ export default function EnrollmentsPage({ user }) {
               )}
 
               <Card className="p-0 overflow-hidden">
+                {!isAdmin && (
+                  <div className="p-3 border-bottom">
+                    <h6 className="fw-semibold mb-1">Estudiantes del curso</h6>
+                    <p className="mb-0 small" style={{ color: "var(--campus-muted)" }}>
+                      Solo figuran los estudiantes que pertenecen al curso. Para sumar a alguien,
+                      usá el buscador de arriba.
+                    </p>
+                  </div>
+                )}
                 {loadingStudents ? (
                   <div className="d-flex justify-content-center py-5">
                     <Spinner label="Cargando estudiantes..." />
@@ -421,7 +508,12 @@ export default function EnrollmentsPage({ user }) {
                     testId="enrollments-table"
                     rowTestId={(student) => `enrollment-row-${student.id}`}
                     columns={columns}
-                    rows={students}
+                    rows={courseStudents}
+                    empty={
+                      isAdmin
+                        ? "No hay estudiantes activos."
+                        : "No hay estudiantes inscriptos en el curso."
+                    }
                   />
                 )}
               </Card>

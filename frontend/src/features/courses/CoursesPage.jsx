@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import {
-  Badge,
   Button,
   Card,
   ConfirmDialog,
@@ -9,6 +8,7 @@ import {
   Modal,
   PageHeader,
   Spinner,
+  StatusBadge,
   useToast,
 } from "../../ui/index.js";
 import { listCourses, setCourseActive } from "./api.js";
@@ -104,14 +104,7 @@ export default function CoursesPage() {
     {
       key: "active",
       header: "Estado",
-      render: (course) => (
-        <Badge
-          tone={course.active ? "success" : "neutral"}
-          icon={course.active ? "check-circle-fill" : "slash-circle"}
-        >
-          {course.active ? "Activo" : "Inactivo"}
-        </Badge>
-      ),
+      render: (course) => <StatusBadge active={course.active} />,
     },
     {
       key: "actions",

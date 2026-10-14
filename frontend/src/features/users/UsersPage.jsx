@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import {
-  Badge,
   Button,
   Card,
   ConfirmDialog,
@@ -10,6 +9,7 @@ import {
   PageHeader,
   RoleBadge,
   Spinner,
+  StatusBadge,
   useToast,
 } from "../../ui/index.js";
 import { listUsers, setUserActive } from "./api.js";
@@ -119,14 +119,7 @@ export default function UsersPage() {
     {
       key: "active",
       header: "Estado",
-      render: (user) => (
-        <Badge
-          tone={user.active ? "success" : "neutral"}
-          icon={user.active ? "check-circle-fill" : "slash-circle"}
-        >
-          {user.active ? "Activo" : "Inactivo"}
-        </Badge>
-      ),
+      render: (user) => <StatusBadge active={user.active} />,
     },
     {
       key: "actions",

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
 import {
-  Badge,
   Button,
   Card,
   ConfirmDialog,
@@ -11,6 +10,7 @@ import {
   Modal,
   PageHeader,
   Spinner,
+  StatusBadge,
   useToast,
 } from "../../ui/index.js";
 import { createTask, listMyCourses, listTasks, setTaskActive, updateTask } from "./api.js";
@@ -28,18 +28,7 @@ function formatDueDate(value) {
 }
 
 function taskBadge(task) {
-  if (task.active) {
-    return (
-      <Badge tone="success" icon="check-circle-fill">
-        Activa
-      </Badge>
-    );
-  }
-  return (
-    <Badge tone="warning" icon="pause-circle-fill">
-      Inactiva
-    </Badge>
-  );
+  return <StatusBadge active={task.active} activeLabel="Activa" inactiveLabel="Inactiva" />;
 }
 
 export default function TasksPage() {
