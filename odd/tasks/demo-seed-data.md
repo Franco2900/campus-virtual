@@ -73,4 +73,5 @@ Dejar la base de desarrollo del Campus Virtual con el esquema al día (migració
 - `pytest tests/test_migrations.py -q` → 1 passed.
 
 ### Pendiente
-- Commit de la unidad (a la espera de confirmación del usuario por la restricción "no subir nada a git").
+- (cerrado) Unidad commiteada y publicada: commit `4cd67bd feat(seed): expand demo data with courses, tasks and submissions`; merge fast-forward de CU-07 a `main` y push a `origin/main` (`1139470..4cd67bd`).
+- Nota: por decisión del usuario, CU-07 y los seeds se publicaron juntos en `main` (no se abrió PR); la rama local `feat/cu-07-task-submission` quedó mergeada (fast-forward) y puede borrarse.
