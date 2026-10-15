@@ -103,3 +103,39 @@ Formato de cada entrada:
 - **Solución aplicada:** reemplazar el `ConfirmDialog` anidado por un paso de confirmación **inline** dentro del mismo `Modal` (`data-testid="user-role-confirm"`, botones `user-role-confirm-cancel`/`-accept`), reutilizando `Button` y los tokens del design system. Un único modal por flujo.
 - **Verificación posterior:** flujo de cambio de rol (Profesor↔Estudiante) ejecutado en Playwright → la consola reporta **0 errores desde la última navegación**; `npm run build`/Prettier OK; evidencia `evidencias/cu-04/04-cambio-rol.png` re-capturada.
 - **Estado final:** Resuelto (regla: no anidar dos `Modal` de Bootstrap; usar confirmación inline dentro de un formulario modal).
+
+## 2026-10-14 — El tool call no retorna al levantar servicios en primer plano (congelamiento aparente en CU-09)
+
+- **Fecha:** 2026-10-14.
+- **Error exacto:** sin mensaje de error; el tool call que lanzaba backend + Vite en primer plano desde el shell del agente **nunca devolvía** el control ("Saliendo..." / timeout del tool call), y al interrumpirlo morían los servicios.
+- **Contexto:** evidencia de CU-09. Capturar screenshots con Playwright necesita backend (`:5000`) y Vite (`:5173`) **vivos y persistentes** entre tool calls, a diferencia del smoke, que arranca, valida y limpia en una sola corrida.
+- **Causa probable (confirmada):** lanzar los servicios en primer plano mantiene **abierto el árbol de procesos y el stdio del llamador**: el proceso del agente espera el cierre de los hijos que heredaron sus handles, así que el tool call no puede resolver mientras los servicios sigan vivos. No es un cuelgue del servidor ni un defecto de Flask/Vite.
+- **Archivos involucrados:** `scripts/verify.py` (falta de un modo desligado); `AGENTS.md` (comando de ejecución para evidencia UI).
+- **Diagnóstico:** `python scripts/verify.py --diagnose` mostró los puertos **libres** pese a la percepción de cuelgue (los servicios no llegaban a sobrevivir a la interrupción); el working tree y los logs no mostraban progreso. Confirmado el patrón ya registrado el 2026-10-09 (percepción de congelamiento) y el 2026-10-10 (servicios que no sobreviven al reinicio).
+- **Solución aplicada:** nuevo modo `scripts/verify.py --serve`: spawnea backend + Vite **desligados** del proceso del agente (Windows: `DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_BREAKAWAY_FROM_JOB`, con fallback a `DETACHED_PROCESS`; POSIX: `start_new_session=True`), espera el readiness y **retorna en segundos**, dejando los pids en `scripts/.verify-pids`; `--cleanup` los detiene matando el árbol. Se documentó en `AGENTS.md` y `README.md` (D-036).
+- **Verificación posterior:** `verify.py --serve` retornó en **7,7 s** (exit 0); un tool call posterior confirmó ambos servicios vivos (Vite `200`, backend `401`) con `--diagnose` en OCUPADO; `--cleanup` liberó ambos puertos y dejó `scripts/.verify-pids` vacío; las 10 capturas de `evidencias/cu-09/` se tomaron con este modo y no quedaron procesos residuales.
+- **Estado final:** Resuelto (regla: nunca lanzar servicios de vida larga en primer plano desde el shell del agente; usar `--serve`).
+
+## 2026-10-14 — Gaps de Playwright MCP con el toggle de tema (evidencia en claro/oscuro)
+
+- **Fecha:** 2026-10-14.
+- **Error exacto:** sin excepción; dos comportamientos silenciosamente engañosos: (a) el click del MCP sobre el botón de tema (`data-testid="theme-toggle"`) no llegaba a disparar el handler (`clickCount=0`), y (b) la lectura de `data-bs-theme` quedaba con un toggle de atraso, con lo que la captura podía salir en el tema **equivocado** sin que nada fallara.
+- **Contexto:** captura de evidencia de CU-09 (vistas en claro y oscuro). La captura `06-detalle-estudiante-oscuro.png` salió inicialmente **idéntica en tamaño** a `05-…-claro.png`, señal de que se había capturado el tema equivocado.
+- **Causa probable (confirmada):** el click del MCP no atravesó el elemento interactivo real y la actualización del atributo de tema no es observable en el mismo instante del click; ambos son detalles de sincronización del harness, no defectos de la app.
+- **Archivos involucrados:** ninguno del código de la app; método de captura de evidencia.
+- **Diagnóstico:** comparar el tamaño/luminancia de los PNG contra los del tema esperado; el background promedio delata el tema (claro ≈ 241, oscuro ≈ 28) y la comparación entre capturas hermanas delata la repetición.
+- **Solución aplicada:** método determinista en dos pasos: (1) fijar el tema con `localStorage.setItem('campus-theme', 'dark'|'light')` y **recargar** la página, verificando `document.documentElement['data-bs-theme']` antes de capturar; (2) validar cada PNG por luminancia media de fondo con `System.Drawing` en PowerShell (medición real, no inferencia). Cuando se necesita un click, despachar `b.click()` desde `browser_evaluate` en lugar del click del MCP.
+- **Verificación posterior:** las 10 capturas de `evidencias/cu-09/` pasaron la validación por píxel (claro ≈ 241, oscuro ≈ 28) y `05`/`06` y `09`/`10` se re-capturaron contra el build final.
+- **Estado final:** Resuelto (regla: tema por `localStorage` + recarga verificada, y validación por píxel de cada screenshot de evidencia).
+
+## 2026-10-14 — Prettier marca archivos CRLF que no se tocaron (artefacto de `core.autocrlf` en Windows)
+
+- **Fecha:** 2026-10-14.
+- **Error exacto:** `npm run lint:format` → `[warn] src/features/submissions/api.js`, `[warn] src/features/submissions/SubmissionForm.jsx`, `[warn] src/features/submissions/SubmissionsPage.jsx` y `Code style issues found in 3 files`, en un gate donde esos archivos **no** fueron modificados.
+- **Contexto:** gate de cierre de CU-09. Los tres archivos pertenecen a CU-07 (`features/submissions/`) y no forman parte del diff de CU-09.
+- **Causa probable (confirmada):** `core.autocrlf=true` (config de git de la máquina) hace que el checkout convierta LF→CRLF en el working tree, mientras el blob versionado sigue en LF. Prettier 3 usa `endOfLine: "lf"` por defecto y `frontend/.prettierrc` no lo sobreescribe, así que lee los CRLF locales como formato inválido. No es un defecto del contenido commiteado.
+- **Archivos involucrados:** `frontend/src/features/submissions/{api.js,SubmissionForm.jsx,SubmissionsPage.jsx}` (no tocados); configuración de git de la máquina.
+- **Diagnóstico:** `git status --porcelain` vacío para esos archivos (contenido idéntico a HEAD) + conteo de bytes: working tree con CR>0 (CRLF) vs `git show HEAD:<archivo>` con **0 CR** (LF). La distinción working tree / blob descarta la regresión. **Ojo:** `git status` puede quedar mostrando ` M` por stat cache racy aunque los bytes ya estén normalizados; la fuente de verdad es `git diff --numstat` (0 líneas = sin cambio real) más el conteo de CR.
+- **Solución aplicada:** no se reformateó (un `--write` cambiaría los finales de línea y ensuciaría el diff con ruido ajeno al CU). Se verificó el contenido versionado y se reportó el `warn` como preexistente del entorno. Los archivos creados/modificados en CU-09 se escribieron en LF y pasan el check.
+- **Verificación posterior:** `prettier --check .` no marca ningún archivo de `features/grades/` ni de los modificados en CU-09; el conteo de CR confirma LF en los archivos nuevos.
+- **Estado:** Abierto (limitación del entorno Windows; no requiere cambio de código). Mitigación posible si molesta: `.gitattributes` con `* text=auto eol=lf`, que tiene precedencia sobre `core.autocrlf`.
