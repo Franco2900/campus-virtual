@@ -33,6 +33,7 @@ def create_app(config=None):
     from blueprints.auth import auth_bp
     from blueprints.courses import courses_bp
     from blueprints.enrollments import enrollments_bp
+    from blueprints.grades import grades_bp
     from blueprints.grading import grading_bp
     from blueprints.submissions import submissions_bp
     from blueprints.tasks import tasks_bp
@@ -53,6 +54,7 @@ def create_app(config=None):
     app.register_blueprint(tasks_bp)
     app.register_blueprint(submissions_bp)
     app.register_blueprint(grading_bp)
+    app.register_blueprint(grades_bp)
 
     with app.app_context():
         if app.config.get("TESTING"):
