@@ -10,6 +10,7 @@ import LoginPage from "./features/auth/LoginPage.jsx";
 import RegisterPage from "./features/auth/RegisterPage.jsx";
 import CoursesPage from "./features/courses/CoursesPage.jsx";
 import EnrollmentsPage from "./features/enrollments/EnrollmentsPage.jsx";
+import GradesPage from "./features/grades/GradesPage.jsx";
 import GradingPage from "./features/grading/GradingPage.jsx";
 import SubmissionsPage from "./features/submissions/SubmissionsPage.jsx";
 import TasksPage from "./features/tasks/TasksPage.jsx";
@@ -86,6 +87,14 @@ function AppRoutes({ user, loading, onLogin, onLogout }) {
           element={
             <ProtectedRoute user={user} loading={loading} role="teacher">
               <GradingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/grades"
+          element={
+            <ProtectedRoute user={user} loading={loading} roles={["student", "teacher"]}>
+              <GradesPage user={user} />
             </ProtectedRoute>
           }
         />

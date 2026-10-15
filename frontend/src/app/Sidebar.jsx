@@ -18,6 +18,12 @@ const NAV_ITEMS = [
     roles: ["teacher"],
   },
   { to: "/submissions", label: "Mis entregas", icon: "bi-upload", roles: ["student"] },
+  {
+    to: "/grades",
+    label: "Calificaciones",
+    icon: "bi-clipboard-check",
+    roles: ["student", "teacher"],
+  },
 ];
 
 export default function Sidebar({ user }) {
