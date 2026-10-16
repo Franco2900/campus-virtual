@@ -19,7 +19,7 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 - Entrega de tareas (**CU-07 implementado**): pantalla `/submissions` para elegir un curso, ver las tareas disponibles con su estado de entrega, entregar (texto y/o links), editar y eliminar con confirmación. Disponible para el Estudiante.
 - Corrección de tareas (**CU-08 implementado**): pantalla `/grading` para elegir un curso y una tarea, corregir las entregas con una calificación de 1 a 10 y retroalimentación opcional (máx. 5000 caracteres), ver el estado derivado aprobado/desaprobado y modificar una corrección existente. Disponible para el Profesor.
 - Consulta de calificaciones (**CU-09 implementado**): pantalla `/grades` para elegir un curso y ver, como Estudiante, el detalle por tarea (nota, retroalimentación, aprobado/desaprobado) con el promedio del curso; como Profesor, la matriz estudiante × tarea con el promedio de cada estudiante y el promedio del curso.
-- Filtrado de usuarios (CU-10).
+- Filtrado de usuarios (**CU-10 implementado**): barra de filtros del listado de usuarios (q/role/active) con estado vacío A1, accesible solo para el Administrador.
 - Chatbot asistente integrado con LangChain + Ollama.
 
 ## Tecnologías
@@ -101,6 +101,7 @@ npm run lint:format                           # frontend (desde frontend/)
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu05      # smoke de gestión de inscripciones
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu06      # smoke de gestión de tareas
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu09      # smoke de consulta de calificaciones
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu10      # smoke de filtrado de usuarios
 ..\.venv\Scripts\python.exe scripts\verify.py --serve --db backend\instance\campus.db
                                                              # deja backend + Vite vivos y desligados (evidencia UI)
 ..\.venv\Scripts\python.exe scripts\verify.py --cleanup       # detiene los servicios de --serve/--keep
@@ -138,7 +139,7 @@ npm run lint:format                           # frontend (desde frontend/)
 | GET | `/api/courses/<id>` | CU-03 | Obtener un curso (200/404) | Sesión + Administrador |
 | PUT | `/api/courses/<id>` | CU-03 | Editar un curso (200/400/404/409) | Sesión + Administrador |
 | PATCH | `/api/courses/<id>` | CU-03 | Activar/desactivar un curso — body `{"active": <bool>}` | Sesión + Administrador |
-| GET | `/api/users` | CU-04 | Listar usuarios (incluye inactivos) | Sesión + Administrador |
+| GET | `/api/users` | CU-04, CU-10 | Listar usuarios (incluye inactivos); filtros opcionales `q`/`role`/`active` | Sesión + Administrador |
 | GET | `/api/users/<id>` | CU-04 | Obtener un usuario (200/404) | Sesión + Administrador |
 | PUT | `/api/users/<id>` | CU-04 | Editar datos y rol (200/400/404/409) | Sesión + Administrador |
 | PATCH | `/api/users/<id>` | CU-04 | Activar/desactivar — body `{"active": <bool>}` (200/400/404) | Sesión + Administrador |
@@ -234,7 +235,7 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Roadmap
 
-- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones), CU-06 (Gestionar tareas), CU-07 (Entregar tarea), CU-08 (Corregir tarea) y CU-09 (Consultar calificaciones) implementados end-to-end (backend Flask + frontend React/Vite con ruteo + tests + smoke HTTP y UI con Playwright). El esquema se versiona con migraciones (Alembic).
+- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones), CU-06 (Gestionar tareas), CU-07 (Entregar tarea), CU-08 (Corregir tarea), CU-09 (Consultar calificaciones) y CU-10 (Filtrar usuarios) implementados end-to-end.
 - Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
 - Integración completa del chatbot.
 - Tests automatizados de frontend.

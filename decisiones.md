@@ -384,3 +384,16 @@ Formato:
 - **Criterios:** portabilidad (mismos pasos documentados para Windows/Linux/macOS), ausencia de procesos residuales (cleanup por árbol) y reutilización del harness existente en lugar de agregar dependencias.
 - **Consecuencias / impacto:** `AGENTS.md` y `README.md` documentan `--serve`/`--cleanup` como el modo para evidencia UI; las 10 capturas de `evidencias/cu-09/` se produjeron con este modo; `taskkill /F /T` mata el árbol aunque los pid que escuchan sean hijos de los pid registrados.
 - **Estado:** Vigente.
+
+
+## D-037 — Alcance acordado de CU-10 (filtrado de usuarios)
+
+- Fecha: 2026-10-16.
+- Actor: solo el Administrador; criterios opcionales q/role/active combinados con AND; q escape literal %, _, \. role/active inválidos -> 400; sin paginación; operación de solo lectura; sin notificaciones.
+- Estado: Vigente.
+
+## D-038 — Servicio y endpoint de filtrado + barra de filtros en UI (CU-10)
+
+- Fecha: 2026-10-16.
+- user_service.list_users incorpora los criterios; blueprint lee query y traduce ValidationError a 400; UsersPage con debounce 300ms, selects, botón Limpiar, requestRef y A1 diferenciado; api.js omite vacíos. Tests 241 passed, smoke 22/22, evidencia 9 capturas.
+- Estado: Vigente.

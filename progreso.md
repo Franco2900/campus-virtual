@@ -2,7 +2,7 @@
 
 Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloqueada**.
 
-Última actualización: 2026-10-14.
+Última actualización: 2026-10-16.
 
 ## Fases de configuración del entorno
 
@@ -35,7 +35,7 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 | CU-07 | Entregar tarea | Completada | Implementado end-to-end; 181 tests + smoke 39/39 + UI Playwright (10 screenshots); revisión APROBADA; cambio `2026-10-13-add-task-submission` archivado |
 | CU-08 | Corregir tarea | Completada | Implementado end-to-end; 208 tests + smoke 35/35 + UI Playwright (13 screenshots); revisión APROBADA; cambio `2026-10-14-add-task-grading` archivado |
 | CU-09 | Consultar calificaciones | Completada | Implementado end-to-end; 221 tests + smoke 35/35 + UI Playwright (10 screenshots); revisión APROBADA con 1 hallazgo Medio corregido; cambio `2026-10-14-add-grade-consultation` archivado |
-| CU-10 | Filtrar usuarios | Pendiente | - |
+| CU-10 | Filtrar usuarios | Completada | Implementado end-to-end; backend: servicio + validaciones + endpoint; frontend: barra de filtros con debounce y A1; 241 tests backend, smoke HTTP 22/22, evidencia UI Playwright (9 screenshots claro/oscuro); revisión APROBADA sin bloqueantes (`reviews/cu-10.md`); cambio `add-user-filtering` archivado |
 
 ## Resumen del agente (último)
 
@@ -67,10 +67,11 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 
 ## Próximos pasos
 
-1. **CU-10 (Filtrar usuarios)** orquestado por la skill `new-use-case`. Último CU del alcance: filtrado de usuarios por el Administrador.
-2. Resolver la disponibilidad del subagente `reviewer` (no disponible como tipo de agente en las sesiones de CU-08 y CU-09; se cerró con revisión inline con la skill `review-use-case`) y reintentarlo en el próximo CU.
+1. **CU-10 (Filtrar usuarios) completado** (ver arriba). El alcance de los 10 CU queda cerrado.
+2. Resolver la disponibilidad del subagente `reviewer` (no disponible como tipo de agente en las sesiones de CU-08, CU-09 y CU-10; se cerró con revisión inline con la skill `review-use-case`) y reintentarlo cuando esté disponible.
 3. **Deuda técnica priorizada (B-01 de `reviews/cu-09.md`):** unificar el tratamiento de fechas naive-UTC en el frontend. `formatDueDate`/`formatSubmissionDate` (`features/grades/format.js`, `features/tasks/TasksPage.jsx`, `features/submissions/SubmissionsPage.jsx`) parsean una fecha naive con `new Date(...)` y la muestran como hora local; para usuarios en UTC-3 la "Fecha límite" queda corrida ~3 h respecto del valor con el que el servidor evalúa el vencimiento. El entorno de desarrollo (UTC) lo enmascara. Requiere un cambio transversal propio, con su verificación y evidencia.
 4. **Pendiente menor (B-04 de `reviews/cu-09.md`):** filtrar las tareas inactivas en el selector de la pantalla de corrección (`features/grading/GradingPage.jsx`), para alinearla con la matriz de `/grades` (arrastrado desde el hallazgo 6 de `reviews/cu-08.md`).
+5. **Integración del chatbot LangChain + Ollama** (único ítem futuro del alcance).
 
 ## Pendientes de definición
 
