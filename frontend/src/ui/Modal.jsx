@@ -1,7 +1,15 @@
 import { useEffect, useRef } from "react";
 import BootstrapModal from "bootstrap/js/dist/modal";
 
-export default function Modal({ open, title, size, footer, onClose, children }) {
+export default function Modal({
+  open,
+  title,
+  size,
+  footer,
+  onClose,
+  scrollable = false,
+  children,
+}) {
   const elementRef = useRef(null);
   const instanceRef = useRef(null);
   const onCloseRef = useRef(onClose);
@@ -35,11 +43,18 @@ export default function Modal({ open, title, size, footer, onClose, children }) 
     }
   }, [open]);
 
-  const sizeClass = size ? `modal-${size}` : "";
+  const dialogClass = [
+    "modal-dialog",
+    "modal-dialog-centered",
+    size ? `modal-${size}` : "",
+    scrollable ? "modal-dialog-scrollable" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div className="modal fade" ref={elementRef} tabIndex={-1} aria-hidden="true">
-      <div className={`modal-dialog modal-dialog-centered ${sizeClass}`.trim()}>
+      <div className={dialogClass}>
         <div className="modal-content">
           {title && (
             <div className="modal-header">

@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { Button, FormField } from "../../ui/index.js";
+import SubmissionDetail from "./SubmissionDetail.jsx";
 
 const GRADE_MIN = 1;
 const GRADE_MAX = 10;
@@ -57,8 +58,19 @@ export default function GradeSubmissionModal({
   return (
     <form onSubmit={handleSubmit} noValidate data-testid="grade-submission-modal">
       <p className="text-secondary">
-        Corrigiendo la entrega de <strong>{studentLabel(submission)}</strong>.
+        Corrigiendo la entrega de <strong>{studentLabel(submission)}</strong>
+        {submission?.student?.email && (
+          <>
+            {" "}
+            <span className="small">({submission.student.email})</span>
+          </>
+        )}
+        .
       </p>
+
+      <SubmissionDetail submission={submission} />
+
+      <h6 className="text-uppercase small text-secondary mt-4">Corrección</h6>
 
       <FormField
         id="grade-form-grade"

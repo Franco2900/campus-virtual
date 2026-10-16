@@ -197,6 +197,18 @@
   vertical-align: middle;
 }
 
+/* Visor de entrega: preserva párrafos, acota la altura y evita desbordes */
+.campus-submission-text {
+  max-height: 30vh;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background-color: var(--campus-surface-2);
+  border: 1px solid var(--campus-border);
+  border-radius: var(--campus-radius);
+  padding: 1rem;
+}
+
 /* Estado vacío */
 .campus-empty {
   display: flex;

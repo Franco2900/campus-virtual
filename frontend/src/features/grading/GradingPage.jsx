@@ -266,16 +266,18 @@ export default function GradingPage() {
       header: "",
       className: "text-end",
       render: (submission) => (
-        <Button
-          variant="soft"
-          className="btn-sm"
-          icon="pencil"
-          onClick={() => openGrade(submission)}
-          disabled={submitting}
-          data-testid={`grade-submission-${submission.student_id}`}
-        >
-          {isGraded(submission) ? "Modificar" : "Corregir"}
-        </Button>
+        <div className="d-flex justify-content-end gap-2">
+          <Button
+            variant="soft"
+            className="btn-sm"
+            icon="pencil"
+            onClick={() => openGrade(submission)}
+            disabled={submitting}
+            data-testid={`grade-submission-${submission.student_id}`}
+          >
+            {isGraded(submission) ? "Modificar" : "Corregir"}
+          </Button>
+        </div>
       ),
     },
   ];
@@ -387,6 +389,8 @@ export default function GradingPage() {
       <Modal
         open={modalOpen}
         title={isGraded(activeSubmission ?? {}) ? "Modificar corrección" : "Corregir entrega"}
+        size="lg"
+        scrollable
         onClose={closeModal}
       >
         {modalOpen && (
