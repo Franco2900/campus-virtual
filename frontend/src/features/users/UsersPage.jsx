@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   Button,
   Card,
   ConfirmDialog,
   DataTable,
+  EmptyState,
+  FormField,
   Modal,
   PageHeader,
+  ROLE_META,
   RoleBadge,
   Spinner,
   StatusBadge,
@@ -16,34 +19,67 @@ import { listUsers, setUserActive } from "./api.js";
 import ResetPasswordForm from "./ResetPasswordForm.jsx";
 import UserForm from "./UserForm.jsx";
 
+const FILTER_DEBOUNCE_MS = 300;
+const EMPTY_FILTERS = { q: "", role: "", active: "" };
+
 export default function UsersPage() {
   const { notify } = useToast();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [queryInput, setQueryInput] = useState("");
+  const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [formOpen, setFormOpen] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [resetOpen, setResetOpen] = useState(false);
   const [resettingUser, setResettingUser] = useState(null);
   const [confirming, setConfirming] = useState(null);
   const [toggling, setToggling] = useState(false);
+  const requestRef = useRef(0);
 
-  async function loadUsers() {
+  async function loadUsers(criteria) {
+    const requestId = ++requestRef.current;
     setLoading(true);
     setError("");
     try {
-      const data = await listUsers();
-      setUsers(data);
+      const data = await listUsers(criteria);
+      if (requestRef.current === requestId) {
+        setUsers(data);
+      }
     } catch (requestError) {
-      setError(requestError.message);
+      if (requestRef.current === requestId) {
+        setError(requestError.message);
+      }
     } finally {
-      setLoading(false);
+      if (requestRef.current === requestId) {
+        setLoading(false);
+      }
     }
   }
 
   useEffect(() => {
-    loadUsers();
-  }, []);
+    loadUsers(filters);
+  }, [filters]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters((previous) =>
+        previous.q === queryInput.trim() ? previous : { ...previous, q: queryInput.trim() }
+      );
+    }, FILTER_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [queryInput]);
+
+  function updateFilter(key, value) {
+    setFilters((previous) => ({ ...previous, [key]: value }));
+  }
+
+  function clearFilters() {
+    setQueryInput("");
+    setFilters((previous) =>
+      previous.q || previous.role || previous.active ? EMPTY_FILTERS : previous
+    );
+  }
 
   function openEdit(user) {
     setEditingUser(user);
@@ -57,7 +93,7 @@ export default function UsersPage() {
 
   function handleSaved(saved) {
     setFormOpen(false);
-    loadUsers();
+    loadUsers(filters);
     notify({
       tone: "success",
       title: "Usuario actualizado",
@@ -100,6 +136,8 @@ export default function UsersPage() {
       setConfirming(null);
     }
   }
+
+  const hasActiveFilters = Boolean(filters.q || filters.role || filters.active);
 
   const columns = [
     {
@@ -168,16 +206,95 @@ export default function UsersPage() {
       />
 
       {error && (
-        <div className="alert alert-danger d-flex align-items-center gap-2" role="alert">
+        <div
+          className="alert alert-danger d-flex align-items-center gap-2"
+          role="alert"
+          data-testid="users-error"
+        >
           <i className="bi bi-exclamation-triangle-fill" aria-hidden="true" />
           {error}
         </div>
       )}
 
+      <Card className="p-3 mb-3">
+        <div
+          className="d-flex flex-wrap gap-3 align-items-end"
+          role="group"
+          aria-label="Filtros de usuarios"
+          data-testid="users-filters"
+        >
+          <div className="flex-grow-1">
+            <FormField id="users-filter-q" label="Buscar">
+              <input
+                id="users-filter-q"
+                type="search"
+                className="form-control"
+                placeholder="Nombre, apellido o correo"
+                value={queryInput}
+                onChange={(event) => setQueryInput(event.target.value)}
+                autoComplete="off"
+                data-testid="users-filter-q"
+              />
+            </FormField>
+          </div>
+          <FormField id="users-filter-role" label="Rol">
+            <select
+              id="users-filter-role"
+              className="form-select"
+              value={filters.role}
+              onChange={(event) => updateFilter("role", event.target.value)}
+              data-testid="users-filter-role"
+            >
+              <option value="">Todos</option>
+              {Object.entries(ROLE_META).map(([value, meta]) => (
+                <option key={value} value={value}>
+                  {meta.label}
+                </option>
+              ))}
+            </select>
+          </FormField>
+          <FormField id="users-filter-active" label="Estado">
+            <select
+              id="users-filter-active"
+              className="form-select"
+              value={filters.active}
+              onChange={(event) => updateFilter("active", event.target.value)}
+              data-testid="users-filter-active"
+            >
+              <option value="">Todos</option>
+              <option value="true">Activos</option>
+              <option value="false">Inactivos</option>
+            </select>
+          </FormField>
+          <Button
+            variant="soft"
+            icon="x-circle"
+            className="mb-3"
+            onClick={clearFilters}
+            data-testid="users-filter-clear"
+          >
+            Limpiar filtros
+          </Button>
+        </div>
+      </Card>
+
       <Card className="p-0 overflow-hidden">
         {loading ? (
           <div className="d-flex justify-content-center py-5">
             <Spinner label="Cargando usuarios..." />
+          </div>
+        ) : users.length === 0 && hasActiveFilters ? (
+          <div data-testid="users-empty-filtered">
+            <EmptyState icon="bi-search" title="No hay resultados para los criterios">
+              <Button
+                variant="soft"
+                icon="x-circle"
+                onClick={clearFilters}
+                data-testid="users-filter-clear-empty"
+              >
+                Limpiar filtros
+              </Button>
+            </EmptyState>
           </div>
         ) : (
           <DataTable
