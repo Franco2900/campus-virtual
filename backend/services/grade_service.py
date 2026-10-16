@@ -168,6 +168,7 @@ def _teacher_view(course):
                 },
                 "grades": grades,
                 "average": average,
+                "approved": average is not None and average >= APPROVAL_THRESHOLD,
             }
         )
 

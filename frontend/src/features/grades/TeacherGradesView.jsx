@@ -1,5 +1,23 @@
-import { Card, DataTable, EmptyState, StatCard } from "../../ui/index.js";
+import { Badge, Card, DataTable, EmptyState, StatCard } from "../../ui/index.js";
 import { formatValue } from "./format.js";
+
+function approvalBadge(row) {
+  if (row.average === null || row.average === undefined) {
+    return <span className="text-secondary">—</span>;
+  }
+  if (row.approved) {
+    return (
+      <Badge tone="success" icon="patch-check-fill">
+        Aprobado
+      </Badge>
+    );
+  }
+  return (
+    <Badge tone="danger" icon="x-circle-fill">
+      Desaprobado
+    </Badge>
+  );
+}
 
 export default function TeacherGradesView({ data }) {
   const tasks = data.tasks ?? [];
@@ -50,6 +68,11 @@ export default function TeacherGradesView({ data }) {
       key: "average",
       header: "Promedio",
       render: (row) => <span className="fw-semibold">{formatValue(row.average)}</span>,
+    },
+    {
+      key: "approved",
+      header: "Estado",
+      render: (row) => approvalBadge(row),
     },
   ];
 

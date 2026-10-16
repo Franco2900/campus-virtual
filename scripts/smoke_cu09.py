@@ -319,6 +319,11 @@ def main():
         f"fila={row}",
     )
     check(
+        "la fila del estudiante expone su estado de aprobación del curso",
+        isinstance(row, dict) and row.get("approved") is False,
+        f"approved={row.get('approved') if isinstance(row, dict) else 'n/a'}",
+    )
+    check(
         "el promedio del curso es la media de los promedios por estudiante",
         isinstance(teacher_body, dict) and teacher_body.get("course_average") == 4.5,
         f"course_average={teacher_body.get('course_average') if isinstance(teacher_body, dict) else 'n/a'}",

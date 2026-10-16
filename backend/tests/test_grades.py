@@ -31,7 +31,7 @@ STUDENT_TASK_FIELDS = {
 STUDENT_VIEW_FIELDS = {"course", "average", "tasks"}
 TEACHER_VIEW_FIELDS = {"course", "tasks", "students", "course_average"}
 TEACHER_TASK_FIELDS = {"task_id", "title", "due_date", "active"}
-STUDENT_ROW_FIELDS = {"student", "grades", "average"}
+STUDENT_ROW_FIELDS = {"student", "grades", "average", "approved"}
 STUDENT_INFO_FIELDS = {"id", "name", "email"}
 PAST_DUE_DATE = datetime(2020, 1, 1, tzinfo=UTC)
 
@@ -319,8 +319,46 @@ def test_teacher_view_matrix(client, app):
     assert rows[student_one]["average"] == 4.5
     assert rows[student_two]["grades"] == {str(task_one): None, str(task_two): 1}
     assert rows[student_two]["average"] == 1
+    assert rows[student_one]["approved"] is False
+    assert rows[student_two]["approved"] is False
     assert body["course_average"] == 2.75
     assert teacher_id > 0
+
+
+def test_teacher_view_student_approval_state(client, app):
+    _, course_id = _teacher_with_course(client, app)
+    task = _seed_task(app, course_id, title="T1")
+
+    approved_student = _create_user(
+        app, STUDENT, UserRole.STUDENT, first_name="Apro", last_name="Bado"
+    )
+    boundary_student = _create_user(
+        app,
+        {"email": "boundary@example.com", "password": "boundarypass123"},
+        UserRole.STUDENT,
+        first_name="Justo",
+        last_name="Seis",
+    )
+    failed_student = _create_user(
+        app, STUDENT_TWO, UserRole.STUDENT, first_name="Desa", last_name="Probado"
+    )
+    _seed_enrollment(app, course_id, approved_student)
+    _seed_enrollment(app, course_id, boundary_student)
+    _seed_enrollment(app, course_id, failed_student)
+
+    _seed_submission(app, task, approved_student, grade=8, graded_at=datetime.now(UTC))
+    _seed_submission(app, task, boundary_student, grade=6, graded_at=datetime.now(UTC))
+    _seed_submission(app, task, failed_student, grade=5, graded_at=datetime.now(UTC))
+
+    response = client.get(_grades_url(course_id))
+    assert response.status_code == 200
+    rows = {row["student"]["id"]: row for row in response.get_json()["students"]}
+    assert rows[approved_student]["average"] == 8
+    assert rows[approved_student]["approved"] is True
+    assert rows[boundary_student]["average"] == 6
+    assert rows[boundary_student]["approved"] is True
+    assert rows[failed_student]["average"] == 5
+    assert rows[failed_student]["approved"] is False
 
 
 def test_teacher_view_without_students(client, app):
@@ -349,3 +387,4 @@ def test_teacher_view_without_active_tasks(client, app):
     assert len(body["students"]) == 1
     assert body["students"][0]["grades"] == {}
     assert body["students"][0]["average"] is None
+    assert body["students"][0]["approved"] is False
