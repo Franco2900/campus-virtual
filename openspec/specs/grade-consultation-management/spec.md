@@ -80,7 +80,7 @@ El sistema SHALL devolver, en la vista del Estudiante, el detalle por tarea y el
 
 ### Requirement: Matriz de calificaciones del Profesor
 
-El sistema SHALL devolver, en la vista del Profesor, una matriz de estudiantes × tareas y el promedio del curso. La matriz MUST incluir como filas a los estudiantes con inscripción activa en el curso y como columnas las tareas activas del curso. Para cada par (estudiante, tarea) la matriz MUST reflejar la calificación correspondiente según la regla del promedio (nota si la entrega está corregida, 1 si la fecha límite venció sin entrega, o la ausencia de calificación) y MUST incluir el promedio por estudiante. El promedio del curso MUST calcularse sobre los estudiantes inscriptos.
+El sistema SHALL devolver, en la vista del Profesor, una matriz de estudiantes × tareas y el promedio del curso. La matriz MUST incluir como filas a los estudiantes con inscripción activa en el curso y como columnas las tareas activas del curso. Para cada par (estudiante, tarea) la matriz MUST reflejar la calificación correspondiente según la regla del promedio (nota si la entrega está corregida, 1 si la fecha límite venció sin entrega, o la ausencia de calificación) y MUST incluir el promedio por estudiante y el estado de aprobación del curso del estudiante. El estado de aprobación MUST derivarse de la regla `average >= 6` (aprobado cuando el promedio es igual o mayor a 6) y MUST ser falso cuando el promedio es nulo; el estado MUST NOT persistirse. El promedio del curso MUST calcularse sobre los estudiantes inscriptos.
 
 #### Scenario: Matriz con estudiantes y tareas
 - **GIVEN** que un curso asignado al Profesor tiene estudiantes inscriptos y tareas activas con algunas entregas corregidas
@@ -96,6 +96,16 @@ El sistema SHALL devolver, en la vista del Profesor, una matriz de estudiantes �
 - **GIVEN** que un curso asignado al Profesor no tiene tareas activas
 - **WHEN** el Profesor consulta `GET /api/courses/<id>/grades`
 - **THEN** el sistema responde HTTP 200 con la matriz sin columnas de tareas y sin promedio de curso
+
+#### Scenario: Fila con estado de aprobación del curso
+- **GIVEN** que un curso asignado al Profesor tiene estudiantes inscriptos cuyos promedios alcanzan y no alcanzan 6
+- **WHEN** el Profesor consulta `GET /api/courses/<id>/grades`
+- **THEN** cada fila incluye el estado de aprobación del curso del estudiante: aprobado cuando su promedio es igual o mayor a 6 y desaprobado en caso contrario
+
+#### Scenario: Estudiante sin promedio no está aprobado
+- **GIVEN** que un estudiante inscripto en el curso no tiene ninguna calificación que aporte a su promedio
+- **WHEN** el Profesor consulta `GET /api/courses/<id>/grades`
+- **THEN** su fila indica estado no aprobado y un promedio nulo
 
 ### Requirement: Regla del promedio simple
 
