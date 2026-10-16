@@ -2,10 +2,11 @@
 
 Crea cursos extra, Profesores, Estudiantes (uno inactivo), asignaciones
 Profesor↔curso, inscripciones (activas e inactivas), tareas (activas/inactivas,
-con plazos futuros y vencidos) y entregas de tareas, sobre los cursos demo ya
-sembrados por `scripts/seed_admin.py`. Es idempotente: cada registro se busca por
-su clave natural (email, par curso+profesor, par curso+estudiante, par curso+título
-de tarea, par tarea+estudiante) antes de insertarse.
+con plazos futuros y vencidos), entregas de tareas y la corrección de una porción
+determinista de esas entregas, sobre los cursos demo ya sembrados por
+`scripts/seed_admin.py`. Es idempotente: cada registro se busca por su clave natural
+(email, par curso+profesor, par curso+estudiante, par curso+título de tarea, par
+tarea+estudiante) antes de insertarse, y solo se corrigen entregas sin calificar.
 
 Uso (desde la raíz del proyecto, con el Administrador y los cursos demo ya creados):
     Windows:     .\\.venv\\Scripts\\python.exe scripts\\seed_demo.py
@@ -249,26 +250,70 @@ ACTIVE_COURSE_CODES = [
 ]
 
 # Plantillas de tareas por curso: (title, description, days_from_now, active).
-# Los plazos negativos quedan vencidos; una tarea por curso queda inactiva.
+# Los plazos negativos quedan vencidos; dos tareas por curso quedan inactivas.
 TASK_TEMPLATES = [
     ("Trabajo Práctico 1", "Resolución de ejercicios de la unidad 1.", 7, True),
     ("Trabajo Práctico 2", "Resolución de ejercicios de la unidad 2.", 14, True),
+    ("Trabajo Práctico 3", "Resolución de ejercicios de la unidad 3.", 21, True),
+    ("Trabajo Práctico 4", "Resolución de ejercicios de la unidad 4.", 28, True),
+    ("Cuestionario de autoevaluación", "Repaso de los temas del curso.", 10, True),
     ("Ejercicios de repaso", "Consolidación de los temas vistos en clase.", -3, True),
+    (
+        "Recuperatorio del primer parcial",
+        "Instancia de recuperación para quienes no aprobaron.",
+        -10,
+        True,
+    ),
+    ("Trabajo final integrador", "Integra los contenidos vistos en el curso.", 42, True),
     ("Parcial práctico", "Evaluación integradora (se publica más adelante).", 21, False),
+    ("Actividad complementaria", "Ejercicios adicionales de profundización.", 30, False),
 ]
 
 SUBMISSION_CONTENTS = [
-    "Entrego el trabajo completo con las consignas resueltas.",
-    "Adjunto el desarrollo de los ejercicios y las conclusiones.",
-    "Presento la resolución de los puntos 1 a 5.",
-    "Entrego el informe con los resultados y el análisis pedido.",
-    "Subo la versión final del trabajo práctico.",
+    "\n\nTrabajo Práctico: Entrega completa\n\nEnunciado desarrollado.\n\n1. Desarrollo teórico\n\nPara la presente entrega se procedió a analizar los fundamentos del tema asignado, revisando las fuentes bibliográficas indicadas y contrastando los distintos enfoques mencionados en la cursada. Se tomó como base el material teórico provisto y se profundizó en los ejemplos prácticos discutidos en clase, a fin de dar respuesta a todas las consignas solicitadas.\n\n2. Resolución práctica\n\nSe desarrollaron todos los ejercicios propuestos, mostrando de manera ordenada los pasos seguidos y los cálculos intermedios. Para aquellos puntos que requerían justificación, se incluyeron las razones que sustentan la solución propuesta. Asimismo, se verificaron los resultados obtenidos para minimizar posibles errores.\n\n3. Análisis y conclusiones\n\nA partir del trabajo realizado, se arribaron a las conclusiones pertinentes. Se identificaron las principales dificultades y las estrategias adoptadas para superarlas. Finalmente, se evaluó la aplicabilidad de los conceptos abordados a situaciones concretas vinculadas a la asignatura.\n",
+    "\n\nDesarrollo de la actividad\n\nSe entrega la resolución completa de la actividad solicitada. El trabajo se estructura como sigue:\n\nIntroducción: breve contextualización del problema y los objetivos que se persiguen con esta entrega.\n\nMarco teórico: síntesis de los conceptos fundamentales utilizados, con la referencia a los temas de la cursada.\n\nDesarrollo: resolución detallada de cada punto, incluyendo diagramas, fórmulas y argumentos cuando corresponde.\n\nResultados: presentación clara y organizada de los resultados obtenidos.\n\nConclusión: principales hallazgos y reflexiones finales sobre el ejercicio desarrollado.\n",
+    "\n\nInforme de resolución\n\nA continuación se presenta el desarrollo completo de la actividad:\n\n1. Objetivos\n\nEl presente trabajo tiene como objetivo aplicar los contenidos vistos en clase para resolver las consignas propuestas, poniendo especial atención a la claridad en la justificación de cada respuesta.\n\n2. Marco conceptual\n\nSe revisaron los conceptos teóricos necesarios para encarar la actividad. Se tuvieron en cuenta las definiciones, propiedades y criterios de aplicación vistos en la unidad correspondiente.\n\n3. Desarrollo\n\nSe resolvieron todos los puntos, mostrando cálculos, razonamientos y ejemplos cuando resultaba pertinente. Se prestó especial cuidado a la legibilidad y a la correcta aplicación de las fórmulas empleadas.\n\n4. Discusión\n\nSe analizan los resultados obtenidos, señalando las coincidencias y diferencias con los ejemplos vistos en clase.\n\n5. Conclusiones\n\nSe arriba a las conclusiones correspondientes y se proponen breves ideas para complementar el análisis.\n",
+    "\n\nEntrega de la actividad práctica\n\nLa presente entrega incluye el desarrollo completo de todos los ítems propuestos. Para cada punto se ha detallado el procedimiento seguido, permitiendo así seguir la lógica empleada en la obtención de cada respuesta.\n\nSe han incluido las etapas de análisis, diseño y resolución. Además, se consideraron posibles validaciones de las soluciones encontradas a fin de asegurar su coherencia con lo solicitado en la consigna.\n",
+    "\n\nTrabajo completo\n\nSe presenta la resolución completa de la actividad asignada. El enfoque adoptado fue el de justificar cada paso, dejando constancia de los razonamientos, de los recursos utilizados y de las decisiones tomadas a lo largo del proceso de resolución.\n\nEl trabajo abarca el desarrollo de la totalidad de los puntos, la verificación de los resultados y la síntesis final con conclusiones.\n",
 ]
 
 SUBMISSION_LINKS = [
-    ["https://example.com/entrega/tp1"],
-    ["https://docs.google.com/document/d/demo-entrega"],
-    ["https://github.com/alumno-demo/tp", "https://example.com/video-explicativo"],
+    [
+        "https://example.com/entregas/tp-desarrollo",
+        "https://docs.google.com/document/d/demo-entrega",
+    ],
+    [
+        "https://github.com/alumno-demo/resolucion",
+        "https://example.com/repositorio-anexo",
+    ],
+    [
+        "https://docs.google.com/spreadsheets/d/demo-calculos",
+        "https://example.com/informe-final",
+    ],
+    [
+        "https://github.com/alumno-demo/tp-entrega",
+        "https://docs.google.com/presentation/d/demo-presentacion",
+    ],
+    [
+        "https://drive.google.com/file/d/demo-documento",
+        "https://example.com/capturas-evidencia",
+        "https://github.com/alumno-demo/suplemento",
+    ],
+]
+
+# Calificaciones de demostración: ciclo determinista que cubre aprobados (>= 6) y
+# desaprobados, para que la demo de CU-09 muestre ambos estados. Las longitudes del
+# ciclo de notas y del de retroalimentaciones son coprimas con el módulo de salteo de
+# `_seed_grades` (% 5); si no lo fueran, esa nota o ese texto quedarían sin asignarse.
+GRADE_CYCLE = [9, 7, 6, 4, 10, 5, 8, 3]
+
+GRADE_FEEDBACKS = [
+    "",
+    "Muy buen trabajo: completo y bien justificado.",
+    "Faltó desarrollar los últimos puntos.",
+    "Correcto en general; revisá el análisis del punto 3.",
+    "Buen desarrollo, cuidá la presentación.",
+    "Repasá la consigna 2 para la próxima entrega.",
 ]
 
 
@@ -491,6 +536,45 @@ def _seed_submissions():
     return created
 
 
+def _as_utc(value):
+    """Normaliza a UTC: SQLite devuelve los `DateTime` sin información de zona."""
+    if value.tzinfo is None:
+        return value.replace(tzinfo=UTC)
+    return value.astimezone(UTC)
+
+
+def _seed_grades():
+    """Corrige una porción determinista de las entregas sin calificar.
+
+    Deja alrededor de un 20% sin corregir para poder practicar CU-08, y solo toca
+    entregas con `grade` nulo, así que preserva las correcciones hechas a mano.
+    """
+    now = datetime.now(UTC)
+    due_dates = {
+        task.id: task.due_date for task in db.session.execute(db.select(Task)).scalars()
+    }
+    pending = (
+        db.session.execute(
+            db.select(Submission).where(Submission.grade.is_(None)).order_by(Submission.id)
+        )
+        .scalars()
+        .all()
+    )
+    graded = 0
+    for submission in pending:
+        bucket = submission.task_id + submission.student_id
+        if bucket % 5 == 4:
+            continue
+        due_date = due_dates.get(submission.task_id)
+        graded_at = min(_as_utc(due_date) + timedelta(days=2), now) if due_date else now
+        submission.grade = GRADE_CYCLE[bucket % len(GRADE_CYCLE)]
+        submission.feedback = GRADE_FEEDBACKS[bucket % len(GRADE_FEEDBACKS)]
+        submission.graded_at = graded_at
+        graded += 1
+    db.session.commit()
+    return graded
+
+
 def main():
     try:
         teacher_password, student_password = read_passwords()
@@ -520,6 +604,7 @@ def main():
         enrollments_created = _seed_enrollments(build_demo_enrollments())
         tasks_created = _seed_tasks(build_demo_tasks())
         submissions_created = _seed_submissions()
+        grades_created = _seed_grades()
 
     print(f"Cursos creados: {courses_created}")
     print(f"Profesores creados: {teachers_created}")
@@ -528,6 +613,7 @@ def main():
     print(f"Inscripciones creadas: {enrollments_created}")
     print(f"Tareas creadas: {tasks_created}")
     print(f"Entregas creadas: {submissions_created}")
+    print(f"Entregas corregidas: {grades_created}")
     print("(Los registros existentes no se duplican.)")
     return 0
 
