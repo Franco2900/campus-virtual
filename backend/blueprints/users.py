@@ -30,7 +30,15 @@ def _serialize_user(user):
 @login_required
 @require_roles(UserRole.ADMIN)
 def list_users_endpoint(current_user):
-    return jsonify([_serialize_user(user) for user in list_users()]), 200
+    try:
+        users = list_users(
+            q=request.args.get("q"),
+            role=request.args.get("role"),
+            active=request.args.get("active"),
+        )
+    except ValidationError as error:
+        return jsonify({"error": str(error)}), 400
+    return jsonify([_serialize_user(user) for user in users]), 200
 
 
 @users_bp.get("/<int:user_id>")

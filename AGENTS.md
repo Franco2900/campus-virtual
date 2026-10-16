@@ -115,7 +115,7 @@ Resumen (detalle completo en `casos_de_uso.md`):
 | GET | `/api/courses/<id>` | CU-03 | Obtener un curso (200/404) | Sesión + Administrador |
 | PUT | `/api/courses/<id>` | CU-03 | Editar un curso (200/400/404/409) | Sesión + Administrador |
 | PATCH | `/api/courses/<id>` | CU-03 | Activar/desactivar un curso — body `{"active": <bool>}` (200/400/404) | Sesión + Administrador |
-| GET | `/api/users` | CU-04 | Listar usuarios (incluye inactivos) | Sesión + Administrador |
+| GET | `/api/users` | CU-04/CU-10 | Listar usuarios (incluye inactivos); filtros opcionales `q` (texto libre), `role` y `active` (`true`/`false`), combinados con AND (400 con criterio inválido) | Sesión + Administrador |
 | GET | `/api/users/<id>` | CU-04 | Obtener un usuario (200/404) | Sesión + Administrador |
 | PUT | `/api/users/<id>` | CU-04 | Editar datos y rol (200/400/404/409) | Sesión + Administrador |
 | PATCH | `/api/users/<id>` | CU-04 | Activar/desactivar — body `{"active": <bool>}` (200/400/404) | Sesión + Administrador |

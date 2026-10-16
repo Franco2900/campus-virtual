@@ -55,6 +55,18 @@ def _parse_role(value):
     raise ValidationError("El rol es inválido")
 
 
+def _parse_active_filter(value):
+    if value == "true":
+        return True
+    if value == "false":
+        return False
+    raise ValidationError("El estado debe ser 'true' o 'false'")
+
+
+def _escape_like(value):
+    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
 def _email_in_use(email, exclude_id=None):
     query = db.select(User).where(User.email == email)
     if exclude_id is not None:
@@ -85,8 +97,24 @@ def register_user(data):
     return user
 
 
-def list_users():
-    return db.session.execute(db.select(User).order_by(User.id)).scalars().all()
+def list_users(q=None, role=None, active=None):
+    query = db.select(User)
+
+    if q is not None and q.strip():
+        pattern = f"%{_escape_like(q.strip())}%"
+        query = query.where(
+            db.or_(
+                User.first_name.ilike(pattern, escape="\\"),
+                User.last_name.ilike(pattern, escape="\\"),
+                User.email.ilike(pattern, escape="\\"),
+            )
+        )
+    if role is not None:
+        query = query.where(User.role == _parse_role(role))
+    if active is not None:
+        query = query.where(User.active == _parse_active_filter(active))
+
+    return db.session.execute(query.order_by(User.id)).scalars().all()
 
 
 def get_user_or_404(user_id):
