@@ -401,9 +401,9 @@ Formato:
 ## D-039 — UI y modelo del chatbot (CU-11)
 
 - Fecha: 2026-10-17.
-- Decisión: el chatbot vive en una **página dedicada `/chat`** (feature `src/features/chatbot/` enlazada desde el sidebar, mismo patrón que los CUs anteriores) y usa el modelo **`qwen3:8b` vía Ollama local** (`langchain-ollama`).
+- Decisión: el chatbot vive en una **página dedicada `/chat`** (feature `src/features/chatbot/` enlazada desde el sidebar, mismo patrón que los CUs anteriores) y usa el modelo **`qwen3:4b` vía Ollama local** (`langchain-ollama`), como prueba con un modelo liviano; si el comportamiento resulta insuficiente se evaluará escalar a uno más potente (p. ej. `qwen3:8b`).
 - Contexto / problema: el CU-11 define el comportamiento funcional pero no la forma de la UI ni el modelo; ambas son decisiones de producto dependientes del hardware del usuario.
-- Alternativas consideradas: UI — (a) panel lateral persistente (más pro, toca el shell global y complica la evidencia Playwright); (b) widget flotante global (máxima visibilidad, mayor complejidad e interferencia con capturas). Modelo — llama3.2:3b (más liviano), qwen2.5:3b (recomendado por balance), mistral:7b, qwen2.5:7b.
-- Criterios: la página `/chat` reutiliza el patrón de features y el pipeline de evidencia existente sin tocar el shell; `qwen3:8b` ofrece buen español y tool calling a cambio de exigir RAM holgada.
-- Consecuencias / impacto: la implementación sigue el patrón routes → services → models con un blueprint `chat` nuevo; el README deberá documentar `ollama pull qwen3:8b` como requisito de uso.
+- Alternativas consideradas: UI — (a) panel lateral persistente (más pro, toca el shell global y complica la evidencia Playwright); (b) widget flotante global (máxima visibilidad, mayor complejidad e interferencia con capturas). Modelo — llama3.2:3b (más liviano), qwen2.5:3b, mistral:7b, qwen2.5:7b, qwen3:8b (primero elegido, luego reducido a 4b para la prueba).
+- Criterios: la página `/chat` reutiliza el patrón de features y el pipeline de evidencia existente sin tocar el shell; `qwen3:4b` prioriza velocidad y bajo consumo de RAM en la etapa de prueba, dejando el escalado como evolución posterior.
+- Consecuencias / impacto: la implementación sigue el patrón routes → services → models con un blueprint `chat` nuevo; el README deberá documentar `ollama pull qwen3:4b` como requisito de uso; cambiar el modelo en el futuro es una sola variable de configuración.
 - Estado: Vigente.
