@@ -48,6 +48,7 @@
 | CU-08 | Corregir tarea | Profesor |
 | CU-09 | Consultar calificaciones | Profesor / Estudiante |
 | CU-10 | Filtrar usuarios | Administrador |
+| CU-11 | Utilizar chatbot de asistencia | Usuario autenticado (Estudiante / Profesor / Administrador) |
 
 ---
 
@@ -400,3 +401,92 @@
 - Solo el Administrador puede utilizar esta funcionalidad.
 - Los resultados deben corresponder a los criterios ingresados.
 - La búsqueda no modifica los datos de los usuarios.
+
+---
+
+## CU-11 — Utilizar chatbot de asistencia
+
+**Actor principal:** Usuario autenticado (Estudiante, Profesor o Administrador).
+
+**Objetivo:** permitir que los usuarios realicen consultas sobre el funcionamiento de la plataforma y obtengan información real del sistema mediante un chatbot basado en inteligencia artificial, respetando los permisos correspondientes a su rol.
+
+**Precondiciones:**
+- El usuario inició sesión en la plataforma.
+- El usuario posee uno de los roles definidos en el sistema: Estudiante, Profesor o Administrador.
+- El servicio del chatbot se ejecuta localmente en el entorno del sistema y se encuentra disponible para recibir consultas.
+- Las fuentes de información necesarias se encuentran disponibles.
+
+**Flujo principal:**
+1. El usuario accede al chatbot desde la plataforma.
+2. El sistema habilita la interfaz de conversación.
+3. El usuario ingresa una consulta.
+4. El sistema identifica al usuario autenticado y su rol.
+5. El chatbot analiza la consulta para determinar qué información necesita para responder.
+6. Si la consulta se relaciona con el funcionamiento de la plataforma, el chatbot utiliza principalmente la documentación correspondiente y puede recurrir a sus conocimientos generales cuando resulte útil.
+7. Si la consulta requiere información real del sistema, el chatbot obtiene los datos necesarios de la base de datos mediante las operaciones autorizadas para el rol del usuario.
+8. El chatbot utiliza el contexto de la conversación actual y, cuando corresponda, el historial de conversaciones anteriores del mismo usuario.
+9. El chatbot genera una respuesta en español, clara y amable, cuya extensión se adapta a la consulta.
+10. El sistema muestra la respuesta al usuario.
+11. El usuario puede continuar la conversación realizando nuevas consultas.
+
+**Flujo alternativo A1 — Usuario no autenticado:**
+1. Una persona intenta acceder al chatbot sin haber iniciado sesión.
+2. El sistema impide el acceso al chatbot.
+3. El sistema solicita que la persona inicie sesión para utilizarlo.
+
+**Flujo alternativo A2 — Consulta sobre información no disponible:**
+1. El usuario realiza una consulta que requiere información que no se encuentra disponible o que no puede determinarse con suficiente certeza.
+2. El chatbot informa que no dispone de información suficiente para responder con certeza.
+3. Cuando resulte útil, proporciona información general relacionada, sin presentarla como un dato confirmado de la plataforma.
+4. Cuando corresponda, recomienda consultar con un profesor o administrador.
+
+**Flujo alternativo A3 — Consulta sobre información no autorizada:**
+1. El usuario solicita información que excede los permisos correspondientes a su rol.
+2. El sistema impide el acceso a dicha información.
+3. El chatbot informa que no puede proporcionar los datos solicitados.
+
+**Flujo alternativo A4 — Solicitud de modificación o ejecución de operaciones:**
+1. El usuario solicita crear, modificar o eliminar información de la plataforma mediante el chatbot.
+2. El chatbot informa que no puede ejecutar esa operación y, cuando corresponda, orienta al usuario hacia la funcionalidad correspondiente de la plataforma.
+
+**Flujo alternativo A5 — Solicitud de corrección o calificación de tareas:**
+1. El usuario solicita que el chatbot corrija una entrega o asigne una calificación.
+2. El chatbot informa que esas operaciones no forman parte de sus funciones y que corresponden al profesor.
+
+**Flujo alternativo A6 — Consulta ajena a la función del chatbot:**
+1. El usuario realiza una consulta que no está relacionada con el funcionamiento de la plataforma educativa.
+2. El chatbot explica brevemente que su función es ayudar a utilizar la plataforma y consultar información del sistema.
+3. El chatbot redirige al usuario hacia ese propósito sin responder la consulta ajena a su función.
+
+**Flujo alternativo A7 — Error al consultar información o generar una respuesta:**
+1. Se produce un error que impide consultar la base de datos o generar una respuesta.
+2. El chatbot informa que no pudo completar la consulta.
+3. Cuando corresponda, indica que el usuario puede intentarlo nuevamente.
+
+**Flujo alternativo A8 — Consulta relacionada con una conversación anterior:**
+1. El usuario realiza una consulta que hace referencia a una conversación previa.
+2. El chatbot recupera el historial disponible correspondiente a ese usuario.
+3. El chatbot utiliza el contexto recuperado para interpretar y responder la consulta.
+4. Si no dispone del contexto necesario, informa la limitación y solicita la información que falte cuando sea necesario.
+
+**Postcondiciones:**
+- El usuario recibe una respuesta o una explicación de por qué no puede responderse su consulta.
+- La información proporcionada respeta los permisos de acceso correspondientes al rol del usuario.
+- Las consultas de información se realizan sin modificar los datos de la plataforma.
+- El historial de conversaciones se conserva asociado a la cuenta del usuario para permitir su utilización como contexto en futuras conversaciones.
+
+**Reglas:**
+- Solo los usuarios autenticados con los roles Estudiante, Profesor o Administrador pueden utilizar esta funcionalidad.
+- El chatbot se ejecuta localmente: el modelo de lenguaje y el procesamiento de las consultas ocurren en el entorno del sistema, sin depender de servicios externos en la nube.
+- El chatbot debe respetar los permisos de acceso existentes en la plataforma para cada rol.
+- El chatbot no debe revelar información a usuarios que no estén autorizados a consultarla.
+- Los datos concretos sobre cursos, inscripciones, tareas, entregas y calificaciones deben obtenerse de las fuentes autorizadas del sistema. El chatbot no debe inventar ni presentar como confirmados datos que no pudo verificar.
+- La documentación de la plataforma constituye la fuente principal para explicar su funcionamiento. Los conocimientos generales del modelo pueden utilizarse como complemento, pero no deben utilizarse para inventar funcionalidades o reglas de la aplicación.
+- El chatbot no puede crear, modificar ni eliminar información de la plataforma, ni ejecutar operaciones en nombre del usuario.
+- El chatbot no puede corregir entregas ni asignar calificaciones. Estas operaciones corresponden al profesor.
+- Cuando no disponga de información suficiente, el chatbot debe reconocer sus limitaciones, evitar especular y recomendar consultar con un profesor o administrador cuando corresponda.
+- El chatbot debe limitar sus respuestas a las funciones definidas para la plataforma educativa. Ante consultas ajenas a ellas, debe explicar brevemente su alcance y redirigir al usuario.
+- El chatbot debe responder en español, utilizando un tono claro y amable y adaptando la extensión de sus respuestas a cada consulta.
+- El historial de conversaciones debe mantenerse asociado al usuario correspondiente y no puede ser accesible por otros usuarios sin autorización.
+- Al utilizar conversaciones anteriores como contexto, el chatbot debe priorizar los datos actuales y verificados del sistema cuando la consulta requiera información actualizada.
+- Las validaciones de identidad y permisos deben realizarse en el backend y no depender únicamente de las instrucciones proporcionadas al modelo de inteligencia artificial.
