@@ -24,6 +24,7 @@ const NAV_ITEMS = [
     icon: "bi-clipboard-check",
     roles: ["student", "teacher"],
   },
+  { to: "/chat", label: "Asistente", icon: "bi-chat-dots-fill" },
 ];
 
 export default function Sidebar({ user }) {

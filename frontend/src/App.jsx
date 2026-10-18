@@ -8,6 +8,7 @@ import ProtectedRoute from "./app/ProtectedRoute.jsx";
 import { getMe, logout } from "./features/auth/api.js";
 import LoginPage from "./features/auth/LoginPage.jsx";
 import RegisterPage from "./features/auth/RegisterPage.jsx";
+import ChatPage from "./features/chatbot/ChatPage.jsx";
 import CoursesPage from "./features/courses/CoursesPage.jsx";
 import EnrollmentsPage from "./features/enrollments/EnrollmentsPage.jsx";
 import GradesPage from "./features/grades/GradesPage.jsx";
@@ -95,6 +96,14 @@ function AppRoutes({ user, loading, onLogin, onLogout }) {
           element={
             <ProtectedRoute user={user} loading={loading} roles={["student", "teacher"]}>
               <GradesPage user={user} />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute user={user} loading={loading} roles={["student", "teacher", "admin"]}>
+              <ChatPage />
             </ProtectedRoute>
           }
         />
