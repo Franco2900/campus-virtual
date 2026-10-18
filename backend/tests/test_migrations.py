@@ -6,9 +6,11 @@ from flask_migrate import upgrade as migrate_upgrade
 
 from app import create_app
 from models import (  # noqa: F401  (registers all model tables on the metadata)
+    conversation,
     course,
     course_teacher,
     enrollment,
+    message,
     submission,
     task,
     user,

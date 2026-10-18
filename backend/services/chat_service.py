@@ -10,9 +10,11 @@ from flask import current_app
 from models.base import db
 from models.conversation import Conversation
 from models.message import Message
+from models.user import UserRole
 from services.course_service import list_courses_for_user
 from services.enrollment_service import list_students
 from services.errors import ForbiddenError, NotFoundError, ValidationError
+from services.grade_service import get_course_grades as get_course_grades_service
 from services.grading_service import list_submissions_for_task
 from services.task_service import list_tasks
 
@@ -153,17 +155,18 @@ def build_tools(current_user):
 
     @tool
     def list_my_courses() -> str:
+        """Lista los cursos visibles para el usuario autenticado, según su rol."""
         try:
             items = list_courses_for_user(current_user)
             return json.dumps(
                 [
                     {
-                        "id": c.id,
-                        "name": c.name,
-                        "code": c.code,
-                        "active": c.active,
+                        "id": course.id,
+                        "name": course.name,
+                        "code": course.code,
+                        "active": course.active,
                     }
-                    for c in items
+                    for course in items
                 ],
                 ensure_ascii=False,
             )
@@ -172,19 +175,22 @@ def build_tools(current_user):
 
     @tool
     def list_course_students(course_id: int) -> str:
+        """Lista los estudiantes activos de un curso con el estado de su inscripción. Solo Administrador o Profesor del curso."""
+        if current_user.role == UserRole.STUDENT:
+            return "No tenés permisos para ver esa información"
         try:
-            items = list_students(course_id, current_user)
+            rows = list_students(course_id, current_user)
             return json.dumps(
                 [
                     {
-                        "id": s.id,
-                        "email": s.email,
-                        "first_name": s.first_name,
-                        "last_name": s.last_name,
-                        "active": s.active,
-                        "enrollment_active": getattr(s, "enrollment_active", True),
+                        "id": student.id,
+                        "email": student.email,
+                        "first_name": student.first_name,
+                        "last_name": student.last_name,
+                        "active": student.active,
+                        "enrollment_active": enrollment.active if enrollment is not None else False,
                     }
-                    for s in items
+                    for student, enrollment in rows
                 ],
                 ensure_ascii=False,
             )
@@ -193,17 +199,18 @@ def build_tools(current_user):
 
     @tool
     def list_course_tasks(course_id: int) -> str:
+        """Lista las tareas de un curso visibles para el usuario autenticado (el Estudiante ve las disponibles y su entrega)."""
         try:
             items = list_tasks(course_id, current_user)
             return json.dumps(
                 [
                     {
-                        "id": t.id,
-                        "title": t.title,
-                        "active": t.active,
-                        "due_at": t.due_at.isoformat() if t.due_at else None,
+                        "id": task.id,
+                        "title": task.title,
+                        "active": task.active,
+                        "due_date": task.due_date.isoformat() if task.due_date else None,
                     }
-                    for t in items
+                    for task, _submission in items
                 ],
                 ensure_ascii=False,
             )
@@ -212,34 +219,27 @@ def build_tools(current_user):
 
     @tool
     def get_course_grades(course_id: int) -> str:
+        """Obtiene las calificaciones de un curso: el Estudiante ve las suyas y el Profesor o Administrador la matriz del curso."""
         try:
-            payload = get_course_grades(course_id, current_user)
+            payload = get_course_grades_service(course_id, current_user)
             return json.dumps(payload, ensure_ascii=False)
         except (ForbiddenError, NotFoundError, ValidationError) as error:
             return str(error)
 
     @tool
     def list_task_submissions(course_id: int, task_id: int) -> str:
+        """Lista las entregas de una tarea con su corrección. Solo Administrador o Profesor del curso."""
+        if current_user.role == UserRole.STUDENT:
+            return "No tenés permisos para ver esa información"
         try:
             items = list_submissions_for_task(course_id, task_id, current_user)
-            return json.dumps(
-                [
-                    {
-                        "submission_id": s.id,
-                        "student_id": s.student_id,
-                        "task_id": s.task_id,
-                        "grade": s.grade,
-                        "graded_at": s.graded_at.isoformat() if s.graded_at else None,
-                    }
-                    for s in items
-                ],
-                ensure_ascii=False,
-            )
+            return json.dumps(items, ensure_ascii=False)
         except (ForbiddenError, NotFoundError, ValidationError) as error:
             return str(error)
 
     @tool
     def search_platform_docs(query: str) -> str:
+        """Busca un texto en la documentación de la plataforma (AGENTS.md, README.md y casos_de_uso.md)."""
         return _search_platform_docs(query)
 
     return [
