@@ -27,8 +27,8 @@ Faltan los tres pasos de cierre exigidos por AGENTS.md antes de marcar Completo.
       03-respuesta-asistente-{claro,oscuro}, 04-error-a7-{claro,oscuro}
       (servicio con `OLLAMA_BASE_URL` muerto para no tocar el Ollama del usuario),
       05-acceso-sin-sesion-{claro,oscuro}. Checks: consola sin errores inesperados.
-- [ ] T2 — Revisión `reviews/cu-11.md` (hallazgos con archivo:línea, severidad,
-      veredicto, mapa de evidencia); corregir bloqueantes si aparecen.
+- [x] T2 — Revisión `reviews/cu-11.md` (APROBADO; 3 hallazgos Baja; 268 tests,
+      ruff, Prettier y build frescos como evidencia).
 - [ ] T3 — `progreso.md`: marcar CU-11 **Completado**; verificar docs finales.
 - [ ] T4 — Archive openspec del cambio `add-chatbot-assistant`.
       Cada tarea cierra con un commit conventional (repo: directo a `main`,
@@ -44,7 +44,8 @@ Faltan los tres pasos de cierre exigidos por AGENTS.md antes de marcar Completo.
 - Si se toca backend: `pytest -q` del dominio + ruff check/format.
 
 ## Progreso / evidencia
-- [x] T1 … [ ] T2 … [ ] T3 … [ ] T4 …
+- [x] T1 … [x] T2 … [ ] T3 … [ ] T4 …
 
 ## Siguiente paso
-T1: levantar servicios con `verify.py --serve --seed-demo` y capturar.
+T3/T4: archive openspec `add-chatbot-assistant` y flip de `progreso.md` +
+`AGENTS.md` a Completado/cerrado (commiteo conjunto de cierre).
