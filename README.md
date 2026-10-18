@@ -39,6 +39,7 @@ Las versiones exactas están en `backend/requirements.txt` (backend) y `frontend
 - Python 3.14 (verificado en 3.14.6) y `pip`.
 - Node.js v24 (verificado en v24.19.0) y `npm`.
 - En Windows, `npm` se invoca como `cmd /c npm ...` por la execution policy de PowerShell.
+- **Ollama** para el chatbot (CU-11): el servidor local debe estar ejecutándose y el modelo descargado (ver «Ollama y el chatbot» más abajo).
 
 ## Instalación
 
@@ -67,6 +68,29 @@ npm run dev        # Windows: cmd /c npm run dev
 ```
 
 El servidor de desarrollo de Vite proxea `/api` hacia `http://localhost:5000`.
+
+### Ollama y el chatbot
+
+El chatbot (CU-11, `/chat`) llama a **Ollama corriendo en local**; el backend es un cliente que se conecta a `http://127.0.0.1:11434`, no lo arranca él mismo. Requisitos una sola vez:
+
+```bash
+# Servidor Ollama (la app de escritorio de Windows lo deja corriendo en la bandeja)
+ollama serve
+# Modelo usado por el chatbot (una vez descargado queda disponible sin conexión)
+ollama pull qwen3:4b
+```
+
+Si Ollama no está corriendo o el modelo no existe, **el resto de la app funciona normal**; solo el chatbot responde 502 con un mensaje amable («no se pudo completar la consulta») y ese turno no se guarda en el historial.
+
+Variables de entorno opcionales del chatbot (con sus valores por defecto):
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `OLLAMA_MODEL` | `qwen3:4b` | Modelo usado por el agente |
+| `OLLAMA_BASE_URL` | `http://127.0.0.1:11434` | URL del servidor Ollama |
+| `OLLAMA_TIMEOUT` | `120` | Timeout por invocación (segundos) |
+| `CHAT_HISTORY_WINDOW` | `10` | Ventana de mensajes enviados al modelo por turno |
+| `CHAT_MESSAGE_MAX_LENGTH` | `4000` | Longitud máxima del mensaje del usuario |
 
 ### Migraciones de esquema
 
