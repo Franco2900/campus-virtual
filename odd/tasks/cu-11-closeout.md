@@ -29,8 +29,8 @@ Faltan los tres pasos de cierre exigidos por AGENTS.md antes de marcar Completo.
       05-acceso-sin-sesion-{claro,oscuro}. Checks: consola sin errores inesperados.
 - [x] T2 — Revisión `reviews/cu-11.md` (APROBADO; 3 hallazgos Baja; 268 tests,
       ruff, Prettier y build frescos como evidencia).
-- [ ] T3 — `progreso.md`: marcar CU-11 **Completado**; verificar docs finales.
-- [ ] T4 — Archive openspec del cambio `add-chatbot-assistant`.
+- [x] T3 — `progreso.md`: CU-11 **Completado**; `AGENTS.md` roadmap actualizado (lista de cerradas incluye CU-11, resumen de cierre con archivo y nota de `reviewer` con CU-11).
+- [x] T4 — Reconciliación 51/51 de tasks (`a8de937`), sync a spec main (12 requisitos, `validate --specs --strict` 11/11 ✓) y archive `openspec/changes/archive/2026-10-17-add-chatbot-assistant` (`7179d70`).
       Cada tarea cierra con un commit conventional (repo: directo a `main`,
       política existente del proyecto; sin PR ni push sin pedido).
 
@@ -44,8 +44,9 @@ Faltan los tres pasos de cierre exigidos por AGENTS.md antes de marcar Completo.
 - Si se toca backend: `pytest -q` del dominio + ruff check/format.
 
 ## Progreso / evidencia
-- [x] T1 … [x] T2 … [ ] T3 … [ ] T4 …
+- [x] T1 (5be3536) … [x] T2 (c6edd07) … [x] T3 … [x] T4 (a8de937, 7179d70) …
 
 ## Siguiente paso
-T3/T4: archive openspec `add-chatbot-assistant` y flip de `progreso.md` +
-`AGENTS.md` a Completado/cerrado (commiteo conjunto de cierre).
+Cierre completo: T1–T4 terminados (evidencia `5be3536`, revisión `c6edd07`,
+reconcile `a8de937`, archive `7179d70` y docs de cierre). Sin pendientes;
+próximo hito: mantenimiento nuevo (deuda B-01/B-04) o cerrar sesión.
