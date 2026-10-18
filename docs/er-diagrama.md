@@ -1,6 +1,6 @@
 # Diagrama entidad-relación — Base de datos
 
-Esquema de la base SQLite del Campus Virtual, tal como queda en la versión **head `0004`** de las migraciones Alembic (`backend/migrations/versions/`). Fuente de verdad: los modelos SQLAlchemy en `backend/models/`.
+Esquema de la base SQLite del Campus Virtual, tal como queda en la versión **head `0008`** de las migraciones Alembic (`backend/migrations/versions/`). Fuente de verdad: los modelos SQLAlchemy en `backend/models/`.
 
 ## Diagrama
 
@@ -10,6 +10,11 @@ erDiagram
     COURSE ||--o{ COURSE_TEACHER : "course_id"
     USER ||--o{ ENROLLMENT : "student_id (Estudiante)"
     COURSE ||--o{ ENROLLMENT : "course_id"
+    COURSE ||--o{ TASK : "course_id"
+    TASK ||--o{ SUBMISSION : "task_id"
+    USER ||--o{ SUBMISSION : "student_id (Estudiante)"
+    USER ||--o{ CONVERSATION : "user_id (chatbot)"
+    CONVERSATION ||--o{ MESSAGE : "conversation_id"
 
     USER {
         int id PK
@@ -41,6 +46,40 @@ erDiagram
         bool active "NOT NULL, default true (baja logica)"
         datetime enrolled_at "NOT NULL, UTC"
     }
+    TASK {
+        int id PK
+        int course_id FK "-> course.id, NOT NULL"
+        string title "NOT NULL"
+        string description "default ''"
+        datetime due_date "NOT NULL"
+        bool active "NOT NULL, default true"
+        datetime created_at "NOT NULL, UTC"
+    }
+    SUBMISSION {
+        int id PK
+        int task_id FK "-> task.id, NOT NULL"
+        int student_id FK "-> user.id, NOT NULL"
+        string content "NOT NULL, default ''"
+        json links "NOT NULL, default []"
+        int grade "NULL hasta corregir (1..10)"
+        string feedback "NULL hasta corregir"
+        datetime graded_at "NULL hasta corregir"
+        datetime created_at "NOT NULL, UTC"
+        datetime updated_at "NOT NULL, UTC"
+    }
+    CONVERSATION {
+        int id PK
+        int user_id FK "-> user.id, NOT NULL, index"
+        datetime created_at "NOT NULL, UTC"
+        datetime updated_at "NOT NULL, UTC"
+    }
+    MESSAGE {
+        int id PK
+        int conversation_id FK "-> conversation.id, NOT NULL, index"
+        string role "user | assistant, NOT NULL"
+        string content "NOT NULL"
+        datetime created_at "NOT NULL, UTC"
+    }
 ```
 
 Si el visor no renderiza Mermaid, la relación se lee así:
@@ -49,6 +88,11 @@ Si el visor no renderiza Mermaid, la relación se lee así:
 - `course` 1—N `course_teacher` (por `course_id`): un curso puede tener varios Profesores.
 - `user` 1—N `enrollment` (por `student_id`): un Estudiante puede estar inscripto en varios cursos.
 - `course` 1—N `enrollment` (por `course_id`): un curso puede tener varias inscripciones.
+- `course` 1—N `task` (por `course_id`): un curso puede tener varias tareas.
+- `task` 1—N `submission` (por `task_id`): una tarea puede tener varias entregas (una por Estudiante).
+- `user` 1—N `submission` (por `student_id`): un Estudiante puede entregar varias tareas.
+- `user` 1—N `conversation` (por `user_id`): cada usuario del chatbot tiene una conversación.
+- `conversation` 1—N `message` (por `conversation_id`): la conversación acumula los turnos user/assistant.
 
 ## Tablas y columnas
 
@@ -98,12 +142,64 @@ Restricción de tabla: `UNIQUE(course_id, teacher_id)` (`uq_course_teacher`).
 
 Restricción de tabla: `UNIQUE(course_id, student_id)` (`uq_enrollment`).
 
+### `task`
+
+| Columna | Tipo | Restricción | Nota |
+|---------|------|-------------|------|
+| `id` | Integer | PK | |
+| `course_id` | Integer | FK → `course.id`, NOT NULL | |
+| `title` | String(200) | NOT NULL | |
+| `description` | String(1000) | NOT NULL, default `""` | |
+| `due_date` | DateTime(tz) | NOT NULL | se almacena en UTC |
+| `active` | Boolean | NOT NULL, default `true` | baja lógica; una tarea inactiva no admite entregas |
+| `created_at` | DateTime(tz) | NOT NULL | UTC |
+
+### `submission`
+
+| Columna | Tipo | Restricción | Nota |
+|---------|------|-------------|------|
+| `id` | Integer | PK | |
+| `task_id` | Integer | FK → `task.id`, NOT NULL | |
+| `student_id` | Integer | FK → `user.id`, NOT NULL | debe apuntar a un usuario `role = student` (lo exige el servicio) |
+| `content` | Text | NOT NULL, default `""` | |
+| `links` | JSON | NOT NULL, default `[]` | lista de URLs |
+| `grade` | Integer | NULL | `NULL` hasta que el Profesor corrija; rango 1..10 |
+| `feedback` | Text | NULL, default `""` | retroalimentación del Profesor |
+| `graded_at` | DateTime(tz) | NULL | UTC; marca cuándo se corrigió |
+| `created_at` | DateTime(tz) | NOT NULL | UTC (envío del Estudiante) |
+| `updated_at` | DateTime(tz) | NOT NULL | UTC; se actualiza al modificar entrega o corrección |
+
+Restricción de tabla: `UNIQUE(task_id, student_id)` (`uq_submission_task_student`) — un Estudiante entrega una sola vez por tarea.
+
+### `conversation`
+
+| Columna | Tipo | Restricción | Nota |
+|---------|------|-------------|------|
+| `id` | Integer | PK | |
+| `user_id` | Integer | FK → `user.id`, NOT NULL, index | una conversación por usuario del chatbot |
+| `created_at` | DateTime(tz) | NOT NULL | UTC |
+| `updated_at` | DateTime(tz) | NOT NULL | UTC; se actualiza en cada turno |
+
+### `message`
+
+| Columna | Tipo | Restricción | Nota |
+|---------|------|-------------|------|
+| `id` | Integer | PK | |
+| `conversation_id` | Integer | FK → `conversation.id`, NOT NULL, index | |
+| `role` | String(20) | NOT NULL | uno de `user` \| `assistant` |
+| `content` | Text | NOT NULL | |
+| `created_at` | DateTime(tz) | NOT NULL | UTC |
+
+Nota de comportamiento (D-040): cuando el LLM falla (Ollama caído, 502) el turno **no** se persiste — ni el mensaje del usuario ni el del asistente.
+
 ## Invariantes de negocio al cargar datos
 
 - **Rol ↔ relación:** `course_teacher.teacher_id` debe ser un `user` con `role='teacher'`; `enrollment.student_id` debe ser un `user` con `role='student'`. La base **no** lo valida: lo aplican los servicios.
 - **Un rol por usuario:** cada `user` tiene exactamente un `role`.
 - **Sin duplicados:** un Profesor no se repite en un curso y un Estudiante no se repite en un curso (restricciones UNIQUE).
-- **Baja lógica vs física:** `active=false` en `user`, `course` y `enrollment` es baja lógica (los inactivos no se tratan como activos). El borrado de una inscripción (DELETE) es físico.
+- **Baja lógica vs física:** `active=false` en `user`, `course`, `enrollment` y `task` es baja lógica (los inactivos no se tratan como activos). El borrado de una inscripción (DELETE) es físico.
+- **Calificaciones:** `submission.grade` es `NULL` (sin corregir) o un entero entre 1 y 10; el rango lo validan los servicios, no la base.
+- **Chat:** `message.role` solo admite `user` o `assistant`. El agente recorta la ventana de contexto a los 10 mensajes más recientes por turno, pero la base conserva el historial completo por usuario.
 - **Claves foráneas:** las FK no declaran `ON DELETE`; SQLite tiene el enforcement de FK **desactivado por defecto**, así que borrar un `user`/`course` referenciado no falla pero deja huérfanos. Cargar y borrar a través de los endpoints (o de los seeds), no a mano.
 - **Contraseñas:** usar `werkzeug.security.generate_password_hash`; nunca texto plano.
 

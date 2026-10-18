@@ -18,7 +18,7 @@
 | Runtime frontend | Node | v24.19.0 |
 | Base de datos | SQLite | PENDIENTE DE DEFINIR |
 | ORM | SQLAlchemy | PENDIENTE DE DEFINIR |
-| Chatbot | LangChain + Ollama (local) | PENDIENTE DE DEFINIR |
+| Chatbot | LangChain + Ollama (local) | 1.4.6 / 1.1.0 (`qwen3:4b`) |
 
 ## Actores del sistema
 

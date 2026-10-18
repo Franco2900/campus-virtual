@@ -20,7 +20,7 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 - Corrección de tareas (**CU-08 implementado**): pantalla `/grading` para elegir un curso y una tarea, corregir las entregas con una calificación de 1 a 10 y retroalimentación opcional (máx. 5000 caracteres), ver el estado derivado aprobado/desaprobado y modificar una corrección existente. Disponible para el Profesor.
 - Consulta de calificaciones (**CU-09 implementado**): pantalla `/grades` para elegir un curso y ver, como Estudiante, el detalle por tarea (nota, retroalimentación, aprobado/desaprobado) con el promedio del curso; como Profesor, la matriz estudiante × tarea con el promedio de cada estudiante y el promedio del curso.
 - Filtrado de usuarios (**CU-10 implementado**): barra de filtros del listado de usuarios (q/role/active) con estado vacío A1, accesible solo para el Administrador.
-- Chatbot asistente integrado con LangChain + Ollama.
+- Chatbot asistente (**CU-11 implementado**): pantalla `/chat` con un agente local LangChain + Ollama (`qwen3:4b`) que responde consultas sobre la plataforma y sobre datos reales del sistema según el rol del usuario; solo lectura (no crea, modifica ni califica). Fallo del modelo local → mensaje amable, sin persistir el turno.
 
 ## Tecnologías
 
@@ -235,9 +235,8 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Roadmap
 
-- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones), CU-06 (Gestionar tareas), CU-07 (Entregar tarea), CU-08 (Corregir tarea), CU-09 (Consultar calificaciones) y CU-10 (Filtrar usuarios) implementados end-to-end.
+- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones), CU-06 (Gestionar tareas), CU-07 (Entregar tarea), CU-08 (Corregir tarea), CU-09 (Consultar calificaciones), CU-10 (Filtrar usuarios) y CU-11 (Utilizar chatbot de asistencia) implementados end-to-end.
 - Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
-- Integración completa del chatbot.
 - Tests automatizados de frontend.
 
 ## Licencia
