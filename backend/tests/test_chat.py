@@ -669,6 +669,7 @@ def test_system_prompt_encodes_platform_behaviour_rules():
     assert "espa" in prompt
     assert "documentaci" in prompt
     assert "herramientas" in prompt
+    assert "datos actuales" in prompt
     assert "no crees, modifiques ni elimines" in prompt
     assert "No corrijas entregas ni asignes calificaciones" in prompt
     assert "redir" in prompt
