@@ -132,7 +132,7 @@ export default function GradingPage() {
       try {
         const data = await listTasks(selectedCourseId);
         if (active) {
-          setTasks(data);
+          setTasks((data ?? []).filter((task) => task.active));
         }
       } catch (requestError) {
         if (active) {
@@ -351,7 +351,6 @@ export default function GradingPage() {
                     {tasks.map((task) => (
                       <option key={task.id} value={task.id}>
                         {task.title}
-                        {task.active ? "" : " — inactiva"}
                       </option>
                     ))}
                   </select>
