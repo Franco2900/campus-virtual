@@ -13,6 +13,12 @@ import { deleteHistory, getHistory, sendMessage } from "./api.js";
 import ChatComposer from "./ChatComposer.jsx";
 import MessageList from "./MessageList.jsx";
 
+const ERROR_TITLES = {
+  load: "No se pudo cargar el historial",
+  send: "No se pudo completar la consulta",
+  clear: "No se pudo eliminar el historial",
+};
+
 export default function ChatPage() {
   const { notify } = useToast();
   const [messages, setMessages] = useState([]);
@@ -28,8 +34,7 @@ export default function ChatPage() {
     setError({ message, kind });
     notify({
       tone: "danger",
-      title:
-        kind === "send" ? "No se pudo completar la consulta" : "No se pudo cargar el historial",
+      title: ERROR_TITLES[kind] ?? ERROR_TITLES.load,
       message,
     });
   }
@@ -86,6 +91,8 @@ export default function ChatPage() {
     }
     if (error.kind === "load") {
       loadHistory();
+    } else if (error.kind === "clear") {
+      setConfirmOpen(true);
     } else {
       handleSend(lastTextRef.current);
     }
@@ -103,11 +110,7 @@ export default function ChatPage() {
         message: "Se eliminó tu historial de conversaciones con el asistente.",
       });
     } catch (requestError) {
-      notify({
-        tone: "danger",
-        title: "No se pudo eliminar el historial",
-        message: requestError.message,
-      });
+      showError(requestError.message, "clear");
     } finally {
       setClearing(false);
       setConfirmOpen(false);
