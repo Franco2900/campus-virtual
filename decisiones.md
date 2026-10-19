@@ -437,3 +437,13 @@ Formato:
 - Criterios: cambio mínimo y reversible en la config del orquestador; sin tocar los `.md` de los agentes (su frontmatter era correcto).
 - Consecuencias / impacto: la config global está marcada `__managed_by: gentle-ai/sdd`; un sync de gentle-ai puede sobrescribir la allowlist y reintroducir la denegación. Requiere reiniciar OpenCode para tomar efecto. Si se pierde, repetir este cambio.
 - Estado: Vigente.
+
+## D-043 — Borrado explícito del historial propio del chatbot (CU-11 ampliado)
+
+- Fecha: 2026-10-19.
+- Decisión: la eliminación del historial propio se implementa como **borrado explícito ordenado en el servicio** (`delete_history(user)` en `backend/services/chat_service.py`: mensajes → conversación en una sola transacción, sin cascade ORM y sin migración), expuesto como `DELETE /api/chat/messages` **idempotente** (200 con `{"message": "Historial eliminado"}` incluso sin historial; 401 sin sesión; roles Estudiante/Profesor/Administrador). La UI ofrece la opción "Eliminar historial" en `/chat` con **confirmación mediante `ConfirmDialog` de intención danger** y aviso de irreversibilidad; al confirmar, estado vacío y toast; al cancelar, no se borra nada. El **prompt del sistema** orienta al usuario hacia la opción de la interfaz y aclara que el modelo no ejecuta el borrado.
+- Contexto / problema: ampliación del CU-11 (A9/A9.1 + reglas 14/16/17): el usuario debe poder eliminar completamente su historial propio. Borrar solo la conversación dejaría mensajes huérfanos, y el esquema no tenía ninguna mecánica de borrado.
+- Alternativas consideradas: cascade a nivel ORM (`cascade`/`ondelete` en la relación `Conversation`→`Message`) — descartada porque exigía tocar los modelos y generar una migración sin cambio real de esquema, para un único punto de borrado que ya controla el servicio.
+- Criterios: cero mensajes huérfanos sin tocar el esquema; identidad y permiso de borrado validados siempre en el backend desde la sesión (regla 16); el borrado solo alcanza al usuario propio y no toca datos funcionales como cursos, tareas, entregas, inscripciones ni calificaciones (regla 14); operación idempotente.
+- Consecuencias / impacto: el servicio y el endpoint son la única vía de borrado; el historial eliminado no se recupera desde la aplicación ni vuelve al contexto del chatbot (regla 17); no hay migración ni cambio en los modelos; los tests cubren borrado completo, aislamiento, idempotencia, 401 y contexto vacío en el turno siguiente.
+- Estado: Vigente.

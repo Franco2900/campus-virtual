@@ -49,6 +49,7 @@
 | CU-09 | Consultar calificaciones | Profesor / Estudiante |
 | CU-10 | Filtrar usuarios | Administrador |
 | CU-11 | Utilizar chatbot de asistencia | Usuario autenticado (Estudiante / Profesor / Administrador) |
+| CU-12 | Gestionar fuentes de conocimiento del chatbot | Administrador |
 
 ---
 
@@ -408,12 +409,12 @@
 
 **Actor principal:** Usuario autenticado (Estudiante, Profesor o Administrador).
 
-**Objetivo:** permitir que los usuarios realicen consultas sobre el funcionamiento de la plataforma y obtengan información real del sistema mediante un chatbot basado en inteligencia artificial, respetando los permisos correspondientes a su rol.
+**Objetivo:** permitir que los usuarios realicen consultas sobre el funcionamiento de la plataforma y obtengan información real del sistema mediante un chatbot basado en inteligencia artificial, respetando los permisos correspondientes a su rol. Permitir también consultar conversaciones anteriores y eliminar completamente el historial propio del chatbot.
 
 **Precondiciones:**
 - El usuario inició sesión en la plataforma.
 - El usuario posee uno de los roles definidos en el sistema: Estudiante, Profesor o Administrador.
-- El servicio del chatbot se ejecuta localmente en el entorno del sistema y se encuentra disponible para recibir consultas.
+- El chatbot se encuentra disponible para recibir consultas.
 - Las fuentes de información necesarias se encuentran disponibles.
 
 **Flujo principal:**
@@ -422,12 +423,12 @@
 3. El usuario ingresa una consulta.
 4. El sistema identifica al usuario autenticado y su rol.
 5. El chatbot analiza la consulta para determinar qué información necesita para responder.
-6. Si la consulta se relaciona con el funcionamiento de la plataforma, el chatbot utiliza principalmente la documentación correspondiente y puede recurrir a sus conocimientos generales cuando resulte útil.
-7. Si la consulta requiere información real del sistema, el chatbot obtiene los datos necesarios de la base de datos mediante las operaciones autorizadas para el rol del usuario.
+6. Si la consulta se relaciona con el funcionamiento de la plataforma, el chatbot utiliza las fuentes de conocimiento administradas y aprobadas como referencia principal. Puede recurrir a sus conocimientos generales cuando resulte útil, sin inventar funcionalidades específicas de la aplicación.
+7. Si la consulta requiere información real del sistema, el chatbot obtiene los datos necesarios de la base de datos mediante operaciones autorizadas para el rol del usuario.
 8. El chatbot utiliza el contexto de la conversación actual y, cuando corresponda, el historial de conversaciones anteriores del mismo usuario.
 9. El chatbot genera una respuesta en español, clara y amable, cuya extensión se adapta a la consulta.
 10. El sistema muestra la respuesta al usuario.
-11. El usuario puede continuar la conversación realizando nuevas consultas.
+11. El usuario puede continuar la conversación, consultar conversaciones anteriores o acceder a la opción de eliminar su historial.
 
 **Flujo alternativo A1 — Usuario no autenticado:**
 1. Una persona intenta acceder al chatbot sin haber iniciado sesión.
@@ -451,7 +452,7 @@
 
 **Flujo alternativo A5 — Solicitud de corrección o calificación de tareas:**
 1. El usuario solicita que el chatbot corrija una entrega o asigne una calificación.
-2. El chatbot informa que esas operaciones no forman parte de sus funciones y que corresponden al profesor.
+2. El chatbot informa que esas operaciones corresponden al profesor y que no forman parte de sus funciones.
 
 **Flujo alternativo A6 — Consulta ajena a la función del chatbot:**
 1. El usuario realiza una consulta que no está relacionada con el funcionamiento de la plataforma educativa.
@@ -469,24 +470,138 @@
 3. El chatbot utiliza el contexto recuperado para interpretar y responder la consulta.
 4. Si no dispone del contexto necesario, informa la limitación y solicita la información que falte cuando sea necesario.
 
+**Flujo alternativo A9 — Eliminar el historial del chat:**
+1. El usuario accede a la sección de historial o configuración del chatbot.
+2. El sistema ofrece la opción de eliminar completamente el historial de conversaciones del usuario.
+3. El usuario selecciona la opción de eliminación.
+4. El sistema informa que la operación eliminará el historial guardado y que no podrá recuperarse desde la aplicación.
+5. El sistema solicita confirmación antes de continuar.
+6. El usuario confirma la operación.
+7. El sistema elimina las conversaciones y los mensajes almacenados correspondientes al usuario, junto con las memorias persistentes o los resúmenes derivados de esas conversaciones que se utilicen para personalizar respuestas futuras.
+8. El sistema confirma que la eliminación se completó.
+9. El chatbot deja de utilizar el historial eliminado como contexto para futuras consultas.
+
+**Flujo alternativo A9.1 — Cancelación de la eliminación:**
+1. El usuario decide cancelar la operación antes de confirmarla.
+2. El sistema conserva el historial existente.
+3. El usuario puede continuar utilizando el chatbot.
+
 **Postcondiciones:**
 - El usuario recibe una respuesta o una explicación de por qué no puede responderse su consulta.
-- La información proporcionada respeta los permisos de acceso correspondientes al rol del usuario.
-- Las consultas de información se realizan sin modificar los datos de la plataforma.
-- El historial de conversaciones se conserva asociado a la cuenta del usuario para permitir su utilización como contexto en futuras conversaciones.
+- La información proporcionada respeta los permisos correspondientes al rol del usuario.
+- Las consultas de información se realizan sin modificar los datos funcionales de la plataforma.
+- El historial se conserva asociado a la cuenta del usuario mientras no sea eliminado.
+- Cuando el usuario elimina su historial, las conversaciones y las memorias derivadas contempladas en la operación dejan de estar disponibles para su recuperación y utilización por el chatbot.
 
 **Reglas:**
-- Solo los usuarios autenticados con los roles Estudiante, Profesor o Administrador pueden utilizar esta funcionalidad.
-- El chatbot se ejecuta localmente: el modelo de lenguaje y el procesamiento de las consultas ocurren en el entorno del sistema, sin depender de servicios externos en la nube.
-- El chatbot debe respetar los permisos de acceso existentes en la plataforma para cada rol.
-- El chatbot no debe revelar información a usuarios que no estén autorizados a consultarla.
-- Los datos concretos sobre cursos, inscripciones, tareas, entregas y calificaciones deben obtenerse de las fuentes autorizadas del sistema. El chatbot no debe inventar ni presentar como confirmados datos que no pudo verificar.
-- La documentación de la plataforma constituye la fuente principal para explicar su funcionamiento. Los conocimientos generales del modelo pueden utilizarse como complemento, pero no deben utilizarse para inventar funcionalidades o reglas de la aplicación.
-- El chatbot no puede crear, modificar ni eliminar información de la plataforma, ni ejecutar operaciones en nombre del usuario.
-- El chatbot no puede corregir entregas ni asignar calificaciones. Estas operaciones corresponden al profesor.
-- Cuando no disponga de información suficiente, el chatbot debe reconocer sus limitaciones, evitar especular y recomendar consultar con un profesor o administrador cuando corresponda.
-- El chatbot debe limitar sus respuestas a las funciones definidas para la plataforma educativa. Ante consultas ajenas a ellas, debe explicar brevemente su alcance y redirigir al usuario.
-- El chatbot debe responder en español, utilizando un tono claro y amable y adaptando la extensión de sus respuestas a cada consulta.
-- El historial de conversaciones debe mantenerse asociado al usuario correspondiente y no puede ser accesible por otros usuarios sin autorización.
-- Al utilizar conversaciones anteriores como contexto, el chatbot debe priorizar los datos actuales y verificados del sistema cuando la consulta requiera información actualizada.
-- Las validaciones de identidad y permisos deben realizarse en el backend y no depender únicamente de las instrucciones proporcionadas al modelo de inteligencia artificial.
+1. El chatbot solamente puede ser utilizado por usuarios autenticados.
+2. El chatbot está disponible para los roles Estudiante, Profesor y Administrador.
+3. El chatbot debe respetar los permisos de acceso existentes en la plataforma para cada rol.
+4. El chatbot no debe revelar información a usuarios que no estén autorizados a consultarla.
+5. Los datos concretos sobre cursos, inscripciones, tareas, entregas y calificaciones deben obtenerse de las fuentes autorizadas del sistema. El chatbot no debe inventar ni presentar como confirmados datos que no pudo verificar.
+6. Las fuentes de conocimiento administradas por el Administrador constituyen la referencia principal para explicar el funcionamiento de la plataforma y responder preguntas específicas contempladas en ellas.
+7. Los conocimientos generales del modelo pueden utilizarse como complemento, pero no deben utilizarse para inventar funcionalidades o reglas de la aplicación.
+8. El chatbot no puede crear, modificar ni eliminar información funcional de la plataforma, ni ejecutar operaciones en nombre del usuario. La eliminación del historial propio constituye la excepción expresamente autorizada por este caso de uso.
+9. El chatbot no puede corregir entregas ni asignar calificaciones.
+10. Cuando no disponga de información suficiente, el chatbot debe reconocer sus limitaciones, evitar especular y recomendar consultar con un profesor o administrador cuando corresponda.
+11. El chatbot debe limitar sus respuestas a las funciones definidas para la plataforma educativa.
+12. El chatbot debe responder en español, utilizando un tono claro y amable y adaptando la extensión de sus respuestas a cada consulta.
+13. El historial de conversaciones debe mantenerse asociado al usuario correspondiente y no puede ser accesible por otros usuarios sin autorización.
+14. Cuando el usuario elimine su historial, el sistema debe eliminar los datos de conversaciones y las memorias derivadas incluidas en el alcance de la operación. Esta acción no debe eliminar cursos, tareas, entregas, inscripciones, calificaciones ni otros datos funcionales almacenados por la plataforma.
+15. La recuperación y utilización de conversaciones anteriores deben limitarse al historial que siga disponible y pertenezca al usuario autenticado.
+16. Las validaciones de identidad, permisos y eliminación de datos deben realizarse en el backend y no depender únicamente de las instrucciones proporcionadas al modelo de inteligencia artificial.
+17. La eliminación del historial debe gestionarse de forma que los datos eliminados no puedan volver a incorporarse al contexto del chatbot desde copias de trabajo, cachés o memorias persistentes controladas por la aplicación.
+
+---
+
+## CU-12 — Gestionar fuentes de conocimiento del chatbot
+
+**Actor principal:** Administrador.
+
+**Objetivo:** permitir que el Administrador gestione los archivos que funcionan como fuentes de conocimiento autorizadas del chatbot, mediante la carga y eliminación de documentos que establezcan información sobre el funcionamiento de la plataforma y respuestas aprobadas para determinadas consultas.
+
+**Precondiciones:**
+- El Administrador inició sesión en la plataforma.
+- El usuario posee el rol Administrador.
+- El servicio de gestión de fuentes de conocimiento se encuentra disponible.
+
+**Flujo principal:**
+1. El Administrador accede a la sección de gestión de fuentes de conocimiento del chatbot.
+2. El sistema verifica que el usuario posea el rol Administrador.
+3. El sistema muestra los archivos registrados como fuentes de conocimiento y permite consultar la información necesaria para identificarlos.
+4. El Administrador selecciona la operación que desea realizar: cargar un archivo o eliminar uno existente.
+5. El sistema procesa la operación seleccionada.
+
+**Flujo alternativo A1 — Cargar un archivo:**
+1. El Administrador selecciona la opción para cargar un archivo.
+2. El sistema solicita seleccionar el archivo e ingresar, cuando corresponda, información descriptiva, su finalidad y los roles a los que está dirigido.
+3. El Administrador selecciona el archivo e ingresa la información solicitada.
+4. El sistema valida que el archivo cumpla los requisitos establecidos para su carga.
+5. El sistema almacena el archivo y procesa su contenido para incorporarlo a las fuentes de conocimiento del chatbot.
+6. El sistema registra la información necesaria para identificar la fuente y determinar a qué consultas o roles se aplica.
+7. Una vez completado correctamente el procesamiento, el sistema habilita la fuente para su utilización por el chatbot.
+8. El sistema informa al Administrador que la operación finalizó correctamente.
+
+**Flujo alternativo A2 — Eliminar un archivo:**
+1. El Administrador selecciona un archivo registrado.
+2. El sistema muestra la información que permite identificar la fuente seleccionada.
+3. El Administrador solicita eliminarla.
+4. El sistema solicita confirmación.
+5. El Administrador confirma la operación.
+6. El sistema elimina el archivo de las fuentes activas de conocimiento y retira su contenido de los mecanismos de búsqueda o recuperación utilizados por el chatbot.
+7. El sistema informa que la fuente fue eliminada correctamente.
+
+**Flujo alternativo A3 — Usuario sin permisos suficientes:**
+1. Un usuario sin el rol Administrador intenta acceder a la sección o ejecutar una operación de gestión de archivos.
+2. El sistema rechaza la solicitud.
+3. El sistema informa que la operación requiere permisos de Administrador.
+
+**Flujo alternativo A4 — Archivo no válido:**
+1. El Administrador intenta cargar un archivo que no cumple los requisitos establecidos, está dañado o no puede procesarse.
+2. El sistema rechaza la carga o el procesamiento.
+3. El sistema informa el motivo cuando pueda determinarlo.
+4. El archivo no se incorpora a las fuentes activas del chatbot.
+
+**Flujo alternativo A5 — Error durante la carga o el procesamiento:**
+1. Se produce un error al almacenar el archivo o procesar su contenido.
+2. El sistema informa que no pudo completar la operación.
+3. El sistema evita presentar como disponible una fuente cuyo procesamiento no haya finalizado correctamente.
+
+**Flujo alternativo A6 — Cancelación de la eliminación:**
+1. El Administrador solicita eliminar una fuente.
+2. El sistema solicita confirmación.
+3. El Administrador cancela la operación.
+4. El sistema conserva el archivo y mantiene su estado anterior.
+
+**Flujo alternativo A7 — Consulta basada en una fuente eliminada:**
+1. Un usuario realiza una consulta cuyo contenido estaba cubierto por una fuente de conocimiento eliminada.
+2. El chatbot consulta las fuentes de conocimiento que permanecen disponibles.
+3. El chatbot responde utilizando la información vigente que pueda verificar.
+4. Si no dispone de información suficiente, reconoce la limitación y no presenta el contenido eliminado como una fuente vigente.
+
+**Postcondiciones:**
+- Las fuentes cargadas y procesadas correctamente quedan disponibles para las consultas autorizadas del chatbot.
+- Las fuentes eliminadas dejan de estar disponibles para las nuevas consultas del chatbot.
+- Las fuentes y sus operaciones de gestión quedan bajo el control exclusivo de usuarios autenticados con el rol Administrador.
+
+**Reglas:**
+1. Únicamente un usuario autenticado con el rol Administrador puede cargar o eliminar fuentes de conocimiento del chatbot.
+2. Las verificaciones de permisos deben realizarse en el backend para impedir operaciones no autorizadas.
+3. Las fuentes de conocimiento pueden incluir:
+    - Guías de uso de la plataforma.
+    - Instrucciones para Estudiantes, Profesores y Administradores.
+    - Documentación de las funcionalidades y reglas de negocio del sistema.
+    - Preguntas frecuentes y sus respuestas aprobadas.
+    - Preguntas o situaciones determinadas para las que se haya definido una respuesta que el chatbot deba proporcionar.
+4. Los archivos deben cumplir los requisitos de formato, tamaño y procesamiento establecidos por el sistema.
+5. Una fuente solamente puede utilizarse como conocimiento disponible después de que su carga y procesamiento hayan finalizado correctamente.
+6. Cada fuente debe poder identificarse y asociarse, cuando corresponda, con los roles a los que está dirigida y el propósito de su contenido.
+7. El chatbot debe utilizar únicamente la información pertinente y autorizada para el rol del usuario. Una guía dirigida a un rol no debe revelar información restringida a los demás.
+8. Cuando una consulta coincida con una pregunta o situación que tenga una respuesta expresamente aprobada, el chatbot debe priorizar esa respuesta y conservar su significado, sin sustituirla por una respuesta contradictoria generada por el modelo.
+9. Cuando las fuentes de conocimiento establezcan una regla específica de la plataforma, el chatbot debe priorizar esa información frente a sus conocimientos generales. Si encuentra información contradictoria o insuficiente, debe reconocer la limitación en lugar de inventar una regla.
+10. El contenido de las fuentes de conocimiento no otorga permisos adicionales al usuario ni permite omitir los controles de acceso definidos en la plataforma.
+11. Al eliminar una fuente, el sistema debe retirarla del almacenamiento y de los mecanismos de recuperación activos utilizados por el chatbot, de manera que no siga siendo utilizada como fuente vigente en futuras respuestas.
+12. La eliminación de una fuente de conocimiento no implica eliminar el historial de conversaciones en el que ya se hubiera mencionado su contenido.
+13. La carga, el procesamiento, la activación y la eliminación de fuentes deben reflejar correctamente el estado de cada archivo para evitar que el chatbot utilice contenido incompleto o retirado.
+14. La gestión de estas fuentes no permite al Administrador modificar directamente, mediante el chatbot, los datos funcionales de los usuarios, cursos, tareas, entregas, inscripciones o calificaciones.
+15. Los formatos de archivo admitidos, sus límites de tamaño y las condiciones de conservación deben definirse durante el diseño técnico de la funcionalidad.

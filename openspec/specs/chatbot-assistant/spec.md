@@ -197,6 +197,42 @@ El sistema SHALL persistir el historial de conversaciones en SQLite mediante tab
 - **THEN** no se crea, modifica ni elimina ninguna entidad del dominio (cursos, usuarios, inscripciones, tareas, entregas, calificaciones)
 - **AND** únicamente se actualizan las tablas de historial
 
+### Requirement: Eliminación del historial propio
+
+El sistema SHALL permitir a un usuario autenticado (Estudiante, Profesor o Administrador) eliminar completamente su propio historial de conversaciones con el chatbot mediante `DELETE /api/chat/messages` (A9). Un usuario sin sesión MUST recibir HTTP 401. La operación SHALL ser idempotente: cuando el usuario no tiene historial (o ya lo eliminó), el sistema MUST responder con éxito en lugar de un error. El borrado SHALL alcanzar únicamente al usuario autenticado y MUST NO eliminar datos funcionales de la plataforma como cursos, tareas, entregas, inscripciones ni calificaciones (regla 14). La identidad y el permiso de borrado SHALL validarse en el backend desde la sesión activa, sin depender de instrucciones proporcionadas al modelo (regla 16). El historial eliminado MUST dejar de utilizarse como contexto en futuras consultas y no MUST volver a incorporarse desde copias de trabajo, cachés ni memorias persistentes controladas por la aplicación (regla 17). La eliminación la gestiona el sistema (endpoint y opción de la interfaz), no una herramienta del agente: el chatbot MUST seguir siendo de solo lectura y ninguna herramienta expuesta al agente MAY ejecutar esta operación (regla 8, que autoriza expresamente solo esta excepción vía sistema). La interfaz de `/chat` SHALL ofrecer la opción de eliminar el historial con confirmación previa que informe que la operación no podrá recuperarse desde la aplicación (A9 pasos 3-5); al cancelar, el sistema MUST conservar el historial existente (A9.1). Cuando el usuario solicita el borrado como consulta al chatbot, el asistente MUST orientarlo hacia la opción de la interfaz sin prometer ejecutar el borrado.
+
+#### Scenario: Confirmar la eliminación borra todo el historial
+- **GIVEN** que un usuario autenticado tiene un historial de conversaciones con el chatbot
+- **WHEN** selecciona la opción de eliminar historial, confirma la operación en el diálogo de confirmación y el sistema la procesa
+- **THEN** todas sus conversaciones y mensajes almacenados quedan eliminados
+- **AND** el contexto del chatbot queda vacío para sus futuras consultas (A9 paso 9)
+- **AND** el sistema muestra la confirmación de que la eliminación se completó (A9 paso 8)
+
+#### Scenario: Cancelar la eliminación no borra nada (A9.1)
+- **GIVEN** que un usuario autenticado abrió el diálogo de confirmación de eliminación de historial
+- **WHEN** cancela la operación antes de confirmarla
+- **THEN** el historial existente se conserva íntegro
+- **AND** el usuario puede continuar utilizando el chatbot con su contexto previo
+
+#### Scenario: Sin sesión la eliminación es rechazada
+- **GIVEN** que una persona no ha iniciado sesión
+- **WHEN** intenta eliminar el historial con `DELETE /api/chat/messages`
+- **THEN** el sistema responde HTTP 401
+- **AND** no se elimina ningún dato
+
+#### Scenario: Eliminación idempotente sin historial
+- **GIVEN** que un usuario autenticado no tiene historial de conversaciones (o ya lo eliminó previamente)
+- **WHEN** ejecuta la eliminación
+- **THEN** el sistema responde HTTP 200 con éxito, sin error
+- **AND** la interfaz continúa en el estado vacío sin mensajes de error
+
+#### Scenario: El borrado alcanza solo al usuario propio y no toca datos funcionales
+- **GIVEN** que un usuario autenticado elimina su historial
+- **WHEN** la operación concluye
+- **THEN** solo se eliminan las conversaciones y mensajes de chat de ese usuario
+- **AND** el historial de otros usuarios queda intacto
+- **AND** no se ven afectados cursos, tareas, entregas, inscripciones ni calificaciones (regla 14)
+
 ### Requirement: Ejecución local con Ollama y configuración
 
 El chatbot SHALL ejecutarse localmente: el modelo de lenguaje y el procesamiento de las consultas ocurren en el entorno del sistema, sin depender de servicios externos en la nube (regla 2). El agente LangChain SHALL utilizar Ollama local con el modelo `qwen3:4b` (configurable por nombre de modelo y URL de Ollama a través de variables de entorno, con valores por defecto para desarrollo). La implementación SHALL utilizar `langchain-ollama` según las decisiones del proyecto. El sistema SHALL documentar el requisito de tener Ollama ejecutándose localmente y el modelo `qwen3:4b` descargado (p.ej. `ollama pull qwen3:4b`).
