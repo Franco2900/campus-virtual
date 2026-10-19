@@ -3,8 +3,9 @@
 Exercises POST /api/chat/messages and GET /api/chat/messages: authorization
 (401 without session), validation (400 for empty content), the happy path
 (201 with an assistant reply when Ollama is up), the service-failure path
-(502 with the friendly A7 error when Ollama is down), and per-user history
-isolation. Requires the backend (and Vite proxy) to be running;
+(502 with the friendly A7 error when Ollama is down), per-user history
+isolation, and deleting the user's own history (CU-11 A9, idempotent).
+Requires the backend (and Vite proxy) to be running;
 `scripts/verify.py --cu cu11` handles that with an isolated database.
 
 Usage:
@@ -96,6 +97,11 @@ def main():
 
     status, _ = request(base, "GET", "/api/chat/messages", opener=anonymous)
     check("historial sin sesión (401)", status == 401, f"status={status}")
+
+    status, _ = request(base, "DELETE", "/api/chat/messages", opener=anonymous)
+    check(
+        "borrado de historial sin sesión (401)", status == 401, f"status={status}"
+    )
 
     # Register + login the first user (Estudiante is enough; chat is open to all three roles)
     student_email, _, reg_status = register_user(base, student, "est")
@@ -196,6 +202,30 @@ def main():
         "aislamiento de historial entre usuarios (200)",
         status == 200 and other_messages == [] and not leaked,
         f"status={status} count={len(other_messages)}",
+    )
+
+    # CU-11 extension (A9): the user deletes their own history; repeating it is safe
+    status, _ = request(base, "DELETE", "/api/chat/messages", opener=student)
+    check("eliminar el historial propio (200)", status == 200, f"status={status}")
+
+    status, history = request(base, "GET", "/api/chat/messages", opener=student)
+    remaining = history.get("messages", []) if isinstance(history, dict) else None
+    check(
+        "historial vacío después de eliminar (200, 0 mensajes)",
+        status == 200 and remaining == [],
+        f"status={status} count={len(remaining) if isinstance(remaining, list) else 'n/a'}",
+    )
+
+    status, _ = request(base, "DELETE", "/api/chat/messages", opener=student)
+    check("eliminar sin historial (200, idempotente)", status == 200, f"status={status}")
+
+    status, other_history = request(base, "GET", "/api/chat/messages", opener=other)
+    check(
+        "el borrado no afecta a otro usuario (200)",
+        status == 200
+        and isinstance(other_history, dict)
+        and other_history.get("messages") == [],
+        f"status={status}",
     )
 
     ok = all(results)
