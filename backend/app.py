@@ -40,9 +40,11 @@ def create_app(config=None):
     from blueprints.tasks import tasks_bp
     from blueprints.users import users_bp
     from models import (  # noqa: F401  (registers model tables)
+        conversation,
         course,
         course_teacher,
         enrollment,
+        message,
         submission,
         task,
         user,
