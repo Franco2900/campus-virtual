@@ -8,6 +8,7 @@ export default function Modal({
   footer,
   onClose,
   scrollable = false,
+  testId,
   children,
 }) {
   const elementRef = useRef(null);
@@ -53,7 +54,13 @@ export default function Modal({
     .join(" ");
 
   return (
-    <div className="modal fade" ref={elementRef} tabIndex={-1} aria-hidden="true">
+    <div
+      className="modal fade"
+      ref={elementRef}
+      tabIndex={-1}
+      aria-hidden="true"
+      data-testid={testId}
+    >
       <div className={dialogClass}>
         <div className="modal-content">
           {title && (

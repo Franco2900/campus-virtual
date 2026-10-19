@@ -16,6 +16,8 @@ export default function ConfirmDialog({
   cancelLabel = "Cancelar",
   confirmVariant = "brand",
   loading = false,
+  testId,
+  confirmTestId,
   onConfirm,
   onCancel,
 }) {
@@ -26,14 +28,19 @@ export default function ConfirmDialog({
       <Button variant="soft" onClick={onCancel} disabled={loading}>
         {cancelLabel}
       </Button>
-      <Button variant={confirmVariant} onClick={onConfirm} disabled={loading}>
+      <Button
+        variant={confirmVariant}
+        onClick={onConfirm}
+        disabled={loading}
+        data-testid={confirmTestId}
+      >
         {loading ? "Procesando..." : confirmLabel}
       </Button>
     </>
   );
 
   return (
-    <Modal open={open} title={title} footer={footer} onClose={onCancel}>
+    <Modal open={open} title={title} footer={footer} testId={testId} onClose={onCancel}>
       <div className="d-flex align-items-start gap-3">
         <span className="auth-brand__icon" style={style} aria-hidden="true">
           <i className={`bi bi-${icon}`} />

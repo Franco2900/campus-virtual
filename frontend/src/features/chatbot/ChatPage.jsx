@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Button, Card, EmptyState, PageHeader, Spinner, useToast } from "../../ui/index.js";
-import { getHistory, sendMessage } from "./api.js";
+import {
+  Button,
+  Card,
+  ConfirmDialog,
+  EmptyState,
+  PageHeader,
+  Spinner,
+  useToast,
+} from "../../ui/index.js";
+import { deleteHistory, getHistory, sendMessage } from "./api.js";
 import ChatComposer from "./ChatComposer.jsx";
 import MessageList from "./MessageList.jsx";
 
@@ -12,6 +20,8 @@ export default function ChatPage() {
   const [text, setText] = useState("");
   const [thinking, setThinking] = useState(false);
   const [error, setError] = useState(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const lastTextRef = useRef("");
 
   function showError(message, kind) {
@@ -81,6 +91,29 @@ export default function ChatPage() {
     }
   }
 
+  async function handleClearHistory() {
+    setClearing(true);
+    try {
+      await deleteHistory();
+      setMessages([]);
+      setError(null);
+      notify({
+        tone: "success",
+        title: "Historial eliminado",
+        message: "Se eliminó tu historial de conversaciones con el asistente.",
+      });
+    } catch (requestError) {
+      notify({
+        tone: "danger",
+        title: "No se pudo eliminar el historial",
+        message: requestError.message,
+      });
+    } finally {
+      setClearing(false);
+      setConfirmOpen(false);
+    }
+  }
+
   const showEmpty = !loading && messages.length === 0 && !thinking && error?.kind !== "load";
 
   return (
@@ -90,6 +123,18 @@ export default function ChatPage() {
         subtitle="Consultá sobre el funcionamiento del Campus Virtual y tus datos"
         icon="bi-chat-dots-fill"
       />
+
+      <div className="d-flex justify-content-end mb-3">
+        <Button
+          variant="soft"
+          icon="trash"
+          onClick={() => setConfirmOpen(true)}
+          disabled={loading || thinking || clearing}
+          data-testid="chat-clear-history"
+        >
+          Eliminar historial
+        </Button>
+      </div>
 
       {error && (
         <div
@@ -133,6 +178,21 @@ export default function ChatPage() {
           </>
         )}
       </Card>
+
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Eliminar historial"
+        tone="danger"
+        icon="trash"
+        confirmVariant="danger"
+        confirmLabel="Eliminar historial"
+        loading={clearing}
+        testId="chat-clear-confirm"
+        confirmTestId="chat-clear-confirm-accept"
+        message="Se eliminarán todas tus conversaciones con el asistente. Esta acción no se puede recuperar desde la aplicación."
+        onConfirm={handleClearHistory}
+        onCancel={() => setConfirmOpen(false)}
+      />
     </div>
   );
 }
