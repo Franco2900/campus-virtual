@@ -4,7 +4,12 @@ Exercises POST /api/chat/messages and GET /api/chat/messages: authorization
 (401 without session), validation (400 for empty content), the happy path
 (201 with an assistant reply when Ollama is up), the service-failure path
 (502 with the friendly A7 error when Ollama is down), per-user history
-isolation, and deleting the user's own history (CU-11 A9, idempotent).
+isolation (the second user publishes a real turn when Ollama is up and must
+still own it after the first user deletes their own history), and deleting
+the user's own history (CU-11 A9, idempotent). The two checks that depend on
+the second user's own turn print an explicit `[SKIP]` line and are not
+counted when Ollama is down, so the expected totals are 15 checks with Ollama
+up and 13 with Ollama down.
 Requires the backend (and Vite proxy) to be running;
 `scripts/verify.py --cu cu11` handles that with an isolated database.
 
@@ -204,6 +209,26 @@ def main():
         f"status={status} count={len(other_messages)}",
     )
 
+    # The second user publishes a real turn, so the post-deletion check below
+    # compares a non-trivial history instead of "empty before, empty after"
+    if ollama_up:
+        status, _ = request(
+            base,
+            "POST",
+            "/api/chat/messages",
+            {"content": "¿Cómo me inscribo a un curso?"},
+            opener=other,
+        )
+        check("otro usuario publica una consulta (201)", status == 201, f"status={status}")
+    else:
+        print("[SKIP] Ollama no disponible: sin consulta del segundo usuario")
+
+    status, other_before = request(base, "GET", "/api/chat/messages", opener=other)
+    other_before_messages = (
+        other_before.get("messages", []) if isinstance(other_before, dict) else []
+    )
+    student_contents = {m.get("content") for m in messages if isinstance(m, dict)}
+
     # CU-11 extension (A9): the user deletes their own history; repeating it is safe
     status, _ = request(base, "DELETE", "/api/chat/messages", opener=student)
     check("eliminar el historial propio (200)", status == 200, f"status={status}")
@@ -219,14 +244,26 @@ def main():
     status, _ = request(base, "DELETE", "/api/chat/messages", opener=student)
     check("eliminar sin historial (200, idempotente)", status == 200, f"status={status}")
 
-    status, other_history = request(base, "GET", "/api/chat/messages", opener=other)
-    check(
-        "el borrado no afecta a otro usuario (200)",
-        status == 200
-        and isinstance(other_history, dict)
-        and other_history.get("messages") == [],
-        f"status={status}",
-    )
+    if ollama_up:
+        status, other_after = request(base, "GET", "/api/chat/messages", opener=other)
+        other_after_messages = (
+            other_after.get("messages", []) if isinstance(other_after, dict) else []
+        )
+        leaked_after = any(
+            m.get("content") in student_contents
+            for m in other_after_messages
+            if isinstance(m, dict)
+        )
+        check(
+            "el borrado no afecta al historial de otro usuario (200, conserva los suyos)",
+            status == 200
+            and other_after_messages == other_before_messages
+            and len(other_after_messages) > 0
+            and not leaked_after,
+            f"status={status} count={len(other_after_messages)}",
+        )
+    else:
+        print("[SKIP] Ollama no disponible: sin historial propio del segundo usuario")
 
     ok = all(results)
     print(f"\nCU-11 smoke: {sum(results)}/{len(results)} checks")
