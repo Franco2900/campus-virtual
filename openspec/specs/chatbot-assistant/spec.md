@@ -29,7 +29,7 @@ El sistema SHALL permitir el acceso a la funcionalidad del chatbot únicamente a
 
 ### Requirement: Conversación, idioma, extensión y contexto
 
-El chatbot SHALL responder en español, con tono claro y amable, adaptando la extensión de sus respuestas a cada consulta (regla 11). Para generar la respuesta, el chatbot SHALL analizar la consulta para determinar la información necesaria (paso 5 del flujo principal). Si la consulta requiere contexto de la conversación en curso, el chatbot SHALL utilizar el contexto de la conversación actual (paso 8). Si la consulta hace referencia a una conversación anterior (A8), el chatbot SHALL recuperar y utilizar el historial disponible correspondiente únicamente al mismo usuario autenticado (reglas 12-13). Cuando no disponga del contexto necesario para interpretar la consulta, el chatbot SHALL informar esa limitación y solicitar la información que falte cuando sea necesario (A8 paso 4).
+El chatbot SHALL responder en español, con tono claro y amable, adaptando la extensión de sus respuestas a cada consulta (regla 12). Para generar la respuesta, el chatbot SHALL analizar la consulta para determinar la información necesaria (paso 5 del flujo principal). Si la consulta requiere contexto de la conversación en curso, el chatbot SHALL utilizar el contexto de la conversación actual (paso 8). Si la consulta hace referencia a una conversación anterior (A8), el chatbot SHALL recuperar y utilizar el historial disponible correspondiente únicamente al mismo usuario autenticado (reglas 13 y 15). Cuando no disponga del contexto necesario para interpretar la consulta, el chatbot SHALL informar esa limitación y solicitar la información que falte cuando sea necesario (A8 paso 4).
 
 #### Scenario: Respuesta en español con extensión adaptada
 - **GIVEN** que un usuario autenticado envía una consulta sencilla o detallada al chatbot
@@ -50,7 +50,7 @@ El chatbot SHALL responder en español, con tono claro y amable, adaptando la ex
 
 ### Requirement: Respuesta anclada a la documentación de la plataforma
 
-Cuando la consulta se relaciona con el funcionamiento de la plataforma (paso 6), el chatbot SHALL utilizar principalmente la documentación correspondiente del repositorio del proyecto (`AGENTS.md`, `README.md`, `casos_de_uso.md`) para responder (regla 6). Los conocimientos generales del modelo MAY utilizarse como complemento. Los conocimientos generales del modelo MUST NOT utilizarse para inventar funcionalidades o reglas de la aplicación (regla 6). El chatbot MUST NOT inventar ni presentar como confirmados datos de la plataforma que no haya podido verificar a través de fuentes autorizadas (regla 5).
+Cuando la consulta se relaciona con el funcionamiento de la plataforma (paso 6), el chatbot SHALL utilizar principalmente la documentación correspondiente del repositorio del proyecto (`AGENTS.md`, `README.md`, `casos_de_uso.md`) para responder (regla 6). Los conocimientos generales del modelo MAY utilizarse como complemento. Los conocimientos generales del modelo MUST NOT utilizarse para inventar funcionalidades o reglas de la aplicación (regla 7). El chatbot MUST NOT inventar ni presentar como confirmados datos de la plataforma que no haya podido verificar a través de fuentes autorizadas (regla 5).
 
 #### Scenario: Consulta sobre funcionamiento de la plataforma
 - **GIVEN** que un usuario autenticado pregunta cómo funciona una funcionalidad descrita en la documentación del proyecto
@@ -66,7 +66,7 @@ Cuando la consulta se relaciona con el funcionamiento de la plataforma (paso 6),
 
 ### Requirement: Datos reales del sistema con alcance por rol y validación en backend
 
-Si la consulta requiere información real del sistema (paso 7), el chatbot SHALL obtener los datos necesarios exclusivamente mediante herramientas de solo lectura que delegan en los `services/` existentes del backend (regla 5). Las validaciones de identidad y permisos SHALL realizarse siempre en el backend, tomando la identidad y el rol del usuario exclusivamente de la sesión activa, nunca de parámetros proporcionados al modelo ni de instrucciones que el modelo pueda interpretar de manera ambigua (regla 16). El filtrado por permisos según el rol SHALL aplicarse dentro de cada herramienta: un Estudiante MUST acceder únicamente a su propia información y a los cursos en los que esté inscrito (regla 3-4); un Profesor MUST acceder únicamente a los cursos en los que trabaja (regla 3-4); un Administrador MUST acceder a la información permitida por sus servicios existentes (regla 3-4). El chatbot MUST respetar los permisos de acceso existentes en la plataforma para cada rol (regla 3). Cuando un usuario solicita información que excede sus permisos (A3), el sistema MUST impedir el acceso a dicha información y el chatbot MUST informar que no puede proporcionar los datos solicitados.
+Si la consulta requiere información real del sistema (paso 7), el chatbot SHALL obtener los datos necesarios exclusivamente mediante herramientas de solo lectura que delegan en los `services/` existentes del backend (regla 8). Las validaciones de identidad y permisos SHALL realizarse siempre en el backend, tomando la identidad y el rol del usuario exclusivamente de la sesión activa, nunca de parámetros proporcionados al modelo ni de instrucciones que el modelo pueda interpretar de manera ambigua (regla 16). El filtrado por permisos según el rol SHALL aplicarse dentro de cada herramienta: un Estudiante MUST acceder únicamente a su propia información y a los cursos en los que esté inscrito (regla 3-4); un Profesor MUST acceder únicamente a los cursos en los que trabaja (regla 3-4); un Administrador MUST acceder a la información permitida por sus servicios existentes (regla 3-4). El chatbot MUST respetar los permisos de acceso existentes en la plataforma para cada rol (regla 3). Cuando un usuario solicita información que excede sus permisos (A3), el sistema MUST impedir el acceso a dicha información y el chatbot MUST informar que no puede proporcionar los datos solicitados.
 
 #### Scenario: Estudiante solicita datos solo de su ámbito
 - **GIVEN** que un Estudiante autenticado solicita información sobre sus cursos, inscripciones, tareas, entregas o calificaciones
@@ -100,7 +100,7 @@ Si la consulta requiere información real del sistema (paso 7), el chatbot SHALL
 
 ### Requirement: Rechazo de mutaciones, corrección y calificación
 
-El chatbot MUST ser exclusivamente de solo lectura (regla 7). El chatbot MUST NOT crear, modificar ni eliminar información de la plataforma, ni ejecutar operaciones en nombre del usuario (regla 7). Cuando el usuario solicita crear, modificar o eliminar información (A4), el chatbot MUST informar que no puede ejecutar esa operación y, cuando corresponda, orientar al usuario hacia la funcionalidad correspondiente de la plataforma. El chatbot MUST NOT corregir entregas ni asignar calificaciones (regla 8). Cuando el usuario solicita corregir una entrega o asignar una calificación (A5), el chatbot MUST informar que esas operaciones no forman parte de sus funciones y que corresponden al profesor. Ninguna herramienta expuesta al agente MAY realizar operaciones de escritura, modificación, eliminación, corrección o calificación.
+El chatbot MUST ser exclusivamente de solo lectura (regla 8). El chatbot MUST NOT crear, modificar ni eliminar información de la plataforma, ni ejecutar operaciones en nombre del usuario (regla 8). Cuando el usuario solicita crear, modificar o eliminar información (A4), el chatbot MUST informar que no puede ejecutar esa operación y, cuando corresponda, orientar al usuario hacia la funcionalidad correspondiente de la plataforma. El chatbot MUST NOT corregir entregas ni asignar calificaciones (regla 9). Cuando el usuario solicita corregir una entrega o asignar una calificación (A5), el chatbot MUST informar que esas operaciones no forman parte de sus funciones y que corresponden al profesor. Ninguna herramienta expuesta al agente MAY realizar operaciones de escritura, modificación, eliminación, corrección o calificación.
 
 #### Scenario: Solicitud de modificación o ejecución de operaciones (A4)
 - **GIVEN** que un usuario solicita crear, modificar o eliminar información de la plataforma mediante el chatbot
@@ -122,7 +122,7 @@ El chatbot MUST ser exclusivamente de solo lectura (regla 7). El chatbot MUST NO
 
 ### Requirement: Consulta sin información suficiente
 
-Cuando el chatbot no dispone de información suficiente para responder con certeza (A2), este MUST reconocer sus limitaciones, evitar especular y, cuando resulte útil, proporcionar información general relacionada sin presentarla como dato confirmado de la plataforma (A2 pasos 2-3). Cuando corresponda, el chatbot SHALL recomendar consultar con un profesor o administrador (regla 9, A2 paso 4).
+Cuando el chatbot no dispone de información suficiente para responder con certeza (A2), este MUST reconocer sus limitaciones, evitar especular y, cuando resulte útil, proporcionar información general relacionada sin presentarla como dato confirmado de la plataforma (A2 pasos 2-3). Cuando corresponda, el chatbot SHALL recomendar consultar con un profesor o administrador (regla 10, A2 paso 4).
 
 #### Scenario: Consulta sobre información no disponible (A2)
 - **GIVEN** que el usuario realiza una consulta que requiere información no disponible o que no puede determinarse con suficiente certeza
@@ -143,7 +143,7 @@ Cuando el chatbot no dispone de información suficiente para responder con certe
 
 ### Requirement: Consulta ajena a la plataforma
 
-Cuando el usuario realiza una consulta ajena a la función del chatbot (A6), el chatbot SHALL explicar brevemente que su función es ayudar a utilizar la plataforma y consultar información del sistema (regla 10, A6 paso 2). El chatbot SHALL redirigir al usuario hacia ese propósito sin responder la consulta ajena a su función (A6 paso 3).
+Cuando el usuario realiza una consulta ajena a la función del chatbot (A6), el chatbot SHALL explicar brevemente que su función es ayudar a utilizar la plataforma y consultar información del sistema (regla 11, A6 paso 2). El chatbot SHALL redirigir al usuario hacia ese propósito sin responder la consulta ajena a su función (A6 paso 3).
 
 #### Scenario: Consulta ajena a la función del chatbot (A6)
 - **GIVEN** que un usuario realiza una consulta que no está relacionada con el funcionamiento de la plataforma educativa
@@ -154,7 +154,7 @@ Cuando el usuario realiza una consulta ajena a la función del chatbot (A6), el 
 
 ### Requirement: Error del servicio
 
-Cuando se produce un error que impide consultar la base de datos o generar una respuesta (A7), el chatbot SHALL informar que no pudo completar la consulta (A7 paso 2). Cuando corresponda, el chatbot SHALL indicar que el usuario puede intentarlo nuevamente (A7 paso 3). Esta respuesta debe ser clara y amable, independientemente de que el error sea debido a Ollama caído, modelo no disponible, fallo de conexión u otro error del servicio (regla 2 contempla ejecución local). El backend SHALL traducir errores técnicos del servicio LLM a una respuesta adecuada para el usuario.
+Cuando se produce un error que impide consultar la base de datos o generar una respuesta (A7), el chatbot SHALL informar que no pudo completar la consulta (A7 paso 2). Cuando corresponda, el chatbot SHALL indicar que el usuario puede intentarlo nuevamente (A7 paso 3). Esta respuesta debe ser clara y amable, independientemente de que el error sea debido a Ollama caído, modelo no disponible, fallo de conexión u otro error del servicio (la ejecución local con Ollama figura como restricción del stack tecnológico del proyecto, no como regla de CU-11). El backend SHALL traducir errores técnicos del servicio LLM a una respuesta adecuada para el usuario.
 
 #### Scenario: Error al consultar información o generar respuesta (A7)
 - **GIVEN** que ocurre un error al consultar la base de datos o al generar una respuesta (incluyendo Ollama no disponible o modelo `qwen3:4b` no descargado)
@@ -171,7 +171,7 @@ Cuando se produce un error que impide consultar la base de datos o generar una r
 
 ### Requirement: Historial persistido por usuario y aislamiento
 
-El sistema SHALL persistir el historial de conversaciones en SQLite mediante tablas nuevas creadas por migración incremental de Flask-Migrate/Alembic (patrón de `backend/migrations/`, posterior a `0007` según propuesta). El historial de conversaciones SHALL mantenerse asociado al usuario correspondiente (regla 12). El historial de conversaciones MUST NO ser accesible por otros usuarios sin autorización (regla 12). Cada usuario accede únicamente a su propio historial; el aislamiento entre usuarios es obligatorio. El historial se utiliza como contexto en conversaciones futuras (paso 8, A8) y, al utilizarlo, el chatbot SHALL priorizar los datos actuales y verificados del sistema cuando la consulta requiera información actualizada (regla 14). La persistencia del historial no modifica datos del sistema (postcondición).
+El sistema SHALL persistir el historial de conversaciones en SQLite mediante tablas nuevas creadas por migración incremental de Flask-Migrate/Alembic (patrón de `backend/migrations/`, posterior a `0007` según propuesta). El historial de conversaciones SHALL mantenerse asociado al usuario correspondiente (regla 13). El historial de conversaciones MUST NO ser accesible por otros usuarios sin autorización (regla 13). Cada usuario accede únicamente a su propio historial; el aislamiento entre usuarios es obligatorio. El historial se utiliza como contexto en conversaciones futuras (paso 8, A8) y, al utilizarlo, el chatbot SHALL priorizar los datos actuales y verificados del sistema cuando la consulta requiera información actualizada. La persistencia del historial no modifica datos del sistema (postcondición).
 
 #### Scenario: Historial asociado al usuario correspondiente
 - **GIVEN** que un usuario autenticado mantiene una conversación con el chatbot
@@ -235,7 +235,7 @@ El sistema SHALL permitir a un usuario autenticado (Estudiante, Profesor o Admin
 
 ### Requirement: Ejecución local con Ollama y configuración
 
-El chatbot SHALL ejecutarse localmente: el modelo de lenguaje y el procesamiento de las consultas ocurren en el entorno del sistema, sin depender de servicios externos en la nube (regla 2). El agente LangChain SHALL utilizar Ollama local con el modelo `qwen3:4b` (configurable por nombre de modelo y URL de Ollama a través de variables de entorno, con valores por defecto para desarrollo). La implementación SHALL utilizar `langchain-ollama` según las decisiones del proyecto. El sistema SHALL documentar el requisito de tener Ollama ejecutándose localmente y el modelo `qwen3:4b` descargado (p.ej. `ollama pull qwen3:4b`).
+El chatbot SHALL ejecutarse localmente: el modelo de lenguaje y el procesamiento de las consultas ocurren en el entorno del sistema, sin depender de servicios externos en la nube (restricción del stack tecnológico del proyecto; no es una regla de CU-11). El agente LangChain SHALL utilizar Ollama local con el modelo `qwen3:4b` (configurable por nombre de modelo y URL de Ollama a través de variables de entorno, con valores por defecto para desarrollo). La implementación SHALL utilizar `langchain-ollama` según las decisiones del proyecto. El sistema SHALL documentar el requisito de tener Ollama ejecutándose localmente y el modelo `qwen3:4b` descargado (p.ej. `ollama pull qwen3:4b`).
 
 #### Scenario: Ejecución exclusivamente local
 - **GIVEN** que el chatbot procesa una consulta
