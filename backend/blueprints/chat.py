@@ -57,3 +57,11 @@ def list_messages_endpoint(current_user):
         ),
         200,
     )
+
+
+@chat_bp.delete("/messages")
+@login_required
+@require_roles(UserRole.STUDENT, UserRole.TEACHER, UserRole.ADMIN)
+def delete_messages_endpoint(current_user):
+    chat_service.delete_history(current_user)
+    return jsonify({"message": "Historial eliminado"}), 200

@@ -96,21 +96,26 @@ def _serialize_db_message(message: Message) -> dict[str, Any]:
     }
 
 
-def _get_or_create_conversation(current_user):
-    conv = (
+def _user_conversations(current_user) -> Sequence[Conversation]:
+    return (
         db.session.execute(
             db.select(Conversation)
             .where(Conversation.user_id == current_user.id)
             .order_by(Conversation.id.asc())
         )
         .scalars()
-        .first()
+        .all()
     )
-    if conv is None:
-        conv = Conversation(user_id=current_user.id)
-        db.session.add(conv)
+
+
+def _get_or_create_conversation(current_user):
+    conv = _user_conversations(current_user)
+    if not conv:
+        conversation = Conversation(user_id=current_user.id)
+        db.session.add(conversation)
         db.session.flush()
-    return conv
+        return conversation
+    return conv[0]
 
 
 def _load_history(conv: Conversation, window: int) -> Sequence[Message]:
@@ -139,6 +144,7 @@ def _build_system_prompt() -> str:
         "Obtené datos concretos únicamente a través de las herramientas disponibles; no inventes datos.\n"
         "Priorizá los datos actuales y verificados del sistema por sobre la información que surja del historial de la conversación.\n"
         "Solo lectura: no crees, modifiques ni elimines información. No corrijas entregas ni asignes calificaciones.\n"
+        "Para eliminar su historial de conversaciones, el usuario debe hacerlo desde la opción de borrado de la interfaz del chat: no podés ejecutar esa operación, orientalo hacia esa función.\n"
         "Si la consulta excede el alcance permitido para el usuario, informa que no podés acceder a esos datos.\n"
         "Si la consulta es ajena al uso de la plataforma, explicalo brevemente y redirígela hacia ese propósito.\n"
         "Si no tenés información suficiente para responder con certeza, reconocé el límite, evitá especular y, si corresponde, indicá que podés consultar con un profesor o administrador.\n"
@@ -326,6 +332,18 @@ def get_history(current_user):
         .all()
     )
     return conv, list(messages)
+
+
+def delete_history(current_user) -> int:
+    conversations = _user_conversations(current_user)
+    if not conversations:
+        return 0
+
+    conversation_ids = [conversation.id for conversation in conversations]
+    db.session.execute(db.delete(Message).where(Message.conversation_id.in_(conversation_ids)))
+    db.session.execute(db.delete(Conversation).where(Conversation.id.in_(conversation_ids)))
+    db.session.commit()
+    return len(conversation_ids)
 
 
 def respond(current_user, data):
