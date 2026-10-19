@@ -1,27 +1,9 @@
 import { useState } from "react";
 
+import { isoToLocalInput } from "../../api/dates.js";
 import { Button, FormField } from "../../ui/index.js";
 
 const EMPTY_FORM = { title: "", description: "", due_date: "" };
-
-function pad(value) {
-  return String(value).padStart(2, "0");
-}
-
-// The backend sends ISO 8601 (UTC); datetime-local expects local "YYYY-MM-DDTHH:mm".
-function isoToLocalInput(value) {
-  if (!value) {
-    return "";
-  }
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "";
-  }
-  return (
-    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
-    `T${pad(date.getHours())}:${pad(date.getMinutes())}`
-  );
-}
 
 function toForm(initialValues) {
   if (!initialValues) {

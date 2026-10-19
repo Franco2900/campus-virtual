@@ -13,6 +13,7 @@ import {
   Spinner,
   useToast,
 } from "../../ui/index.js";
+import { formatDueDate } from "../../api/dates.js";
 import {
   createSubmission,
   deleteSubmission,
@@ -21,17 +22,6 @@ import {
   updateSubmission,
 } from "./api.js";
 import SubmissionForm from "./SubmissionForm.jsx";
-
-function formatDueDate(value) {
-  if (!value) {
-    return "—";
-  }
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "—";
-  }
-  return date.toLocaleString("es-AR", { dateStyle: "medium", timeStyle: "short" });
-}
 
 function submissionBadge(submission) {
   if (submission) {

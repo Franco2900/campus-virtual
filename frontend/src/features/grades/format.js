@@ -1,3 +1,5 @@
+import { formatDueDate } from "../../api/dates.js";
+
 export function formatValue(value) {
   if (value === null || value === undefined || value === "") {
     return "—";
@@ -9,13 +11,4 @@ export function formatValue(value) {
   return number.toFixed(2);
 }
 
-export function formatDueDate(value) {
-  if (!value) {
-    return "—";
-  }
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "—";
-  }
-  return date.toLocaleString("es-AR", { dateStyle: "medium", timeStyle: "short" });
-}
+export { formatDueDate };
