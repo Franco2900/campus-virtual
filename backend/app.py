@@ -36,6 +36,7 @@ def create_app(config=None):
     from blueprints.enrollments import enrollments_bp
     from blueprints.grades import grades_bp
     from blueprints.grading import grading_bp
+    from blueprints.knowledge import knowledge_bp
     from blueprints.submissions import submissions_bp
     from blueprints.tasks import tasks_bp
     from blueprints.users import users_bp
@@ -44,6 +45,7 @@ def create_app(config=None):
         course,
         course_teacher,
         enrollment,
+        knowledge_source,
         message,
         submission,
         task,
@@ -59,6 +61,7 @@ def create_app(config=None):
     app.register_blueprint(grading_bp)
     app.register_blueprint(chat_bp)
     app.register_blueprint(grades_bp)
+    app.register_blueprint(knowledge_bp)
 
     with app.app_context():
         if app.config.get("TESTING"):
