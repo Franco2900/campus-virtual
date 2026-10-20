@@ -43,8 +43,32 @@ async function request(method, path, body) {
   return data;
 }
 
+async function formRequest(path, formData) {
+  let response;
+  try {
+    // Sin Content-Type manual: el browser agrega el boundary del multipart.
+    response = await fetch(path, { method: "POST", body: formData });
+  } catch {
+    throw new Error(NETWORK_ERROR_MESSAGE);
+  }
+
+  const data = await readJson(response);
+
+  if (!response.ok) {
+    const message =
+      data && typeof data.error === "string" && data.error ? data.error : DEFAULT_ERROR_MESSAGE;
+    throw new Error(message);
+  }
+
+  return data;
+}
+
 export function post(path, body) {
   return request("POST", path, body);
+}
+
+export function postForm(path, formData) {
+  return formRequest(path, formData);
 }
 
 export function put(path, body) {
