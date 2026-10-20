@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-10-19
+goal: Permitir al Administrador cargar y eliminar fuentes de conocimiento
+  autorizadas del chatbot, integradas por recuperacion RAG scopeada por rol
