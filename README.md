@@ -21,6 +21,7 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 - Consulta de calificaciones (**CU-09 implementado**): pantalla `/grades` para elegir un curso y ver, como Estudiante, el detalle por tarea (nota, retroalimentación, aprobado/desaprobado) con el promedio del curso; como Profesor, la matriz estudiante × tarea con el promedio de cada estudiante y el promedio del curso.
 - Filtrado de usuarios (**CU-10 implementado**): barra de filtros del listado de usuarios (q/role/active) con estado vacío A1, accesible solo para el Administrador.
 - Chatbot asistente (**CU-11 implementado**): pantalla `/chat` con un agente local LangChain + Ollama (`qwen3:4b`) que responde consultas sobre la plataforma y sobre datos reales del sistema según el rol del usuario; solo lectura (no crea, modifica ni califica). Fallo del modelo local → mensaje amable, sin persistir el turno.
+- Fuentes de conocimiento del chatbot (**CU-12 implementado**): pantalla `/knowledge` (solo Administrador) para cargar, listar y eliminar fuentes `.md`/`.txt` (≤ 1 MB) que el chatbot usa como contexto RAG (ChromaDB + embeddings locales); alta/índice/consulta scopeados por rol.
 
 ## Tecnologías
 
@@ -39,7 +40,7 @@ Las versiones exactas están en `backend/requirements.txt` (backend) y `frontend
 - Python 3.14 (verificado en 3.14.6) y `pip`.
 - Node.js v24 (verificado en v24.19.0) y `npm`.
 - En Windows, `npm` se invoca como `cmd /c npm ...` por la execution policy de PowerShell.
-- **Ollama** para el chatbot (CU-11): el servidor local debe estar ejecutándose y el modelo descargado (ver «Ollama y el chatbot» más abajo).
+- **Ollama** para el chatbot (CU-11) y para indexar fuentes de conocimiento (CU-12): el servidor local debe estar ejecutándose y los modelos descargados (ver «Ollama y el chatbot» más abajo).
 
 ## Instalación
 
@@ -78,6 +79,8 @@ El chatbot (CU-11, `/chat`) llama a **Ollama corriendo en local**; el backend es
 ollama serve
 # Modelo usado por el chatbot (una vez descargado queda disponible sin conexión)
 ollama pull qwen3:4b
+# Modelo de embeddings usado para indexar las fuentes de conocimiento (CU-12)
+ollama pull nomic-embed-text
 ```
 
 Si Ollama no está corriendo o el modelo no existe, **el resto de la app funciona normal**; solo el chatbot responde 502 con un mensaje amable («no se pudo completar la consulta») y ese turno no se guarda en el historial.
@@ -91,6 +94,20 @@ Variables de entorno opcionales del chatbot (con sus valores por defecto):
 | `OLLAMA_TIMEOUT` | `120` | Timeout por invocación (segundos) |
 | `CHAT_HISTORY_WINDOW` | `10` | Ventana de mensajes enviados al modelo por turno |
 | `CHAT_MESSAGE_MAX_LENGTH` | `4000` | Longitud máxima del mensaje del usuario |
+
+### Fuentes de conocimiento del chatbot (CU-12)
+
+El Administrador gestiona en `/knowledge` las fuentes `.md`/`.txt` (≤ 1 MB) que el chatbot usa como contexto. La carga indexa el documento de forma síncrona en ChromaDB local con embeddings de Ollama (`nomic-embed-text`, ver el bloque de arriba); sin ese modelo, el alta responde 400 con la fuente en estado `error` (visible en la pantalla) y el resto de la app sigue funcionando.
+
+Variables de entorno de las fuentes de conocimiento (con sus valores por defecto):
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `OLLAMA_EMBED_MODEL` | `nomic-embed-text` | Modelo de embeddings para indexar |
+| `CHROMA_PERSIST_DIR` | `instance/chroma` | Directorio de persistencia de ChromaDB |
+| `CHROMA_COLLECTION` | `campus_knowledge` | Nombre de la colección vectorial |
+| `KNOWLEDGE_MAX_FILE_BYTES` | `1048576` | Tamaño máximo del archivo cargado (1 MB) |
+| `KNOWLEDGE_UPLOAD_DIR` | `instance/knowledge` | Directorio donde se guardan los archivos cargados |
 
 ### Migraciones de esquema
 
@@ -259,7 +276,7 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Roadmap
 
-- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones), CU-06 (Gestionar tareas), CU-07 (Entregar tarea), CU-08 (Corregir tarea), CU-09 (Consultar calificaciones), CU-10 (Filtrar usuarios) y CU-11 (Utilizar chatbot de asistencia) implementados end-to-end.
+- CU-01 (Registrarse), CU-02 (Autenticarse), CU-03 (Gestionar cursos), CU-04 (Gestionar usuarios), CU-05 (Gestionar inscripciones), CU-06 (Gestionar tareas), CU-07 (Entregar tarea), CU-08 (Corregir tarea), CU-09 (Consultar calificaciones), CU-10 (Filtrar usuarios), CU-11 (Utilizar chatbot de asistencia) y CU-12 (Gestionar fuentes de conocimiento del chatbot) implementados end-to-end.
 - Pipeline spec-driven por CU (openspec, orquestado por `new-use-case`).
 - Tests automatizados de frontend.
 

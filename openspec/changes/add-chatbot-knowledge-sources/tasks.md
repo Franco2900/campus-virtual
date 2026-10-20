@@ -90,19 +90,19 @@ Chain strategy: stacked-to-main
 
 ### 3.1 Cliente HTTP `postForm`
 
-- [ ] 3.1 Agregar `postForm(path, formData)` en `frontend/src/api/client.js` (mismo esqueleto que `request` pero con `FormData`, sin fijar `Content-Type` manual), sin alterar el resto del cliente. Verificar: `frontend/` `cmd /c npm run lint:format`.
+- [x] 3.1 Agregar `postForm(path, formData)` en `frontend/src/api/client.js` (mismo esqueleto que `request` pero con `FormData`, sin fijar `Content-Type` manual), sin alterar el resto del cliente. Verificar: `frontend/` `cmd /c npm run lint:format`.
 
 ### 3.2 Feature `knowledge`
 
-- [ ] 3.2 Crear la feature `frontend/src/features/knowledge/` con `api.js` (`getSources()`, `createSource(formData)` vía `postForm`, `deleteSource(id)`), `KnowledgePage.jsx` (listado con Nombre, Propósito, Tipo/Badge, Roles con "Todos" si vacío, `StatusBadge` con `active`/`processing`/`error` y `error_message` en secundario; `PageHeader` + botón "Cargar fuente"; `Spinner`/`EmptyState`/`Toast`; `data-testid` `knowledge-page`/`knowledge-source-row`), `KnowledgeUploadForm.jsx` (dentro de `Modal`, `FormField` con nombre/descripción/tipo, checkboxes de los tres roles tildados por defecto, input `file` `accept=".md,.txt"`, envío `FormData`, muestra el `error` del backend en 400, `data-testid` `knowledge-upload-form`) y la confirmación de borrado con `ConfirmDialog` danger (aviso de que dejará de estar disponible para el chatbot, cancelación sin efectos A6, `data-testid` `knowledge-delete-confirm`), reutilizando `src/ui/` y tokens sin colores hardcodeados. Verificar: `frontend/` `cmd /c npm run lint:format`.
+- [x] 3.2 Crear la feature `frontend/src/features/knowledge/` con `api.js` (`getSources()`, `createSource(formData)` vía `postForm`, `deleteSource(id)`), `KnowledgePage.jsx` (listado con Nombre, Propósito, Tipo/Badge, Roles con "Todos" si vacío, `StatusBadge` con `active`/`processing`/`error` y `error_message` en secundario; `PageHeader` + botón "Cargar fuente"; `Spinner`/`EmptyState`/`Toast`; `data-testid` `knowledge-page`/`knowledge-source-row`), `KnowledgeUploadForm.jsx` (dentro de `Modal`, `FormField` con nombre/descripción/tipo, checkboxes de los tres roles tildados por defecto, input `file` `accept=".md,.txt"`, envío `FormData`, muestra el `error` del backend en 400, `data-testid` `knowledge-upload-form`) y la confirmación de borrado con `ConfirmDialog` danger (aviso de que dejará de estar disponible para el chatbot, cancelación sin efectos A6, `data-testid` `knowledge-delete-confirm`), reutilizando `src/ui/` y tokens sin colores hardcodeados. Verificar: `frontend/` `cmd /c npm run lint:format`.
 
 ### 3.3 Rutas y sidebar
 
-- [ ] 3.3 Agregar el item `{ to: "/knowledge", label: "Fuentes", icon: "bi-bookmark-data-fill", roles: ["admin"] }` en `NAV_ITEMS` de `frontend/src/app/Sidebar.jsx:3-28` y la ruta `/knowledge` bajo `ProtectedRoute role="admin"` en `frontend/src/App.jsx` (patrón de `/users`, líneas 54-61, visible solo para Administrador). Verificar: `frontend/` `cmd /c npm run build` y `cmd /c npm run lint:format`.
+- [x] 3.3 Agregar el item `{ to: "/knowledge", label: "Fuentes", icon: "bi-bookmark-data-fill", roles: ["admin"] }` en `NAV_ITEMS` de `frontend/src/app/Sidebar.jsx:3-28` y la ruta `/knowledge` bajo `ProtectedRoute role="admin"` en `frontend/src/App.jsx` (patrón de `/users`, líneas 54-61, visible solo para Administrador). Verificar: `frontend/` `cmd /c npm run build` y `cmd /c npm run lint:format`.
 
 ### 3.4 Smoke HTTP CU-12
 
-- [ ] 3.4 Crear `scripts/smoke_cu12.py` (patrón `scripts/smoke_cu02.py`, flag `--base`) que: login admin → `POST /api/knowledge/sources` con un `.md` de prueba → poll de `GET /api/knowledge/sources` hasta `active` → consulta al chat que usa la fuente → `DELETE` de la fuente → `GET` de la fuente eliminada devuelve ausencia (A7); y caso no-admin → 403 en los endpoints de gestión (A3). Verificar: `.\.venv\Scripts\python.exe scripts\verify.py --cu cu12` (base temporal aislada; `verify.py` resuelve `smoke_cu12.py` por nombre, no requiere edición adicional) con salida en verde.
+- [x] 3.4 Crear `scripts/smoke_cu12.py` (patrón `scripts/smoke_cu02.py`, flag `--base`) que: login admin → `POST /api/knowledge/sources` con un `.md` de prueba → poll de `GET /api/knowledge/sources` hasta `active` → consulta al chat que usa la fuente → `DELETE` de la fuente → `GET` de la fuente eliminada devuelve ausencia (A7); y caso no-admin → 403 en los endpoints de gestión (A3). Verificar: `.\.venv\Scripts\python.exe scripts\verify.py --cu cu12` (base temporal aislada; `verify.py` resuelve `smoke_cu12.py` por nombre, no requiere edición adicional) con salida en verde.
 
 ### 3.5 Evidencia UI Playwright
 
@@ -110,7 +110,7 @@ Chain strategy: stacked-to-main
 
 ### 3.6 Documentación de cierre
 
-- [ ] 3.6 Actualizar `AGENTS.md` (endpoints `GET/POST/DELETE /api/knowledge/sources` en la tabla API, estructura de `models/`/`services/`/`blueprints/`, variables de entorno nuevas, requisito operativo `ollama pull nomic-embed-text`), `decisiones.md` (nuevas decisiones: límite 1 MB, fuente sin roles = todos, fila `error`, orden de borrado no atómico, reemplazo de `search_platform_docs`), `progreso.md` (estado de CU-12 por slice), `README.md` (requisitos de entorno) y `openspec/specs/chatbot-assistant/spec.md` (merge del delta al archivar). Verificar: revisión manual de que la tabla de API y las env coinciden con el código.
+- [x] 3.6 Actualizar `AGENTS.md` (endpoints `GET/POST/DELETE /api/knowledge/sources` en la tabla API, estructura de `models/`/`services/`/`blueprints/`, variables de entorno nuevas, requisito operativo `ollama pull nomic-embed-text`), `decisiones.md` (nuevas decisiones: límite 1 MB, fuente sin roles = todos, fila `error`, orden de borrado no atómico, reemplazo de `search_platform_docs`), `progreso.md` (estado de CU-12 por slice), `README.md` (requisitos de entorno) y `openspec/specs/chatbot-assistant/spec.md` (merge del delta al archivar). Verificar: revisión manual de que la tabla de API y las env coinciden con el código.
 
 ### 3.7 Verificación de cierre del Slice 3 y del CU
 

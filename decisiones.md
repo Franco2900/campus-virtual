@@ -447,3 +447,43 @@ Formato:
 - Criterios: cero mensajes huérfanos sin tocar el esquema; identidad y permiso de borrado validados siempre en el backend desde la sesión (regla 16); el borrado solo alcanza al usuario propio y no toca datos funcionales como cursos, tareas, entregas, inscripciones ni calificaciones (regla 14); operación idempotente.
 - Consecuencias / impacto: el servicio y el endpoint son la única vía de borrado; el historial eliminado no se recupera desde la aplicación ni vuelve al contexto del chatbot (regla 17); no hay migración ni cambio en los modelos; los tests cubren borrado completo, aislamiento, idempotencia, 401 y contexto vacío en el turno siguiente.
 - Estado: Vigente.
+
+## D-044 — RAG con ChromaDB + `nomic-embed-text` y tool `search_knowledge_sources` (CU-12)
+
+- Fecha: 2026-10-19.
+- Decisión: la recuperación de conocimiento del chatbot se implementa como **RAG sobre ChromaDB** (`chromadb` + `langchain-chroma`, colección persistida en `CHROMA_PERSIST_DIR`, default `instance/chroma`; `CHROMA_COLLECTION`, default `campus_knowledge`) con embeddings locales de Ollama (`OLLAMA_EMBED_MODEL`, default `nomic-embed-text`, **requisito operativo: `ollama pull nomic-embed-text`**). El servicio `knowledge_service.retrieve_for_user(query, user_role, k=4)` filtra por `source_id` activos y flags `role_<rol>` con el **rol de la sesión**, ordena de forma estable con las `approved_answer` primero y trunca el texto a 1200 caracteres; se expone al agente como la tool `@tool search_knowledge_sources(query)` en `build_tools(current_user)`, **reemplazando a `search_platform_docs`** (eliminada junto con `_search_platform_docs` y `_load_repo_doc_paths`). El system prompt reescrito declara a las fuentes administradas como fuente primaria.
+- Contexto / problema: CU-12 / Slice 2 — el chatbot respondía solo con docs del repo (`search_platform_docs`), no con el material administrado por el Administrador; se necesitaba recuperación semántica scopeada por rol (reglas 7/8/13 del spec).
+- Alternativas consideradas: (a) búsqueda `LIKE` sobre SQLite sin embeddings (descartada: sin recuperación semántica, el CU pide indexado de documentos); (b) mantener `search_platform_docs` además de la tool nueva (descartada: dos fuentes de documentación competían en el prompt y confundían la prioridad); (c) embeddings en la nube (descartada: consigna con Ollama local).
+- Criterios: infraestructura local y portable; un solo mecanismo de recuperación; scoping por rol en el backend desde la sesión (regla 16); prioridad explícita de respuestas aprobadas (regla 8).
+- Consecuencias / impacto: `requirements.txt` incorpora `chromadb` y `langchain-chroma` con versiones fijadas; el entorno de ejecución necesita Ollama con `nomic-embed-text` para **indexar** (si no, el alta devuelve 400 con fila en `error`); sin fuentes `active` para el rol, el agente responde con "sin información suficiente" (comportamiento intencional).
+- Estado: Vigente.
+
+## D-045 — Ciclo de vida de la fuente: límite 1 MB, roles vacíos = todos y fila `error` (CU-12)
+
+- Fecha: 2026-10-19.
+- Decisión: la carga acepta solo `.md`/`.txt` de hasta **1 MB** (`KNOWLEDGE_MAX_FILE_BYTES=1048576`, `KNOWLEDGE_UPLOAD_DIR=instance/knowledge`); la ingesta es **síncrona** (persistir fila `processing` + archivo con nombre uuid → leer UTF-8 `errors="replace"` → chunking → embeddings + `collection.add` → `status=active` con `chunk_count`); un `target_roles` **vacío significa "todos los roles autenticados"** (la serialización devuelve `target_roles: []`); cualquier fallo de procesamiento **persiste la fila en `error` con `error_message`** y compensa el índice (`collection.delete(where={"source_id": id})` best-effort) antes de responder 400 con mensaje amable.
+- Contexto / problema: CU-12 — el spec exige rechazo de archivos inválidos sin fila (A4) y fallo de indexado visible para el administrador (A5) en lugar de un error opaco; el chatbot necesita saber a quién llega cada fuente (regla 7).
+- Alternativas consideradas: (a) límite por `Content-Length` del request sin validar el archivo real (descartada: no cubre el cuerpo decodificado); (b) cola de ingesta asíncrona con polling de estado (descartada: agrega complejidad de infraestructura sin requerimiento que la justifique, el límite de 1 MB hace la síncrona aceptable); (c) persistir solo `processing`/`active` y descartar filas fallidas (descartada: el administrador perdería visibilidad del fallo).
+- Criterios: validación en `services/` (fuente de verdad del servidor, la UI solo muestra el error); sin filas huérfanas ante validación; estados observables `processing`/`active`/`error` con `error_message` para diagnosticar.
+- Consecuencias / impacto: la UI de `/knowledge` muestra `StatusBadge` por estado y el `error_message` en texto secundario; el smoke del CU-12 distingue el 400 de validación (sin fila) del 400 de indexado (fila `error`).
+- Estado: Vigente.
+
+## D-046 — Borrado no atómico de la fuente: orden ChromaDB → archivo → fila (CU-12)
+
+- Fecha: 2026-10-19.
+- Decisión: `delete_source(id)` ejecuta (1) fila o `NotFoundError`, (2) `collection.delete(where={"source_id": id})` **idempotente** — un fallo aquí aborta con `KnowledgeServiceError` (500) y la fila queda intacta —, (3) `Path.unlink()` **best-effort** tolerante a `OSError` (solo loguea) y (4) `db.session.delete(row)` + commit. No hay transacción distribuida entre ChromaDB, el filesystem y SQLite.
+- Contexto / problema: el borrado toca tres almacenamientos que no comparten transacción; se necesitaba un orden que evite que una fuente eliminada siga apareciendo en la recuperación del chatbot (A7).
+- Alternativas consideradas: (a) transacción de dos fases con rollback explícito de ChromaDB (descartada: ChromaDB no participa de transacciones de SQLite y agregaba superficie de error sin garantía real); (b) borrar primero la fila y después el índice (descartada: dejaría fragmentos vectoriales "fantasma" de una fuente que ya no existe, que seguirían recuperándose hasta el próximo cleanup).
+- Criterios: la recuperación consulta `active_ids` desde SQLite **antes** del filtro vectorial, así que una fila borrada nunca vuelve aunque queden vectores huérfanos; el paso crítico (índice) es el primero y es idempotente.
+- Consecuencias / impacto: el peor caso tolerado es un archivo huérfano en `instance/knowledge` (logueado), nunca una fuente visible sin fila; un fallo del índice devuelve 500 con mensaje amable y la fuente sigue gestionable (reintento de borrado).
+- Estado: Vigente.
+
+## D-047 — Dependencias y compatibilidad del indexado (CU-12)
+
+- Fecha: 2026-10-19.
+- Decisión: `chromadb` y `langchain-chroma` se fijan en `backend/requirements.txt` y `langchain-text-splitters` pasa a **dependencia explícita** (antes traída en transitivo): `knowledge_service` importa `RecursiveCharacterTextSplitter` de ese paquete para el chunking de `document` (chunk 500 / overlap 50, separadores `["\n## ", "\n### ", "\n", ". ", " "]`), mientras que `approved_answer` se trocea por bloques `\n\n`. La compatibilidad con **Python 3.14.6** (versión del stack del TP) quedó **verificada** en este host: instalación sin errores e `import chromadb, langchain_chroma` correcto.
+- Contexto / problema: el diseño marcó la incompatibilidad potencial de ChromaDB con Python 3.14 como riesgo residual a comprobar antes de aceptar la dependencia.
+- Alternativas consideradas: (a) indexado propio sin ChromaDB (descartada: reimplementar persistencia vectorial y filtros metales para un TP); (b) fijar solo `chromadb` y confiar en el transitivo de `langchain-chroma` para los splitters (descartada: un transitivo puede cambiar de árbol entre versiones y romper el import).
+- Criterios: dependencias con versión fija (portabilidad y reproducibilidad); comprobación empírica del riesgo antes de aprobar el diseño; import local dentro de la función de chunking para no cargar el splitter en procesos que no indexan.
+- Consecuencias / impacto: los tests unitarios siguen sin tocar ChromaDB ni Ollama (monkeypatch de `_get_embeddings`/`_get_collection`); upgrades futuros de `chromadb` deben revalidar Python 3.14.
+- Estado: Vigente.
