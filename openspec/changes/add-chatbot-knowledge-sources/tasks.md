@@ -84,7 +84,7 @@ Chain strategy: stacked-to-main
 
 ### 2.5 Verificación de cierre del Slice 2
 
-- [ ] 2.5 Ejecutar la verificación de cierre del Slice 2: `backend/` `..\.venv\Scripts\python.exe -m pytest -q`, desde la raíz `.\.venv\Scripts\python.exe -m ruff check backend` + `.\.venv\Scripts\python.exe -m ruff format --check backend`, y re-ejecutar el smoke de regresión de CU-11 con `.\.venv\Scripts\python.exe scripts\verify.py --cu cu11` para confirmar que el reemplazo de la tool no rompió el contrato HTTP del chat. Verificar: todo en verde y smoke CU-11 sin regresiones; conservar la salida como evidencia.
+- [x] 2.5 Ejecutar la verificación de cierre del Slice 2: `backend/` `..\.venv\Scripts\python.exe -m pytest -q`, desde la raíz `.\.venv\Scripts\python.exe -m ruff check backend` + `.\.venv\Scripts\python.exe -m ruff format --check backend`, y re-ejecutar el smoke de regresión de CU-11 con `.\.venv\Scripts\python.exe scripts\verify.py --cu cu11` para confirmar que el reemplazo de la tool no rompió el contrato HTTP del chat. Verificar: todo en verde y smoke CU-11 sin regresiones; conservar la salida como evidencia.
 
 ## Phase 3: Slice 3 — Frontend, smoke, docs y evidencia (PR 3)
 
