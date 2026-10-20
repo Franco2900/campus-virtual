@@ -19,6 +19,9 @@ KNOWLEDGE_ALLOWED_ROLES = {"student", "teacher", "admin"}
 KNOWLEDGE_CHUNK_SIZE = 500
 KNOWLEDGE_CHUNK_OVERLAP = 50
 KNOWLEDGE_CHUNK_SEPARATORS = ["\n## ", "\n### ", "\n", ". ", " "]
+KNOWLEDGE_RETRIEVAL_K = 4
+KNOWLEDGE_RETRIEVAL_MAX_CHARS = 1200
+APPROVED_ANSWER_TYPE = KnowledgeSourceType.APPROVED_ANSWER.value
 
 _EMBEDDINGS_LOCK = threading.Lock()
 _COLLECTION_LOCK = threading.Lock()
@@ -267,6 +270,77 @@ def get_source(source_id):
     if source is None:
         raise NotFoundError("Fuente no encontrada")
     return source
+
+
+def _role_value(user_role):
+    if user_role is None:
+        raise ValidationError("El rol del usuario no es válido")
+    value = user_role.value if hasattr(user_role, "value") else user_role
+    if value not in KNOWLEDGE_ALLOWED_ROLES:
+        raise ValidationError("El rol del usuario no es válido")
+    return value
+
+
+def retrieve_for_user(query, user_role, k=KNOWLEDGE_RETRIEVAL_K):
+    """Retrieve active knowledge fragments authorized for the session user role.
+
+    Identity and role always come from the Flask session (never from the model).
+    Priority is a stable sort so approved answers lead without losing similarity order.
+    """
+    if not isinstance(query, str) or not query.strip():
+        raise ValidationError("La consulta no puede estar vacía")
+    role = _role_value(user_role)
+
+    active_ids = list(
+        db.session.execute(
+            db.select(KnowledgeSource.id).where(
+                KnowledgeSource.status == KnowledgeSourceStatus.ACTIVE
+            )
+        ).scalars()
+    )
+    if not active_ids:
+        return []
+
+    embedding = _get_embeddings().embed_query(query.strip())
+    where = {"$and": [{"source_id": {"$in": active_ids}}, {f"role_{role}": True}]}
+    raw = _get_collection().query(query_embeddings=[embedding], n_results=k, where=where)
+
+    documents = raw.get("documents", [[]])[0] if raw.get("documents") else []
+    metadatas = raw.get("metadatas", [[]])[0] if raw.get("metadatas") else []
+
+    ranked = [
+        (metadata.get("source_type"), index, document, metadata)
+        for index, (document, metadata) in enumerate(zip(documents, metadatas, strict=False))
+    ]
+    # Stable priority sort: approved answers first, similarity order preserved within each group.
+    ranked.sort(key=lambda item: item[0] != APPROVED_ANSWER_TYPE)
+
+    source_ids = list(dict.fromkeys(item[3].get("source_id") for item in ranked))
+    rows = (
+        db.session.execute(
+            db.select(
+                KnowledgeSource.id,
+                KnowledgeSource.name,
+                KnowledgeSource.source_type,
+            ).where(KnowledgeSource.id.in_(source_ids))
+        ).all()
+        if source_ids
+        else []
+    )
+    names = {row.id: row.name for row in rows}
+
+    results = []
+    for source_type, _, document, metadata in ranked:
+        source_id = metadata.get("source_id")
+        text = document or ""
+        results.append(
+            {
+                "source_name": names.get(source_id),
+                "source_type": metadata.get("source_type") or source_type,
+                "text": text[:KNOWLEDGE_RETRIEVAL_MAX_CHARS],
+            }
+        )
+    return results
 
 
 def delete_source(source_id):

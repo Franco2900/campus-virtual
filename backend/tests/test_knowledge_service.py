@@ -5,6 +5,7 @@ from werkzeug.datastructures import FileStorage
 
 from models.base import db
 from models.knowledge_source import KnowledgeSource, KnowledgeSourceStatus
+from models.user import UserRole
 from services import knowledge_service
 from services.errors import NotFoundError, ValidationError
 
@@ -344,3 +345,98 @@ def test_delete_is_tolerant_to_missing_file(app, seams, upload_dir, monkeypatch)
 
         assert db.session.get(KnowledgeSource, source_id) is None
         assert collection.delete_calls == [{"source_id": source_id}]
+
+
+# Retrieval scoped by role (rules 5/7/8/13)
+
+
+def _retrieve(role, query="inscripciones"):
+    return knowledge_service.retrieve_for_user(query, role)
+
+
+def test_retrieve_for_user_without_active_sources_returns_empty(app, seams):
+    with app.app_context():
+        assert _retrieve(UserRole.STUDENT) == []
+
+
+def test_retrieve_for_user_excludes_sources_restricted_to_other_role(app, seams, upload_dir):
+    app.config["KNOWLEDGE_UPLOAD_DIR"] = str(upload_dir)
+    with app.app_context():
+        knowledge_service.create_source(
+            _file_storage("Contenido solo para profesores sobre inscripciones"),
+            {"name": "Guía docente", "source_type": "document", "target_roles": ["teacher"]},
+        )
+        # Rule 7: a student must not recover a source restricted to teachers.
+        assert _retrieve(UserRole.STUDENT) == []
+        assert _retrieve(UserRole.TEACHER)[0]["source_name"] == "Guía docente"
+
+
+def test_retrieve_for_user_prioritizes_approved_answers(app, seams, upload_dir):
+    app.config["KNOWLEDGE_UPLOAD_DIR"] = str(upload_dir)
+    with app.app_context():
+        knowledge_service.create_source(
+            _file_storage("Documento general sobre inscripciones"),
+            {"name": "Guía", "source_type": "document", "target_roles": []},
+        )
+        knowledge_service.create_source(
+            _file_storage("Respuesta aprobada sobre inscripciones"),
+            {"name": "FAQ", "source_type": "approved_answer", "target_roles": []},
+        )
+        results = _retrieve(UserRole.STUDENT)
+
+    assert results[0]["source_type"] == "approved_answer"
+    assert results[0]["source_name"] == "FAQ"
+    assert {item["source_type"] for item in results} == {"approved_answer", "document"}
+
+
+def test_retrieve_for_user_ignores_deleted_source(app, seams, upload_dir):
+    app.config["KNOWLEDGE_UPLOAD_DIR"] = str(upload_dir)
+    with app.app_context():
+        source = knowledge_service.create_source(
+            _file_storage("Contenido sobre inscripciones"),
+            {"name": "Guía", "source_type": "document", "target_roles": []},
+        )
+        assert _retrieve(UserRole.STUDENT)
+        knowledge_service.delete_source(source.id)
+        # A7: a deleted source is no longer recovered.
+        assert _retrieve(UserRole.STUDENT) == []
+
+
+def test_retrieve_for_user_ignores_non_active_source(app, seams, upload_dir):
+    app.config["KNOWLEDGE_UPLOAD_DIR"] = str(upload_dir)
+    embeddings, _ = seams
+    embeddings.fail = True
+    with app.app_context():
+        with pytest.raises(knowledge_service.KnowledgeServiceError):
+            knowledge_service.create_source(
+                _file_storage("Contenido sobre inscripciones"),
+                {"name": "Guía", "source_type": "document", "target_roles": []},
+            )
+        # A source in error state is excluded from retrieval (rules 5/13).
+        assert _retrieve(UserRole.STUDENT) == []
+
+
+def test_retrieve_for_user_truncates_text_to_max_chars(app, seams, upload_dir):
+    app.config["KNOWLEDGE_UPLOAD_DIR"] = str(upload_dir)
+    with app.app_context():
+        body = "aprobada " * 400
+        knowledge_service.create_source(
+            _file_storage(body),
+            {"name": "FAQ", "source_type": "approved_answer", "target_roles": []},
+        )
+        results = _retrieve(UserRole.STUDENT)
+
+    assert results
+    assert all(
+        len(item["text"]) <= knowledge_service.KNOWLEDGE_RETRIEVAL_MAX_CHARS for item in results
+    )
+
+
+def test_retrieve_for_user_rejects_blank_query(app, seams):
+    with app.app_context(), pytest.raises(ValidationError):
+        knowledge_service.retrieve_for_user("   ", UserRole.STUDENT)
+
+
+def test_retrieve_for_user_rejects_invalid_role(app, seams):
+    with app.app_context(), pytest.raises(ValidationError):
+        knowledge_service.retrieve_for_user("inscripciones", "wizard")

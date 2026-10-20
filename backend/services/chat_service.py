@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
-from pathlib import Path
 from typing import Any
 
 from flask import current_app
@@ -11,6 +10,7 @@ from models.base import db
 from models.conversation import Conversation
 from models.message import Message
 from models.user import UserRole
+from services import knowledge_service
 from services.course_service import list_courses_for_user
 from services.enrollment_service import list_students
 from services.errors import ForbiddenError, NotFoundError, ValidationError
@@ -18,7 +18,6 @@ from services.grade_service import get_course_grades as get_course_grades_servic
 from services.grading_service import list_submissions_for_task
 from services.task_service import list_tasks
 
-DOC_EXCERPT_MAX_CHARS = 2000
 MESSAGE_MAX_LENGTH_DEFAULT = 4000
 
 
@@ -38,52 +37,6 @@ def _get_config_str(name: str, default: str) -> str:
     if value is None:
         return default
     return str(value)
-
-
-def _load_repo_doc_paths() -> list[Path]:
-    try:
-        repo_root = Path(__file__).resolve().parents[2]
-    except IndexError:
-        repo_root = Path(__file__).resolve().parent.parent
-    return [
-        repo_root / "AGENTS.md",
-        repo_root / "README.md",
-        repo_root / "casos_de_uso.md",
-    ]
-
-
-def _search_platform_docs(query: str) -> str:
-    if not isinstance(query, str) or not query.strip():
-        return "No se encontró información relevante en la documentación."
-    term = query.strip().lower()
-    paths = _load_repo_doc_paths()
-    excerpts: list[str] = []
-    for path in paths:
-        if not path.exists() or not path.is_file():
-            continue
-        try:
-            text = path.read_text(encoding="utf-8", errors="replace")
-        except OSError:
-            continue
-        if term not in text.lower():
-            continue
-        source = path.name
-        start = text.lower().find(term)
-        if start < 0:
-            snippet = text[:DOC_EXCERPT_MAX_CHARS]
-        else:
-            window_start = max(0, start - 100)
-            window_end = min(len(text), start + 400)
-            snippet = text[window_start:window_end]
-        if len(snippet) > DOC_EXCERPT_MAX_CHARS:
-            snippet = snippet[:DOC_EXCERPT_MAX_CHARS]
-        excerpts.append(f"--- {source} ---\n{snippet}")
-    if not excerpts:
-        return "No se encontró información relevante en la documentación."
-    joined = "\n\n".join(excerpts)
-    if len(joined) > DOC_EXCERPT_MAX_CHARS:
-        return joined[:DOC_EXCERPT_MAX_CHARS]
-    return joined
 
 
 def _serialize_db_message(message: Message) -> dict[str, Any]:
@@ -139,8 +92,13 @@ def _build_system_prompt() -> str:
     return (
         "Sos el asistente del Campus Virtual.\n"
         "Respondé en español, con tono claro y amable, adaptando la extensión a la consulta.\n"
-        "Tu fuente primaria es la documentación del repositorio (AGENTS.md, README.md, casos_de_uso.md). "
-        "No inventes funcionalidades ni reglas de la plataforma.\n"
+        "Tu fuente primaria son las fuentes de conocimiento administradas del campus, "
+        "que obtenés con la herramienta search_knowledge_sources. "
+        "Cuando una respuesta aprobada recuperada corresponda a la consulta, conservá su significado "
+        "y no la reemplaces por una respuesta contradictoria de tu conocimiento general.\n"
+        "El conocimiento general solo puede usarse como complemento y nunca para contradecir las "
+        "fuentes administradas ni para inventar funcionalidades o reglas de la plataforma. "
+        "Ante contradicción no salvable o información insuficiente, reconocé el límite en lugar de inventar.\n"
         "Obtené datos concretos únicamente a través de las herramientas disponibles; no inventes datos.\n"
         "Priorizá los datos actuales y verificados del sistema por sobre la información que surja del historial de la conversación.\n"
         "Solo lectura: no crees, modifiques ni elimines información. No corrijas entregas ni asignes calificaciones.\n"
@@ -245,9 +203,17 @@ def build_tools(current_user):
             return str(error)
 
     @tool
-    def search_platform_docs(query: str) -> str:
-        """Busca un texto en la documentación de la plataforma (AGENTS.md, README.md y casos_de_uso.md)."""
-        return _search_platform_docs(query)
+    def search_knowledge_sources(query: str) -> str:
+        """Busca información en las fuentes de conocimiento autorizadas del campus para el rol del usuario autenticado. Incluye respuestas aprobadas."""
+        try:
+            results = knowledge_service.retrieve_for_user(query, current_user.role)
+        except (ForbiddenError, NotFoundError, ValidationError) as error:
+            return str(error)
+        if not results:
+            return (
+                "No se encontró información en las fuentes de conocimiento disponibles para tu rol."
+            )
+        return json.dumps(results, ensure_ascii=False)
 
     return [
         list_my_courses,
@@ -255,7 +221,7 @@ def build_tools(current_user):
         list_course_tasks,
         get_course_grades,
         list_task_submissions,
-        search_platform_docs,
+        search_knowledge_sources,
     ]
 
 

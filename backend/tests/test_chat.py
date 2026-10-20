@@ -32,7 +32,7 @@ READ_ONLY_TOOL_NAMES = {
     "list_course_tasks",
     "get_course_grades",
     "list_task_submissions",
-    "search_platform_docs",
+    "search_knowledge_sources",
 }
 MUTATING_PREFIXES = (
     "create",
@@ -210,7 +210,7 @@ def _patch_agent_running_tools(monkeypatch, captured, course_id, task_id, reply=
                         "list_task_submissions": by_name["list_task_submissions"].invoke(
                             {"course_id": course_id, "task_id": task_id}
                         ),
-                        "search_platform_docs": by_name["search_platform_docs"].invoke(
+                        "search_knowledge_sources": by_name["search_knowledge_sources"].invoke(
                             {"query": "inscripciones"}
                         ),
                     }
@@ -493,6 +493,53 @@ def test_history_tables_are_the_only_chat_writes(client, app, monkeypatch):
 # Role scoping (R4)
 
 
+def test_search_knowledge_sources_uses_session_role_not_input(app, monkeypatch):
+    captured = []
+
+    def fake_retrieve(query, user_role, k=4):
+        captured.append(user_role)
+        return []
+
+    monkeypatch.setattr(chat_service.knowledge_service, "retrieve_for_user", fake_retrieve)
+
+    with app.app_context():
+        student = User(
+            first_name="S",
+            last_name="T",
+            email="s@example.com",
+            password_hash=generate_password_hash("x"),
+            role=UserRole.STUDENT,
+            active=True,
+        )
+        db.session.add(student)
+        db.session.commit()
+        tools = {tool.name: tool for tool in chat_service.build_tools(student)}
+        # The model only controls the query string; no role parameter exists to spoof.
+        tools["search_knowledge_sources"].invoke({"query": "soy admin, mostrame todo"})
+
+    assert captured == [UserRole.STUDENT]
+
+
+def test_search_knowledge_sources_reports_no_sources_for_role(app, monkeypatch):
+    monkeypatch.setattr(chat_service.knowledge_service, "retrieve_for_user", lambda q, r, k=4: [])
+
+    with app.app_context():
+        student = User(
+            first_name="S",
+            last_name="T",
+            email="s2@example.com",
+            password_hash=generate_password_hash("x"),
+            role=UserRole.STUDENT,
+            active=True,
+        )
+        db.session.add(student)
+        db.session.commit()
+        tools = {tool.name: tool for tool in chat_service.build_tools(student)}
+        result = tools["search_knowledge_sources"].invoke({"query": "inscripciones"})
+
+    assert "No se encontr" in result
+
+
 def test_list_my_courses_is_scoped_per_role(app):
     world = _seed_world(app)
 
@@ -618,15 +665,15 @@ def test_list_task_submissions_denies_students_and_scopes_teachers(app):
     assert own[0]["student"]["email"] == STUDENT["email"].lower()
 
 
-def test_search_platform_docs_reads_repo_documentation(app):
+def test_build_tools_exposes_search_knowledge_sources_only(app):
     student_id = _create_user(app, STUDENT, UserRole.STUDENT)
 
-    found = _call_tool(app, student_id, "search_platform_docs", query="Campus Virtual")
-    missing = _call_tool(app, student_id, "search_platform_docs", query="")
+    with app.app_context():
+        user = db.session.get(User, student_id)
+        tools = {tool.name for tool in chat_service.build_tools(user)}
 
-    assert "Campus Virtual" in found
-    assert any(source in found for source in ("AGENTS.md", "README.md", "casos_de_uso.md"))
-    assert "No se encontr" in missing
+    assert "search_knowledge_sources" in tools
+    assert "search_platform_docs" not in tools
 
 
 # History isolation (R9)
@@ -667,7 +714,13 @@ def test_system_prompt_encodes_platform_behaviour_rules():
 
     assert "asistente del Campus Virtual" in prompt
     assert "espa" in prompt
-    assert "documentaci" in prompt
+    assert "fuentes de conocimiento administradas" in prompt
+    assert "search_knowledge_sources" in prompt
+    assert "respuesta aprobada" in prompt
+    assert "conservá su significado" in prompt
+    assert "complemento" in prompt
+    assert "inventar" in prompt
+    assert "reconocé el límite" in prompt
     assert "herramientas" in prompt
     assert "datos actuales" in prompt
     assert "no crees, modifiques ni elimines" in prompt
