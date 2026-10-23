@@ -206,7 +206,11 @@ export default function KnowledgePage() {
 
       <Modal open={uploadOpen} title="Cargar fuente" onClose={() => setUploadOpen(false)}>
         {uploadOpen && (
-          <KnowledgeUploadForm onCreated={handleCreated} onCancel={() => setUploadOpen(false)} />
+          <KnowledgeUploadForm
+            onCreated={handleCreated}
+            onCancel={() => setUploadOpen(false)}
+            onFailed={loadSources}
+          />
         )}
       </Modal>
 

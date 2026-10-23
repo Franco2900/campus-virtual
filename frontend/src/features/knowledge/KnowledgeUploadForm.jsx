@@ -14,7 +14,7 @@ const ROLES = [
   { value: "admin", label: "Administrador" },
 ];
 
-export default function KnowledgeUploadForm({ onCreated, onCancel }) {
+export default function KnowledgeUploadForm({ onCreated, onCancel, onFailed }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [sourceType, setSourceType] = useState(SOURCE_TYPES[0].value);
@@ -45,6 +45,7 @@ export default function KnowledgeUploadForm({ onCreated, onCancel }) {
     } catch (requestError) {
       // La validación del servidor es la fuente de verdad: solo mostramos su mensaje.
       setError(requestError.message);
+      onFailed?.();
     } finally {
       setSubmitting(false);
     }
