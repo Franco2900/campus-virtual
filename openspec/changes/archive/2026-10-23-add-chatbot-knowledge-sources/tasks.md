@@ -106,7 +106,7 @@ Chain strategy: stacked-to-main
 
 ### 3.5 Evidencia UI Playwright
 
-- [ ] 3.5 Levantar servicios desligados con `.\.venv\Scripts\python.exe scripts\verify.py --serve --seed-demo` y capturar en `evidencias/cu-12/` (nombres `NN-accion.png`): listado con estados, alta exitosa, error de validación A4, borrado con diálogo de confirmación A2/A6, y ausencia del item "Fuentes"/ruta para un usuario no-admin (A3); en tema claro y oscuro; consola sin errores inesperados. Cerrar con `.\.venv\Scripts\python.exe scripts\verify.py --cleanup`. Verificar: capturas presentes y legibles, estado esperado confirmado.
+- [x] 3.5 Levantar servicios desligados con `.\.venv\Scripts\python.exe scripts\verify.py --serve --seed-demo` y capturar en `evidencias/cu-12/` (nombres `NN-accion.png`): listado con estados, alta exitosa, error de validación A4, borrado con diálogo de confirmación A2/A6, y ausencia del item "Fuentes"/ruta para un usuario no-admin (A3); en tema claro y oscuro; consola sin errores inesperados. Cerrar con `.\.venv\Scripts\python.exe scripts\verify.py --cleanup`. Verificar: capturas presentes y legibles, estado esperado confirmado. **Hallazgo corregido durante la captura:** tras un fallo de indexado (400 A5) la fila queda en `error` en el backend pero la pantalla no refrescaba el listado, así que el Administrador no veía ni podía eliminar la fuente fallida; se pasó `onFailed={loadSources}` a `KnowledgeUploadForm` (prop nueva) para recargar el listado tras el fallo y se recapturó `07-error-procesamiento-light.png` y `08-fuente-estado-error-{light,dark}.png` con la fila `error` visible y eliminable.
 
 ### 3.6 Documentación de cierre
 
@@ -114,8 +114,8 @@ Chain strategy: stacked-to-main
 
 ### 3.7 Verificación de cierre del Slice 3 y del CU
 
-- [ ] 3.7 Ejecutar el gate de cierre del CU: `backend/` `..\.venv\Scripts\python.exe -m pytest -q`, raíz `.\.venv\Scripts\python.exe -m ruff check backend` + `.\.venv\Scripts\python.exe -m ruff format --check backend`, `frontend/` `cmd /c npm run build` + `cmd /c npm run lint:format`, y `.\.venv\Scripts\python.exe scripts\verify.py --cu cu12`. Luego ejecutar la revisión obligatoria del CU con la skill `review-use-case` (subagente `reviewer` o inline) y persistir `reviews/cu-12.md` (hallazgos con `archivo:línea`, severidad, veredicto, mapa de evidencia). Verificar: todo en verde, revisión APROBADA.
-- [ ] 3.8 Archivar el cambio: sincronizar el delta de `chatbot-assistant` a `openspec/specs/` y mover `openspec/changes/add-chatbot-knowledge-sources/` a `openspec/changes/archive/YYYY-MM-DD-add-chatbot-knowledge-sources/` (fase `sdd-archive`), con `cmd /c openspec validate add-chatbot-knowledge-sources --strict` y `cmd /c openspec status --change add-chatbot-knowledge-sources` en 4/4. Verificar: cambio archivado y estado completo.
+- [x] 3.7 Ejecutar el gate de cierre del CU: `backend/` `..\.venv\Scripts\python.exe -m pytest -q`, raíz `.\.venv\Scripts\python.exe -m ruff check backend` + `.\.venv\Scripts\python.exe -m ruff format --check backend`, `frontend/` `cmd /c npm run build` + `cmd /c npm run lint:format`, y `.\.venv\Scripts\python.exe scripts\verify.py --cu cu12`. Luego ejecutar la revisión obligatoria del CU con la skill `review-use-case` (subagente `reviewer` o inline) y persistir `reviews/cu-12.md` (hallazgos con `archivo:línea`, severidad, veredicto, mapa de evidencia). Verificar: todo en verde, revisión APROBADA.
+- [x] 3.8 Archivar el cambio: sincronizar el delta de `chatbot-assistant` a `openspec/specs/` y mover `openspec/changes/add-chatbot-knowledge-sources/` a `openspec/changes/archive/YYYY-MM-DD-add-chatbot-knowledge-sources/` (fase `sdd-archive`), con `cmd /c openspec validate add-chatbot-knowledge-sources --strict` y `cmd /c openspec status --change add-chatbot-knowledge-sources` en 4/4. Verificar: cambio archivado y estado completo.
 
 ## Implementation Order
 
