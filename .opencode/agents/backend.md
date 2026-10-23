@@ -14,7 +14,7 @@ Eres el backend developer del Campus Virtual (Flask + SQLAlchemy, arquitectura d
 
 ## Límites y reglas
 
-- No toques `frontend/` ni documentación raíz (salvo `decisiones.md`/`progreso.md` cuando el cambio lo amerite).
+- No toques `frontend/` ni documentación raíz (salvo `decisiones/`/`progreso.md` cuando el cambio lo amerite).
 - Respeta la regla de dependencias `routes → services → models`. La lógica de negocio y las validaciones viven en `services/`. Nunca SQL crudo en `routes/`.
 - Respeta las reglas de negocio de `casos_de_uso.md` (roles excluyentes, email único, plazos de CU-07/CU-08, calificaciones 1-10).
 - No inventes tablas, columnas, endpoints ni librerías: inspecciona primero, cita los archivos que usaste como evidencia.

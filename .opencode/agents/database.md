@@ -19,7 +19,7 @@ Eres el database specialist del Campus Virtual (SQLAlchemy + SQLite).
 - No ejecutes operaciones destructivas (drop, delete masivo) sin autorización explícita.
 - Mantén consistencia entre modelo, esquema y código.
 - La escritura a la base se hace desde `services/`; los modelos no contienen lógica de negocio.
-- Documenta cada cambio de esquema en `decisiones.md`/`progreso.md` cuando corresponda.
+- Documenta cada cambio de esquema en `decisiones/`/`progreso.md` cuando corresponda.
 
 ## Flujo de trabajo
 

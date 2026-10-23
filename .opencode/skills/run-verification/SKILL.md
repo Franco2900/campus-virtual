@@ -17,7 +17,7 @@ Cargar ante cualquier "¿funciona?", "verificá", "corré los tests" o antes de 
 - Frontend: `npm run build` + `npm run lint:format` (Windows con prefijo `cmd /c`).
 - Ejecutar primero la verificación más pequeña y relevante; luego las generales.
 - No afirmar que un test pasa o un build funciona sin haberlo ejecutado.
-- Conservar los mensajes de error completos y registrar en `errores.md` los fallos relevantes.
+- Conservar los mensajes de error completos y registrar en `errores/` los fallos relevantes.
 
 ## Execution Steps
 

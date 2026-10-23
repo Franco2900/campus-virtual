@@ -24,7 +24,7 @@ Cargar cuando un cambio requiere modificar tablas y el proyecto usa migraciones 
 2. Generar la migración con la herramienta del proyecto (p. ej., Alembic: `alembic revision --autogenerate -m "<desc>"`).
 3. Revisar la migración generada antes de aplicarla (autogenerate puede traer ruido).
 4. Aplicarla (`alembic upgrade head`) y verificar el esquema resultante.
-5. Documentar el cambio en `decisiones.md`/`progreso.md` cuando corresponda.
+5. Documentar el cambio en `decisiones/`/`progreso.md` cuando corresponda.
 
 ## Output Contract
 

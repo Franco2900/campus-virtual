@@ -16,7 +16,7 @@ Cargar cuando se trabaja sobre un caso de uso específico del proyecto (CU-01..C
 - Trabajar UN caso de uso a la vez.
 - No marcar un CU como Completado sin: funcionalidad implementada, código ejecutándose, tests ejecutados, documentación y progreso actualizados.
 - Respetar reglas de negocio de `casos_de_uso.md` y la arquitectura de `AGENTS.md` (routes → services → models).
-- Registrar decisiones con `decisiones.md`.
+- Registrar decisiones con `decisiones/`.
 
 ## Decision Gates
 
@@ -37,7 +37,7 @@ Cargar cuando se trabaja sobre un caso de uso específico del proyecto (CU-01..C
 4. Verificar con `run-verification`: en iteración correr solo los tests del dominio con salida `-q`; el suite completo y el build/lint solo en el gate (ver "Optimización de tokens" en AGENTS.md).
 5. Capturar evidencia: screenshots por estado clave del CU (pantalla por rol, alta/edición, error renderizado, logout) en `evidencias/cu-0X/`, en tema claro y oscuro; si el CU no es visual, evidencia = salida de smoke/tests. Gate: consola sin errores inesperados. Playwright quirúrgico: ante un paso fallido, re-capturar solo esa pantalla, no el flujo completo (ver "Optimización de tokens" en AGENTS.md).
 6. Revisar con `reviewer` (o `review-use-case` inline); corregir bloqueantes y persistir `reviews/cu-0X.md` (hallazgos, severidades, veredicto, mapa de evidencia).
-7. Actualizar `progreso.md`, `decisiones.md` (si hay decisión), tabla de API en `AGENTS.md`, README si corresponde. Archive del cambio openspec.
+7. Actualizar `progreso.md`, `decisiones/` (si hay decisión), tabla de API en `AGENTS.md`, README si corresponde. Archive del cambio openspec.
 8. Si el contexto se extendió, cerrar sesión con `mem_session_summary` y retomar en una sesión nueva (ver "Fases y sesiones" en AGENTS.md).
 
 ## Output Contract

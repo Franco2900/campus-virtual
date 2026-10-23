@@ -1,36 +1,10 @@
-# Bitácora de errores
+# Errores transversales (no atados a un CU)
 
-Registro de errores relevantes del proyecto. Evita repetir diagnósticos.
+> Índice completo en [`README.md`](./README.md).
 
-Formato de cada entrada:
-
-- **Fecha:** `YYYY-MM-DD`.
-- **Error exacto:** mensaje completo (sin recortar).
-- **Contexto:** qué se estaba haciendo y con qué herramienta/versión.
-- **Causa probable:** hipótesis (diferenciar confirmada vs. probable).
-- **Archivos involucrados:** rutas.
-- **Diagnóstico:** pasos realizados (reproducibles).
-- **Solución aplicada:** cambio mínimo.
-- **Verificación posterior:** cómo se confirmó la corrección.
-- **Estado final:** Resuelto / Pendiente.
+Errores de harness de smoke/dev, tooling de revisión, evidencia y entorno que aplican a todo el proyecto.
 
 ---
-
-> Sin errores registrados hasta CU-01; primera entrada durante el smoke.
-
----
-
-## 2026-10-09 — Conexión cerrada en el primer request proxeado por Vite
-
-- **Fecha:** 2026-10-09.
-- **Error exacto:** `Se ha terminado la conexión: Una conexión que se esperaba que se mantuviera activa fue cerrada por el servidor.` (Invoke-WebRequest contra `http://localhost:5173/api/auth/register`).
-- **Contexto:** smoke end-to-end del cambio `add-user-registration` (task 6.2): backend Flask en `:5000` y Vite dev en `:5173` arrancados casi en paralelo; primer `POST` vía proxy.
-- **Causa probable:** race de arranque — el primer request entró al proxy antes de que el backend terminara de bindear (el segundo request con el mismo payload respondió 201).
-- **Archivos involucrados:** `frontend/vite.config.js` (proxy), `backend/app.py`.
-- **Diagnóstico:** repetir el smoke esperando `readiness` del backend (poll a `:5000`) antes de probar el proxy; entonces el primer request devuelve 201 y el duplicado 409.
-- **Solución aplicada:** en el smoke, poll de readiness de backend y de Vite antes de emitir requests; el bug no es de la app.
-- **Verificación posterior:** smoke re-ejecutado con readiness: `PROXY FIRST: HTTP 201` + `PROXY SECOND: HTTP 409`.
-- **Estado final:** Resuelto (gotcha del harness de smoke: levantar el backend antes que el frontend).
 
 ## 2026-10-09 — Subagente `reviewer` no arranca (error de tier del proveedor)
 
@@ -91,18 +65,6 @@ Formato de cada entrada:
 - **Solución aplicada:** revisión equivalente inline por el orquestador (skill `review-use-case`) sobre el cambio `add-user-management` → sin bloqueantes (APROBADO), persistida en `reviews/cu-04.md`.
 - **Verificación posterior:** `pytest` 90 passed, `ruff`/Prettier OK, `npm run build` OK, smoke CU-04 21/21 PASS y 9 screenshots de evidencia verificables.
 - **Estado final:** Resuelto (se cierra con revisión inline; el subagente `reviewer` queda pendiente de tier del proveedor).
-
-## 2026-10-11 — Error de consola al anidar dos `Modal` de Bootstrap (ConfirmDialog dentro del formulario modal)
-
-- **Fecha:** 2026-10-11.
-- **Error exacto:** `TypeError: Cannot read properties of null (reading 'style')` en `Modal._hideModal` (`bootstrap/js/dist/modal.js`), disparado al cerrar el modal interno.
-- **Contexto:** post-cierre de CU-04, al resolver el hallazgo 1 de la revisión (paso de confirmación al cambiar el rol). La primera implementación renderizaba `ConfirmDialog` (que envuelve un `Modal` de Bootstrap) **anidado** dentro del `Modal` de edición de `UsersPage`.
-- **Causa probable (confirmada):** los modales apilados de Bootstrap 5 comparten el manejo de `document.body` y del elemento; al ocultar el modal interno mientras el externo sigue visible, `_hideModal` lee `this._element.style` sobre un elemento ya nulo. No es un defecto del código propio, sino del patrón de anidamiento.
-- **Archivos involucrados:** `frontend/src/features/users/UserForm.jsx` (uso de `ConfirmDialog` anidado).
-- **Diagnóstico:** reproducir el cambio de rol en la UI con Playwright y leer la consola (`browser_console_messages`): el error aparece exactamente al cerrar el diálogo interno; antes del cambio (sin anidamiento) la consola estaba limpia.
-- **Solución aplicada:** reemplazar el `ConfirmDialog` anidado por un paso de confirmación **inline** dentro del mismo `Modal` (`data-testid="user-role-confirm"`, botones `user-role-confirm-cancel`/`-accept`), reutilizando `Button` y los tokens del design system. Un único modal por flujo.
-- **Verificación posterior:** flujo de cambio de rol (Profesor↔Estudiante) ejecutado en Playwright → la consola reporta **0 errores desde la última navegación**; `npm run build`/Prettier OK; evidencia `evidencias/cu-04/04-cambio-rol.png` re-capturada.
-- **Estado final:** Resuelto (regla: no anidar dos `Modal` de Bootstrap; usar confirmación inline dentro de un formulario modal).
 
 ## 2026-10-14 — El tool call no retorna al levantar servicios en primer plano (congelamiento aparente en CU-09)
 

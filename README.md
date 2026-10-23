@@ -158,8 +158,8 @@ npm run lint:format                           # frontend (desde frontend/)
 ├── README.md          # este archivo
 ├── opencode.json      # configuración de proyecto (MCP, permisos)
 ├── casos_de_uso.md    # especificación de los 10 casos de uso
-├── decisiones.md      # registro de decisiones
-├── errores.md         # bitácora de errores
+├── decisiones/        # registro de decisiones (README.md + 00-general.md + cu-0X.md)
+├── errores/           # bitácora de errores (README.md + 00-general.md + cu-0X.md)
 ├── progreso.md        # control de progreso
 ├── docs/              # documentación de soporte (docs/er-diagrama.md: diagrama entidad-relación)
 ├── openspec/          # specs spec-driven (fuente de verdad de specs)
