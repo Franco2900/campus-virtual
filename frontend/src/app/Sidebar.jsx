@@ -24,7 +24,7 @@ const NAV_ITEMS = [
     icon: "bi-clipboard-check",
     roles: ["student", "teacher"],
   },
-  { to: "/knowledge", label: "Fuentes", icon: "bi-bookmark-data-fill", roles: ["admin"] },
+  { to: "/knowledge", label: "Fuentes", icon: "bi-database-fill", roles: ["admin"] },
   { to: "/chat", label: "Asistente", icon: "bi-chat-dots-fill" },
 ];
 
