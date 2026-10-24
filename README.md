@@ -64,8 +64,9 @@ npm install        # Windows: cmd /c npm install
 .\.venv\Scripts\python.exe backend\app.py   # Windows
 .venv/bin/python backend/app.py             # Linux/macOS
 
-# Frontend (desde frontend/) → http://localhost:5173
-npm run dev        # Windows: cmd /c npm run dev
+# Frontend → http://localhost:5173
+cd frontend && npm run dev             # Linux/macOS
+cmd /c "cd frontend && npm run dev"    # Windows (PowerShell 5.1)
 ```
 
 El servidor de desarrollo de Vite proxea `/api` hacia `http://localhost:5000`.
