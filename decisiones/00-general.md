@@ -34,6 +34,7 @@ Decisiones que no pertenecen a un caso de uso puntual: stack, arquitectura, MCP,
 - **Alternativas consideradas:** (a) solo engram + context7 (ya cumple el mínimo, menos config); (b) agregar el server-memory oficial (knowledge graph puro) además de engram; (c) agregar un MCP de terminal comunitario.
 - **Criterios:** cubrir las tres categorías pedidas (memoria, filesystem/terminal, documentación), reforzar el criterio MCP del TP, evitar redundancia y riesgo.
 - **Consecuencias / impacto:** opencode ya trae filesystem/terminal nativo, por lo que el MCP de filesystem es redundante en capacidades y su valor es demostrativo (sandbox con allowlist). No se usa MCP de terminal (no hay server oficial maduro). Los MCP se declaran en `opencode.json` de proyecto (Fase 2) y se documentan en el README.
+- **Actualización (2026-10-24):** el conjunto vigente es mayor al original. Se suman `playwright` (MCP local de UI e2e, D-012) y `github` (`github-mcp-server` en modo solo lectura, toolsets `repos,issues,pull_requests,actions`, declarado en la config global, token por `GITHUB_MCP_TOKEN`). El MCP `github` es apoyo para inspeccionar repositorio, issues, PRs y runs de Actions desde el agente; no interviene en el flujo de entrega por CU (commits y push con `git`, CI también consultable con `gh`). Ninguno de los dos es requisito para que la aplicación funcione.
 - **Estado:** Vigente.
 
 ## D-004 — Medición de tiempos

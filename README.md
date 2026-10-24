@@ -247,7 +247,7 @@ El diagrama entidad-relación de la base (tablas, columnas, restricciones e inva
 
 ## Servidores MCP (Model Context Protocol)
 
-El desarrollo se apoya en tres servidores MCP. La configuración vive en `opencode.json` (proyecto) y en la config global de opencode (`~/.config/opencode/opencode.jsonc`).
+El desarrollo se apoya en cinco servidores MCP. La configuración vive en dos niveles: `opencode.json` (proyecto) declara `filesystem` y `playwright`; la config global de opencode (`~/.config/opencode/opencode.jsonc`) declara `engram`, `context7` y `github`.
 
 | Servidor | Tipo | Origen | Rol en el desarrollo |
 |----------|------|--------|----------------------|
@@ -255,10 +255,11 @@ El desarrollo se apoya en tres servidores MCP. La configuración vive en `openco
 | `context7` | Documentación (remoto/externo) | Config global | Documentación actualizada de Flask, SQLAlchemy, React, Vite, LangChain y Ollama; reduce APIs alucinadas por el modelo. Es el MCP externo requerido por la consigna. |
 | `filesystem` | Filesystem (local) | `opencode.json` (proyecto) | Acceso a archivos acotado por allowlist a la carpeta del proyecto. Valor demostrativo del protocolo; opencode ya dispone de acceso a archivos nativo. |
 | `playwright` | Browser e2e (local) | `opencode.json` (proyecto) | Validación real de la UI por CU: navegar, completar formularios y capturar screenshots como evidencia verificable (`@playwright/mcp`, headless + chromium). Complementa, no reemplaza, a pytest y al smoke HTTP. |
+| `github` | Repositorio y CI (remoto vía API) | Config global | Servidor `github-mcp-server` en modo **solo lectura** (`--read-only`, toolsets `repos,issues,pull_requests,actions`) para inspeccionar el repositorio, issues, pull requests y runs de Actions sin salir del agente. Token por `GITHUB_MCP_TOKEN`. Es apoyo de inspección: no interviene en el flujo de entrega por CU, donde los commits y el push se hacen con `git` y el CI también se consulta con `gh`. |
 
 - **Terminal:** se resuelve con la herramienta nativa de opencode (no se usa un MCP de terminal, por no existir un servidor oficial maduro).
 - **Comando del MCP filesystem:** `cmd /c npx -y @modelcontextprotocol/server-filesystem "<ruta del proyecto>"`.
-- **Portabilidad:** la ruta del MCP filesystem es específica de esta máquina. Para correr en otra máquina hay que ajustarla.
+- **Portabilidad:** la ruta del MCP filesystem y el binario del MCP `github` son específicos de esta máquina (config global). Para correr en otra máquina hay que ajustarlos o deshabilitarlos; ninguno de los dos es requisito para que la aplicación funcione.
 
 ## Repositorio
 

@@ -240,10 +240,12 @@ Comandos reales (verificados en CU-01):
 
 - **engram** (memoria, local, config global): memoria persistente del proyecto. Usar para recordar decisiones y gotchas; no reemplaza a `decisiones/`/`progreso.md`.
 - **context7** (documentación, remoto/externo, config global): consultar docs actualizadas antes de escribir código de librerías (Flask, SQLAlchemy, React, Vite, LangChain). Evita APIs inventadas.
+- **filesystem** (archivos, local, `opencode.json`): acceso acotado por allowlist a la carpeta del proyecto; valor demostrativo, opencode ya tiene acceso a archivos nativo.
 - **playwright** (UI e2e, local, `opencode.json`): navegar, completar formularios y capturar screenshots como evidencia de UI por CU (D-012). Requiere el browser instalado: `cmd /c npx -y @playwright/mcp@latest install-browser chrome-for-testing`.
+- **github** (repositorio/CI, remoto vía API, config global): `github-mcp-server` en modo solo lectura (`--read-only`, toolsets `repos,issues,pull_requests,actions`) para inspeccionar issues, PRs y runs de Actions. Token por `GITHUB_MCP_TOKEN`. No forma parte del flujo de entrega por CU: commits/push con `git`, CI también con `gh`.
 - **Terminal:** herramienta nativa de opencode.
 - **openspec CLI** (spec-driven): herramienta nativa del CLI; en Windows invocar siempre `cmd /c openspec ...` (mismo bloqueo de execution policy que `npx`, ver D-006). Los comandos `/opsx-*` omiten esa complejidad.
-- Requisito de la consigna: mínimo 2 servidores MCP, al menos 1 externo (se cumple con engram + context7 + filesystem).
+- Requisito de la consigna: mínimo 2 servidores MCP, al menos 1 externo (se cumple con engram + context7 + filesystem; `playwright` y `github` son apoyo adicional).
 
 ## Skills y subagentes
 
