@@ -128,10 +128,7 @@ export default function StudentHomePage({ user }) {
     [allTasks]
   );
 
-  const submitted = useMemo(
-    () => allTasks.filter((task) => task.submission).length,
-    [allTasks]
-  );
+  const submitted = useMemo(() => allTasks.filter((task) => task.submission).length, [allTasks]);
 
   const overduePending = useMemo(
     () => pendingToSubmit.filter((task) => isOverdue(task)).length,
@@ -211,7 +208,8 @@ export default function StudentHomePage({ user }) {
                 </div>
                 {pendingToSubmit.length === 0 ? (
                   <p className="text-secondary mb-0">
-                    No tenés tareas pendientes por entregar. Si hay nuevas tareas, van a aparecer acá.
+                    No tenés tareas pendientes por entregar. Si hay nuevas tareas, van a aparecer
+                    acá.
                   </p>
                 ) : (
                   <div className="list-group list-group-flush">
@@ -226,7 +224,9 @@ export default function StudentHomePage({ user }) {
                           <div className="small text-secondary">{task.courseName}</div>
                         </div>
                         <div className="text-md-end">
-                          <div className={`small ${isOverdue(task) ? "text-danger" : "text-secondary"}`}>
+                          <div
+                            className={`small ${isOverdue(task) ? "text-danger" : "text-secondary"}`}
+                          >
                             Vence: {formatDueDate(task.due_date)}
                           </div>
                           <div className="small text-secondary">Ir a entregar</div>
@@ -254,7 +254,12 @@ export default function StudentHomePage({ user }) {
                 <h3 className="h6">Accesos rápidos</h3>
                 <div className="d-flex flex-column gap-2">
                   {QUICK_LINKS.map((link) => (
-                    <Link key={link.to} to={link.to} className="campus-link-tile" data-testid={link.testId}>
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      className="campus-link-tile"
+                      data-testid={link.testId}
+                    >
                       <i className={`bi ${link.icon}`} aria-hidden="true" />
                       <span>{link.label}</span>
                     </Link>
@@ -271,8 +276,8 @@ export default function StudentHomePage({ user }) {
                 <span className="fw-semibold">Sin inscripciones</span>
               </div>
               <p className="text-secondary mb-0">
-                Todavía no estás inscripto a ningún curso. Cuando un administrador o docente te inscriba,
-                vas a verlo acá junto con sus tareas y calificaciones.
+                Todavía no estás inscripto a ningún curso. Cuando un administrador o docente te
+                inscriba, vas a verlo acá junto con sus tareas y calificaciones.
               </p>
             </Card>
           )}

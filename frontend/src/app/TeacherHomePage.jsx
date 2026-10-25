@@ -86,9 +86,7 @@ export default function TeacherHomePage({ user }) {
         setTasksByCourse(tasksMap);
 
         const activeTasks = Object.entries(tasksMap).flatMap(([courseId, tasks]) =>
-          tasks
-            .filter((task) => task.active)
-            .map((task) => ({ courseId, task }))
+          tasks.filter((task) => task.active).map((task) => ({ courseId, task }))
         );
 
         const submissionEntries = await Promise.allSettled(
@@ -192,7 +190,9 @@ export default function TeacherHomePage({ user }) {
                 icon="bi-journal-bookmark-fill"
                 value={assignedCourses}
                 label="Mis cursos"
-                detail={[assignedCourses ? "Administrá inscripciones y tareas" : "Sin cursos asignados"]}
+                detail={[
+                  assignedCourses ? "Administrá inscripciones y tareas" : "Sin cursos asignados",
+                ]}
                 to="/enrollments"
                 testId="teacher-stat-courses"
               />
@@ -252,7 +252,9 @@ export default function TeacherHomePage({ user }) {
                         </div>
                         <div className="text-md-end">
                           <div className="small text-secondary">
-                            {item.submittedAt ? `Entregado: ${formatDueDate(item.submittedAt)}` : "Sin fecha de entrega"}
+                            {item.submittedAt
+                              ? `Entregado: ${formatDueDate(item.submittedAt)}`
+                              : "Sin fecha de entrega"}
                           </div>
                           <div className="small text-secondary">Corregir</div>
                         </div>
@@ -279,7 +281,12 @@ export default function TeacherHomePage({ user }) {
                 <h3 className="h6">Accesos rápidos</h3>
                 <div className="d-flex flex-column gap-2">
                   {QUICK_LINKS.map((link) => (
-                    <Link key={link.to} to={link.to} className="campus-link-tile" data-testid={link.testId}>
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      className="campus-link-tile"
+                      data-testid={link.testId}
+                    >
                       <i className={`bi ${link.icon}`} aria-hidden="true" />
                       <span>{link.label}</span>
                     </Link>
@@ -296,8 +303,8 @@ export default function TeacherHomePage({ user }) {
                 <span className="fw-semibold">Sin cursos asignados</span>
               </div>
               <p className="text-secondary mb-0">
-                Aún no tenés cursos asignados. Cuando un administrador te asigne a un curso, vas a poder
-                crear tareas, inscribir estudiantes y corregir entregas.
+                Aún no tenés cursos asignados. Cuando un administrador te asigne a un curso, vas a
+                poder crear tareas, inscribir estudiantes y corregir entregas.
               </p>
             </Card>
           )}
