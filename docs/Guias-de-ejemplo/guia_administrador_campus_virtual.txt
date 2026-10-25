@@ -1,0 +1,236 @@
+CAMPUS VIRTUAL - GUÍA DE PREGUNTAS Y RESPUESTAS
+ROL DESTINATARIO: ADMINISTRADOR
+
+Este archivo explica cómo utilizar las funciones del Campus Virtual disponibles para el rol Administrador. Las respuestas describen la interfaz mostrada y las reglas de los casos de uso del proyecto.
+
+======================================================================
+1. ACCESO Y NAVEGACIÓN
+======================================================================
+
+Pregunta: ¿Cómo ingreso al Campus Virtual como administrador?
+Respuesta: Ingresá a la página de inicio de sesión, escribí el correo electrónico y la contraseña de tu cuenta y accedé. Si la cuenta tiene asignado el rol Administrador, el sistema te permitirá utilizar las funcionalidades correspondientes a ese rol.
+
+Pregunta: ¿Qué secciones puedo utilizar como administrador?
+Respuesta: En el menú lateral podés acceder a Inicio, Cursos, Inscripciones, Usuarios, Fuentes y Asistente. Cada sección reúne funciones diferentes para administrar la plataforma o consultar al chatbot.
+
+Pregunta: ¿Cómo vuelvo a la pantalla de inicio?
+Respuesta: Hacé clic en "Inicio" en el menú lateral izquierdo.
+
+Pregunta: ¿Cómo cambio entre el modo claro y el modo oscuro?
+Respuesta: Utilizá el botón de apariencia ubicado en la parte superior derecha de la pantalla. En la captura aparece con el texto "Oscuro" para cambiar al modo oscuro.
+
+Pregunta: ¿Cómo cierro mi sesión?
+Respuesta: Hacé clic en "Cerrar sesión", en la esquina superior derecha. El sistema finalizará tu sesión activa.
+
+======================================================================
+2. GESTIÓN DE CURSOS
+======================================================================
+
+Pregunta: ¿Cómo veo los cursos existentes?
+Respuesta: Entrá en la sección "Cursos" desde el menú lateral. Se mostrará una tabla con el código, el nombre, la descripción y el estado de cada curso, junto con las acciones disponibles.
+
+Pregunta: ¿Cómo creo un curso nuevo?
+Respuesta: 1) Entrá en "Cursos". 2) Hacé clic en "+ Nuevo curso", arriba a la derecha. 3) Completá los campos "Nombre", "Código" y "Descripción". 4) Presioná "Guardar" para registrar el curso. Si decidís no crearlo, presioná "Cancelar" o cerrá el formulario con la X.
+
+Pregunta: ¿Qué información tengo que completar para crear un curso?
+Respuesta: El formulario "Nuevo curso" muestra tres campos: "Nombre", "Código" y "Descripción". Completalos con los datos del curso y luego seleccioná "Guardar". El sistema valida los datos antes de registrar el nuevo curso.
+
+Pregunta: ¿Para qué sirve el código de un curso?
+Respuesta: El código es un dato que permite identificar al curso, por ejemplo "PROG1" para "Programación I". En la sección Cursos figura en la columna "CÓDIGO" y también se muestra junto al nombre al seleccionar cursos en Inscripciones.
+
+Pregunta: ¿Cómo edito un curso?
+Respuesta: 1) Entrá en "Cursos". 2) Buscá el curso en la tabla. 3) Presioná "Editar" en su fila. 4) Modificá los datos que permita el formulario de edición y guardá los cambios.
+
+Pregunta: ¿Cómo desactivo un curso?
+Respuesta: 1) Entrá en "Cursos". 2) Buscá el curso activo que querés desactivar. 3) Presioná "Desactivar" en esa fila. El curso pasará a estado inactivo cuando la operación se complete.
+
+Pregunta: ¿Cómo vuelvo a activar un curso inactivo?
+Respuesta: Entrá en "Cursos", ubicá un curso cuyo estado sea "Inactivo" y presioná "Activar" en esa fila.
+
+Pregunta: ¿Cómo sé si un curso está activo o inactivo?
+Respuesta: Revisá la columna "ESTADO" de la tabla de Cursos. Una etiqueta verde indica "Activo" y una etiqueta amarilla o anaranjada indica "Inactivo". Además, la acción disponible cambia entre "Desactivar" y "Activar" según el estado actual.
+
+Pregunta: ¿Cómo gestiono los profesores de un curso?
+Respuesta: 1) Entrá en "Cursos" desde el menú lateral. 2) Buscá el curso que querés administrar. 3) Presioná "Profesores" en la fila del curso. 4) Se abrirá una ventana con el título "Profesores de [nombre del curso]", donde podés consultar los docentes asignados, agregar otros o quitar los existentes.
+
+Pregunta: ¿Cómo asigno un profesor a un curso?
+Respuesta: 1) Entrá en "Cursos" y presioná "Profesores" en el curso correspondiente. 2) En la ventana que se abre, buscá el apartado "Asignar profesor". 3) Abrí el selector "Seleccioná un profesor" y elegí al docente que quieras incorporar. 4) Presioná "Asignar" para asociarlo al curso. Podés revisar los docentes actuales en la sección "Profesores asignados".
+
+Pregunta: ¿Cómo quito un profesor de un curso?
+Respuesta: 1) Entrá en "Cursos" y presioná "Profesores" junto al curso correspondiente. 2) En "Profesores asignados", localizá al docente que querés desvincular. 3) Presioná "Quitar" junto a su nombre. Esta acción quita la asignación del profesor a ese curso; no es lo mismo que desactivar su cuenta de usuario. Para salir de la ventana, presioná "Cerrar".
+
+Pregunta: ¿Un curso puede tener más de un profesor?
+Respuesta: Sí. Los casos de uso del Campus Virtual establecen que un curso puede tener múltiples profesores. La gestión se realiza desde la opción "Profesores" del curso.
+
+Pregunta: ¿Puedo eliminar definitivamente un curso desde la tabla?
+Respuesta: En la pantalla de Cursos mostrada no aparece una opción para eliminar cursos de forma definitiva. La acción visible para dejar de tener un curso activo es "Desactivar", y un curso inactivo cuenta con la opción "Activar".
+
+======================================================================
+3. GESTIÓN DE INSCRIPCIONES
+======================================================================
+
+Pregunta: ¿Cómo accedo a la gestión de inscripciones?
+Respuesta: Seleccioná "Inscripciones" en el menú lateral. Allí podés elegir un curso, revisar las inscripciones de los estudiantes y administrar su estado.
+
+Pregunta: ¿Cómo selecciono el curso cuyas inscripciones quiero administrar?
+Respuesta: En "Inscripciones", buscá el apartado "Todos los cursos" y hacé clic en el nombre del curso deseado. El curso seleccionado aparece resaltado y la tabla inferior muestra la situación de los estudiantes para ese curso.
+
+Pregunta: ¿Cómo inscribo a un estudiante en un curso?
+Respuesta: 1) Entrá en "Inscripciones". 2) Seleccioná el curso en "Todos los cursos". 3) En "Inscribir estudiante", abrí el selector "Seleccioná un estudiante". 4) Elegí al estudiante que quieras inscribir. 5) Presioná "Inscribir". El sistema registrará la inscripción si cumple las condiciones necesarias.
+
+Pregunta: ¿Cómo consulto qué estudiantes están inscriptos en un curso?
+Respuesta: Entrá en "Inscripciones" y seleccioná el curso. En la tabla se muestran nombre, apellido, correo y estado de inscripción de los estudiantes. Los que figuran como "Inscripto activo" tienen una inscripción activa en ese curso.
+
+Pregunta: ¿Qué significan los estados de inscripción?
+Respuesta: "Inscripto activo" indica una inscripción activa. "Inscripto inactivo" indica que existe una inscripción, pero está desactivada. "Sin inscripción" indica que el estudiante no tiene una inscripción registrada en el curso seleccionado.
+
+Pregunta: ¿Cómo desactivo la inscripción de un estudiante?
+Respuesta: 1) Entrá en "Inscripciones". 2) Seleccioná el curso. 3) Ubicá al estudiante que figure como "Inscripto activo". 4) Presioná "Desactivar" en su fila. El estado de la inscripción cambiará a inactivo al completarse la operación.
+
+Pregunta: ¿Cómo reactivo una inscripción inactiva?
+Respuesta: Seleccioná el curso en "Inscripciones", buscá al estudiante con estado "Inscripto inactivo" y presioná "Activar" en esa fila.
+
+Pregunta: ¿Cómo quito la inscripción de un estudiante?
+Respuesta: En "Inscripciones", seleccioná el curso y buscá al estudiante que tenga una inscripción registrada. Presioná "Quitar" en su fila para realizar la operación de eliminación de esa inscripción.
+
+Pregunta: ¿Cuál es la diferencia entre desactivar y quitar una inscripción?
+Respuesta: "Desactivar" cambia el estado de una inscripción existente a inactivo y permite luego volver a activarla. "Quitar" es la acción destinada a eliminar la inscripción del estudiante en el curso seleccionado. No son la misma operación.
+
+Pregunta: ¿Por qué algunos estudiantes aparecen con "Sin inscripción"?
+Respuesta: Porque no tienen una inscripción registrada en el curso que seleccionaste. El estado se consulta por curso: un estudiante podría estar inscripto en otro curso y aparecer sin inscripción en el actual.
+
+Pregunta: ¿La plataforma envía automáticamente un correo cuando cambio una inscripción?
+Respuesta: No. Los casos de uso indican que la gestión de inscripciones no genera notificaciones automáticas por correo electrónico.
+
+======================================================================
+4. GESTIÓN DE USUARIOS
+======================================================================
+
+Pregunta: ¿Cómo veo los usuarios registrados?
+Respuesta: Entrá en "Usuarios" desde el menú lateral. Se mostrará una tabla con usuario, correo electrónico, rol, estado y acciones disponibles para cada cuenta.
+
+Pregunta: ¿Cómo busco un usuario por su nombre, apellido o correo?
+Respuesta: Entrá en "Usuarios" y escribí el dato en el campo "Buscar", cuyo texto de ayuda dice "Nombre, apellido o correo". La lista se filtrará según el criterio de búsqueda.
+
+Pregunta: ¿Cómo filtro usuarios por rol?
+Respuesta: En la sección "Usuarios", utilizá el selector "Rol". Podés elegir el rol por el que querés filtrar, por ejemplo Administrador, Profesor o Estudiante, para consultar las cuentas correspondientes.
+
+Pregunta: ¿Cómo filtro usuarios activos o inactivos?
+Respuesta: En "Usuarios", utilizá el selector "Estado" y elegí el estado que quieras consultar. Los resultados se limitarán a los usuarios que cumplan ese criterio.
+
+Pregunta: ¿Puedo combinar la búsqueda con los filtros de rol y estado?
+Respuesta: La pantalla ofrece un campo "Buscar" y los selectores "Rol" y "Estado" en el mismo panel. Podés utilizar esos criterios para acotar la lista de usuarios mostrada.
+
+Pregunta: ¿Cómo elimino los filtros de usuarios?
+Respuesta: En la sección "Usuarios", presioná "Limpiar filtros" para restablecer los criterios de búsqueda y filtrado.
+
+Pregunta: ¿Cómo modifico los datos de un usuario?
+Respuesta: 1) Entrá en "Usuarios" desde el menú lateral. 2) Buscá a la persona cuya cuenta querés modificar. 3) Presioná "Editar" en su fila. 4) En la ventana "Editar usuario", modificá los campos que correspondan: "Nombre", "Apellido", "Correo electrónico" o "Rol". 5) Presioná "Guardar" para registrar los cambios. Si no querés modificar la cuenta, presioná "Cancelar" o cerrá la ventana con la X.
+
+Pregunta: ¿Qué datos puedo cambiar desde la ventana Editar usuario?
+Respuesta: El formulario "Editar usuario" permite modificar nombre, apellido, correo electrónico y rol. Para cambiar el rol, abrí el selector "Rol" y elegí la opción correspondiente. Luego presioná "Guardar".
+
+Pregunta: ¿Cómo cambio el rol de un usuario?
+Respuesta: 1) Entrá en "Usuarios" y buscá la cuenta correspondiente. 2) Presioná "Editar". 3) En la ventana "Editar usuario", abrí el desplegable "Rol". 4) Seleccioná el nuevo rol y presioná "Guardar". El sistema permite que cada cuenta tenga un solo rol a la vez.
+
+Pregunta: ¿Cómo convierto a un estudiante en profesor?
+Respuesta: 1) Entrá en "Usuarios" y ubicá la cuenta del estudiante. 2) Presioná "Editar". 3) En el campo "Rol", seleccioná "Profesor". 4) Presioná "Guardar". Al cambiar el rol, la cuenta deja de tener el rol Estudiante, porque los roles son excluyentes.
+
+Pregunta: ¿Puedo devolver a un profesor al rol de estudiante?
+Respuesta: Sí. Entrá en "Usuarios", buscá la cuenta del profesor y presioná "Editar". En el selector "Rol", elegí "Estudiante" y después presioná "Guardar". El usuario tendrá únicamente el rol Estudiante.
+
+Pregunta: ¿Cómo cambio la contraseña de una cuenta desde la administración?
+Respuesta: 1) Entrá en "Usuarios" desde el menú lateral. 2) Buscá la cuenta a la que querés asignarle una contraseña nueva. 3) Presioná el botón "Contraseña" de esa fila. 4) Se abrirá la ventana "Resetear contraseña", que identifica al usuario por su nombre y correo. 5) Escribí la contraseña nueva en "Nueva contraseña" (debe tener al menos 8 caracteres). 6) Presioná "Resetear contraseña" para guardar el cambio. Si no querés realizarlo, presioná "Cancelar" o cerrá la ventana con la X.
+
+Pregunta: ¿Cuántos caracteres debe tener la contraseña nueva al resetearla?
+Respuesta: La ventana "Resetear contraseña" indica que la nueva contraseña debe tener un mínimo de 8 caracteres. Ingresala en el campo "Nueva contraseña" y presioná "Resetear contraseña".
+
+Pregunta: ¿Cómo desactivo una cuenta de usuario?
+Respuesta: En "Usuarios", buscá la cuenta activa y hacé clic en "Desactivar" en su fila. El estado pasará a "Inactivo" cuando la operación se complete.
+
+Pregunta: ¿Cómo reactivo una cuenta de usuario?
+Respuesta: En "Usuarios", localizá una cuenta cuyo estado sea "Inactivo" y presioná "Activar" en su fila.
+
+Pregunta: ¿Qué roles existen en el Campus Virtual?
+Respuesta: El sistema contempla tres roles: Estudiante, Profesor y Administrador. Cada usuario puede tener exactamente uno de esos roles a la vez. Las funciones accesibles dependen del rol asignado.
+
+Pregunta: ¿Con qué rol se registra un usuario nuevo?
+Respuesta: Las cuentas nuevas reciben inicialmente el rol "Estudiante". El administrador puede asignar posteriormente el rol "Profesor" desde la gestión de usuarios.
+
+Pregunta: ¿Puedo crear usuarios nuevos desde la pantalla de Usuarios?
+Respuesta: En la captura de la sección "Usuarios" no aparece un botón para crear cuentas. El proceso de alta de cuentas documentado para el Campus Virtual se realiza mediante la opción de registro para usuarios no registrados.
+
+======================================================================
+5. FUENTES DE CONOCIMIENTO DEL ASISTENTE
+======================================================================
+
+Pregunta: ¿Para qué sirve la sección Fuentes?
+Respuesta: "Fuentes" permite administrar documentos y respuestas aprobadas que utiliza el asistente para explicar el funcionamiento del Campus Virtual. Estas fuentes ayudan a que el chatbot dé respuestas basadas en información autorizada del sistema.
+
+Pregunta: ¿Cómo consulto las fuentes de conocimiento cargadas?
+Respuesta: Seleccioná "Fuentes" en el menú lateral. La tabla está organizada por nombre, propósito, tipo, roles y estado. Si todavía no se cargó ninguna, la pantalla muestra "Todavía no hay fuentes de conocimiento".
+
+Pregunta: ¿Cómo cargo un documento para el asistente?
+Respuesta: 1) Entrá en "Fuentes". 2) Presioná "+ Cargar fuente". 3) Completá "Nombre" y "Propósito". 4) Seleccioná el "Tipo" y los "Roles destino" correspondientes. 5) En "Archivo", elegí el archivo desde tu computadora. 6) Presioná "Cargar fuente". La fuente podrá utilizarse cuando su carga y procesamiento finalicen correctamente.
+
+Pregunta: ¿Qué formatos de archivo y tamaños admite la carga de fuentes?
+Respuesta: El formulario mostrado permite archivos con extensión .md o .txt de hasta 1 MB. Si el archivo no cumple los requisitos o no puede procesarse, el sistema puede rechazar la carga.
+
+Pregunta: ¿Qué escribo en el campo Propósito al cargar una fuente?
+Respuesta: Escribí para qué debe servir ese archivo dentro del chatbot. Por ejemplo: "Instrucciones para que los administradores creen, editen y desactiven cursos". El propósito ayuda a identificar el uso previsto de la fuente.
+
+Pregunta: ¿Para qué sirve el campo Roles destino?
+Respuesta: Permite indicar a qué roles está dirigida la fuente de conocimiento. En el formulario se muestran las opciones "Estudiante", "Profesor" y "Administrador". Seleccioná los roles que deban poder recibir respuestas basadas en esa fuente.
+
+Pregunta: ¿Qué pasa si no marco ningún rol al cargar una fuente?
+Respuesta: El formulario aclara que, si no seleccionás ningún rol, la fuente aplica a todos los roles. Si el documento contiene procedimientos exclusivos de administración, conviene seleccionar únicamente "Administrador".
+
+Pregunta: ¿Qué rol destino debo elegir para este documento de administración?
+Respuesta: Seleccioná únicamente "Administrador", porque las instrucciones de esta guía describen funciones administrativas que no están destinadas a estudiantes ni profesores.
+
+Pregunta: ¿Cómo elimino una fuente de conocimiento?
+Respuesta: Entrá en "Fuentes", identificá la fuente cargada y utilizá su opción de eliminación cuando esté disponible. Confirmá la operación si el sistema lo solicita. Según los casos de uso, la fuente eliminada deja de estar disponible para nuevas consultas del chatbot.
+
+Pregunta: ¿Qué hago si un archivo no se puede cargar?
+Respuesta: Comprobá que sea un archivo .md o .txt, que no supere 1 MB y que pueda abrirse correctamente. Si sigue fallando, revisá el mensaje que muestre el sistema e intentá nuevamente. Una fuente que no se procesa correctamente no debe quedar disponible para el asistente.
+
+Pregunta: ¿Las fuentes de conocimiento pueden modificar los datos de los cursos o usuarios?
+Respuesta: No. Las fuentes son material de consulta para el asistente; cargarlas no autoriza al chatbot a crear, editar o eliminar cursos, usuarios, inscripciones, tareas o calificaciones. Esas operaciones deben realizarse desde las funciones correspondientes del Campus Virtual.
+
+======================================================================
+6. ASISTENTE VIRTUAL
+======================================================================
+
+Pregunta: ¿Cómo utilizo el asistente virtual?
+Respuesta: Seleccioná "Asistente" en el menú lateral, escribí tu pregunta en el cuadro "Tu consulta" y presioná "Enviar". El asistente intentará responder en español sobre el funcionamiento del Campus Virtual o los datos del sistema a los que estés autorizado a acceder.
+
+Pregunta: ¿Qué tipo de preguntas puedo hacerle al asistente?
+Respuesta: Podés pedir instrucciones sobre el funcionamiento de la plataforma y consultar información disponible del Campus Virtual. Por ejemplo, podés preguntar cómo crear un curso o cómo administrar una inscripción. El asistente debe respetar los permisos correspondientes a tu rol.
+
+Pregunta: ¿El asistente puede crear cursos o modificar usuarios por mí?
+Respuesta: No. El asistente sirve para consultar y orientar, pero no puede crear, modificar ni eliminar información funcional del Campus Virtual. Para realizar cambios debés usar las secciones correspondientes, como "Cursos", "Inscripciones" o "Usuarios".
+
+Pregunta: ¿El asistente puede corregir tareas o asignar calificaciones?
+Respuesta: No. La corrección de entregas y la asignación de calificaciones corresponden a los profesores. El asistente no puede realizar esas operaciones.
+
+Pregunta: ¿El asistente puede mostrar información sin respetar los roles?
+Respuesta: No. Las consultas a información del sistema deben respetar los permisos de acceso del usuario autenticado. El asistente no debe revelar datos para los que el usuario no esté autorizado.
+
+Pregunta: ¿El asistente recuerda mis conversaciones anteriores?
+Respuesta: Según los casos de uso del proyecto, el asistente puede utilizar el contexto de la conversación actual y, cuando corresponda, el historial disponible de conversaciones anteriores de la misma cuenta. Ese historial no debe estar disponible para otros usuarios sin autorización.
+
+Pregunta: ¿Cómo elimino mi historial de conversaciones con el asistente?
+Respuesta: Entrá en "Asistente" y presioná "Eliminar historial", ubicado encima del cuadro de conversación. Confirmá la eliminación cuando el sistema lo solicite. La operación está destinada a eliminar el historial propio de esa cuenta, no los datos de cursos u otras funciones del Campus Virtual.
+
+Pregunta: ¿Qué sucede si el asistente no tiene suficiente información para responder?
+Respuesta: Debe indicar que no dispone de información suficiente para responder con certeza y evitar inventar datos de la plataforma. Cuando corresponda, puede recomendarte consultar con la persona responsable de esa información.
+
+Pregunta: ¿Qué hago si el asistente muestra un error al responder?
+Respuesta: Podés intentar enviar la consulta nuevamente. Si el sistema no puede obtener información o generar una respuesta, el asistente debe informar que no pudo completar la consulta.
+
+Pregunta: ¿Puedo pedirle al asistente ayuda sobre temas ajenos al Campus Virtual?
+Respuesta: El asistente está orientado al funcionamiento de la plataforma educativa y a la información del sistema. Si la consulta no está relacionada con ese propósito, debe explicarte brevemente su alcance y redirigir la conversación a temas del Campus Virtual.
+
+======================================================================
+FIN DEL DOCUMENTO
+======================================================================

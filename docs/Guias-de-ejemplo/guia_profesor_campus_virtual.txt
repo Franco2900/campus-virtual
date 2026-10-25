@@ -1,0 +1,345 @@
+CAMPUS VIRTUAL - GUÍA DE PREGUNTAS Y RESPUESTAS
+ROL DESTINATARIO: PROFESOR
+
+Este archivo explica cómo utilizar las funciones del Campus Virtual disponibles
+para el rol Profesor. Las preguntas y respuestas documentan las opciones de la
+interfaz y las reglas establecidas para el proyecto. Su propósito es que el
+asistente virtual pueda orientar al profesor con instrucciones prácticas.
+
+Las acciones que modifican datos (inscribir, guardar, corregir, etc.) se realizan
+desde las pantallas de la plataforma, no mediante mensajes al asistente.
+
+======================================================================
+1. ACCESO Y NAVEGACIÓN
+======================================================================
+
+Pregunta: ¿Cómo ingreso al Campus Virtual como profesor?
+Respuesta: Abrí la página de inicio de sesión, ingresá tu correo electrónico y contraseña y accedé con tu cuenta. Si tenés asignado el rol Profesor, se habilitarán las funciones correspondientes a ese rol.
+
+Pregunta: ¿Cómo sé con qué rol inicié sesión?
+Respuesta: En la parte superior derecha aparece una etiqueta con tu nombre y el rol, por ejemplo "Laura · Profesor". En "Inicio" también se muestra el rol asignado a la cuenta.
+
+Pregunta: ¿Qué secciones están disponibles para los profesores?
+Respuesta: El menú lateral del profesor muestra "Inicio", "Inscripciones", "Tareas", "Corregir tareas", "Calificaciones" y "Asistente".
+
+Pregunta: ¿Cómo regreso a la página principal?
+Respuesta: Hacé clic en "Inicio" en el menú lateral izquierdo. Allí se muestra un saludo, información de tu cuenta y tu rol.
+
+Pregunta: ¿Qué significa el mensaje "Próximamente" de la pantalla de inicio?
+Respuesta: Es un mensaje informativo que aparece en la portada del profesor. Para comprobar qué funciones podés utilizar, entrá en las secciones específicas del menú lateral, como "Inscripciones", "Tareas" o "Calificaciones".
+
+Pregunta: ¿Cómo activo el modo oscuro?
+Respuesta: Usá el botón "Oscuro" ubicado en la esquina superior derecha. Ese botón permite cambiar la apariencia de la plataforma.
+
+Pregunta: ¿Cómo cierro sesión?
+Respuesta: Presioná "Cerrar sesión" en la parte superior derecha. La plataforma finalizará tu sesión activa.
+
+Pregunta: ¿Por qué no veo las secciones Cursos, Usuarios o Fuentes?
+Respuesta: Esas funciones de administración no están incluidas en el menú del profesor. La creación de cursos, la gestión de cuentas y la carga de fuentes del chatbot corresponden al rol Administrador.
+
+======================================================================
+2. INSCRIPCIONES DE ESTUDIANTES
+======================================================================
+
+Pregunta: ¿Cómo entro a gestionar las inscripciones?
+Respuesta: Seleccioná "Inscripciones" en el menú lateral. La pantalla permite elegir uno de tus cursos asignados, buscar estudiantes para inscribir y consultar las inscripciones existentes.
+
+Pregunta: ¿En qué cursos puedo gestionar inscripciones?
+Respuesta: Solo en los cursos a los que estés asignado como profesor. En la pantalla de Inscripciones aparecen agrupados en el apartado "Cursos asignados".
+
+Pregunta: ¿Cómo selecciono un curso para ver sus inscripciones?
+Respuesta: Entrá en "Inscripciones" y hacé clic en el curso que quieras revisar dentro de "Cursos asignados". El curso seleccionado queda resaltado y se muestra el listado de sus estudiantes.
+
+Pregunta: ¿Cómo veo los estudiantes que pertenecen a un curso?
+Respuesta: 1) Entrá en "Inscripciones". 2) Seleccioná un curso de "Cursos asignados". 3) Consultá la tabla "Estudiantes del curso", que muestra nombre, apellido, correo, estado de inscripción y acciones.
+
+Pregunta: ¿Cómo inscribo a un estudiante en uno de mis cursos?
+Respuesta: 1) Entrá en "Inscripciones". 2) Seleccioná el curso correspondiente. 3) En "Inscribir estudiante", buscá al estudiante por nombre, apellido o correo. 4) Seleccionalo en los resultados. 5) Presioná "Inscribir" para registrar su inscripción.
+
+Pregunta: ¿Cómo busco a un estudiante para inscribirlo?
+Respuesta: En la sección "Inscribir estudiante", escribí su nombre, apellido o correo electrónico en el campo de búsqueda. Debajo se muestran los estudiantes que coinciden y que están disponibles para inscribir en el curso seleccionado.
+
+Pregunta: ¿Qué estudiantes aparecen en el buscador de inscripciones?
+Respuesta: El texto de ayuda de la pantalla indica que solo se listan estudiantes con cuenta activa que todavía no pertenecen al curso seleccionado.
+
+Pregunta: ¿Por qué no encuentro a un estudiante en el buscador para inscribirlo?
+Respuesta: Revisá que hayas seleccionado el curso correcto y que el nombre, apellido o correo estén bien escritos. El buscador solo lista estudiantes activos que todavía no pertenecen a ese curso. Si ya está inscripto o su cuenta está inactiva, no aparecerá entre las opciones disponibles.
+
+Pregunta: ¿Por qué la tabla de inscripciones no muestra a todos los usuarios?
+Respuesta: En la pantalla del profesor, "Estudiantes del curso" solo muestra a las personas que pertenecen al curso seleccionado. Para sumar a una nueva persona, usá el buscador "Inscribir estudiante" ubicado arriba de la tabla.
+
+Pregunta: ¿Qué significa "Inscripto activo"?
+Respuesta: Significa que el estudiante tiene una inscripción activa en el curso seleccionado.
+
+Pregunta: ¿Qué significa "Inscripto inactivo"?
+Respuesta: Significa que existe una inscripción del estudiante en ese curso, pero está desactivada. Podés volver a habilitarla con "Activar".
+
+Pregunta: ¿Cómo desactivo la inscripción de un estudiante?
+Respuesta: 1) Entrá en "Inscripciones" y seleccioná el curso. 2) Buscá al estudiante en "Estudiantes del curso". 3) Si figura como "Inscripto activo", presioná "Desactivar" en su fila.
+
+Pregunta: ¿Cómo reactivo a un estudiante inscripto que está inactivo?
+Respuesta: Seleccioná el curso en "Inscripciones", buscá al estudiante con estado "Inscripto inactivo" y presioná "Activar" en su fila.
+
+Pregunta: ¿Cómo quito a un estudiante de un curso?
+Respuesta: 1) Entrá en "Inscripciones". 2) Seleccioná el curso. 3) Localizá al estudiante en "Estudiantes del curso". 4) Presioná "Quitar" en su fila para eliminar su inscripción.
+
+Pregunta: ¿Cuál es la diferencia entre desactivar y quitar una inscripción?
+Respuesta: "Desactivar" mantiene la inscripción, pero la deja inactiva y permite reactivarla. "Quitar" elimina esa inscripción del curso. Ninguna de estas acciones equivale a desactivar la cuenta del usuario.
+
+Pregunta: ¿Puedo inscribir estudiantes en cursos que no me asignaron?
+Respuesta: No. Los casos de uso del Campus Virtual establecen que el profesor solo puede gestionar inscripciones de los cursos en los que trabaja.
+
+Pregunta: ¿Se envía un correo automático cuando inscribo o desactivo a un estudiante?
+Respuesta: No. Según los casos de uso, la gestión de inscripciones no genera notificaciones automáticas por correo electrónico.
+
+======================================================================
+3. CREACIÓN Y GESTIÓN DE TAREAS
+======================================================================
+
+Pregunta: ¿Cómo veo las tareas de mis cursos?
+Respuesta: Entrá en "Tareas" desde el menú lateral. Elegí el curso en el selector "Curso" para consultar la tabla de tareas correspondientes.
+
+Pregunta: ¿Cómo cambio el curso cuyas tareas estoy viendo?
+Respuesta: En "Tareas", abrí el desplegable "Curso" y seleccioná otro curso al que estés asignado. La lista mostrará sus tareas.
+
+Pregunta: ¿Qué información aparece en el listado de tareas?
+Respuesta: La tabla de "Tareas" muestra el título de cada tarea, su fecha límite, su estado (activa o inactiva) y las acciones "Editar" y "Desactivar" o "Activar", según corresponda.
+
+Pregunta: ¿Cómo creo una tarea nueva?
+Respuesta: 1) Entrá en "Tareas" desde el menú izquierdo. 2) Elegí el curso en el desplegable "Curso". 3) Presioná "+ Nueva tarea". 4) En la ventana "Nueva tarea", completá "Título" y "Descripción". 5) Indicá en "Fecha límite" el día y la hora de vencimiento; podés usar el ícono del calendario. 6) Presioná "Guardar" para registrar la tarea. Si decidís no crearla, seleccioná "Cancelar" o la X de la ventana.
+
+Pregunta: ¿Qué datos forman parte de una tarea?
+Respuesta: Tanto "Nueva tarea" como "Editar tarea" incluyen "Título", "Descripción" y "Fecha límite". El título identifica la actividad, la descripción explica qué trabajo debe realizarse y la fecha y hora límite determinan hasta cuándo se puede entregar. Al terminar, presioná "Guardar".
+
+Pregunta: ¿Qué campos tengo que completar al crear una tarea?
+Respuesta: La ventana "Nueva tarea" muestra tres campos: "Título", "Descripción" y "Fecha límite". Este último incluye fecha y hora. Completalos y presioná "Guardar".
+
+Pregunta: ¿Cómo elijo la fecha y la hora de entrega de una tarea nueva?
+Respuesta: En "Tareas", seleccioná el curso y abrí "+ Nueva tarea". En el campo "Fecha límite", escribí la fecha y hora o presioná el ícono de calendario que aparece a la derecha para elegirlas. Después guardá la tarea.
+
+Pregunta: ¿Cómo cancelo la creación de una tarea antes de guardarla?
+Respuesta: En la ventana "Nueva tarea", presioná "Cancelar" o la X de la esquina superior derecha. Si no guardaste, la tarea no se registra.
+
+Pregunta: ¿Cómo edito una tarea existente?
+Respuesta: 1) Entrá en "Tareas" y seleccioná su curso. 2) Ubicá la tarea en la tabla. 3) Presioná "Editar". 4) En la ventana "Editar tarea", modificá los campos "Título", "Descripción" o "Fecha límite" según necesites. 5) Presioná "Guardar".
+
+Pregunta: ¿Cómo modifico la descripción de una tarea?
+Respuesta: En "Tareas", elegí el curso y presioná "Editar" junto a la actividad. Cambiá el texto del campo "Descripción" y presioná "Guardar".
+
+Pregunta: ¿Cómo cambio el título de una tarea?
+Respuesta: Entrá en "Tareas", seleccioná el curso, buscá la actividad y presioná "Editar". Modificá el campo "Título" y guardá los cambios.
+
+Pregunta: ¿Cómo cambio la fecha límite de una tarea?
+Respuesta: 1) Entrá en "Tareas" y seleccioná el curso. 2) Presioná "Editar" en la tarea. 3) En el campo "Fecha límite", ingresá la nueva fecha y hora o utilizá el selector de calendario. 4) Presioná "Guardar". El sistema validará la nueva fecha.
+
+Pregunta: ¿Puedo establecer una hora además de la fecha límite?
+Respuesta: Sí. El formulario "Editar tarea" muestra el campo "Fecha límite" con fecha y hora, y el listado de tareas también presenta ambos datos.
+
+Pregunta: ¿Cómo cancelo la edición de una tarea sin guardar cambios?
+Respuesta: Mientras esté abierta la ventana "Editar tarea", presioná "Cancelar" o cerrala con la X en la esquina superior derecha.
+
+Pregunta: ¿Cómo desactivo una tarea?
+Respuesta: En "Tareas", seleccioná el curso, buscá la tarea que figure como "Activa" y presioná "Desactivar" en su fila. La actividad pasará a estado inactivo al completarse la operación.
+
+Pregunta: ¿Cómo reactivo una tarea inactiva?
+Respuesta: Entrá en "Tareas", elegí el curso, localizá una actividad cuyo estado sea "Inactiva" y presioná "Activar".
+
+Pregunta: ¿Cómo sé si una tarea está activa o inactiva?
+Respuesta: En el listado de "Tareas", revisá la columna "ESTADO". La etiqueta verde "Activa" identifica tareas activas y la etiqueta amarilla "Inactiva" identifica las desactivadas.
+
+Pregunta: ¿Es lo mismo desactivar una tarea que eliminarla?
+Respuesta: No. "Desactivar" cambia su estado para que deje de estar activa, mientras que eliminar implicaría borrar su registro. En la pantalla mostrada se ven las acciones "Editar", "Desactivar" y "Activar", pero no una opción para borrar una tarea de forma definitiva.
+
+Pregunta: ¿Puedo modificar tareas de cualquier curso?
+Respuesta: No. Los casos de uso establecen que las tareas se gestionan desde los cursos a los que el profesor está asociado.
+
+Pregunta: ¿Se les avisa automáticamente por correo a los estudiantes cuando edito una tarea?
+Respuesta: No. Los casos de uso especifican que los cambios en las tareas no generan notificaciones automáticas por correo electrónico.
+
+Pregunta: ¿Qué pasa cuando se vence la fecha límite de una tarea?
+Respuesta: La fecha límite se usa para controlar las entregas: según los casos de uso, un estudiante debe presentar su trabajo antes de ese momento. No se debe confundir la fecha vencida con el estado "Inactiva", que es un estado de la tarea que el profesor administra por separado.
+
+======================================================================
+4. CORRECCIÓN DE ENTREGAS
+======================================================================
+
+Pregunta: ¿Dónde corrijo los trabajos entregados por los estudiantes?
+Respuesta: Entrá en "Corregir tareas" desde el menú lateral. Allí debés elegir el curso y luego la tarea cuyas entregas querés revisar.
+
+Pregunta: ¿Cómo selecciono una tarea para corregir?
+Respuesta: 1) Entrá en "Corregir tareas". 2) En el desplegable "Curso", seleccioná uno de tus cursos. 3) En el desplegable "Tarea", elegí la actividad correspondiente. 4) Se mostrará la tabla de entregas disponibles.
+
+Pregunta: ¿Qué datos puedo ver sobre cada entrega?
+Respuesta: La tabla de "Corregir tareas" muestra el estudiante, su correo, información de la entrega, estado de corrección, nota y retroalimentación. También ofrece un botón "Corregir" o "Modificar", según el estado.
+
+Pregunta: ¿Cómo reviso el contenido de una entrega?
+Respuesta: 1) Entrá en "Corregir tareas", elegí el curso y después la tarea. 2) Buscá al estudiante en la tabla y presioná "Corregir" si la entrega está pendiente, o "Modificar" si ya fue evaluada. 3) La ventana muestra una sección "TEXTO" con el contenido escrito por el estudiante y otra sección "ENLACES" con los vínculos enviados. 4) Revisá ese material antes de calificar.
+
+Pregunta: ¿Qué hago si una entrega tiene enlaces?
+Respuesta: Si una entrega incluye enlaces, la tabla puede indicar cuántos hay, por ejemplo "2 enlaces". Abrí la entrega con "Corregir" o "Modificar" y buscá el apartado "ENLACES", donde aparecen los vínculos que el estudiante adjuntó. Podés abrirlos para revisar el material antes de calificar.
+
+Pregunta: ¿Cómo corrijo una entrega por primera vez?
+Respuesta: 1) Entrá en "Corregir tareas". 2) Seleccioná el curso y la tarea. 3) Buscá la entrega con estado "No corregida" y presioná "Corregir". 4) En "Corregir entrega", revisá las secciones "TEXTO" y "ENLACES". 5) En "CORRECCIÓN", completá "Calificación (1 a 10)" con un número entero del 1 al 10. 6) Opcionalmente, escribí una "Retroalimentación" de hasta 5000 caracteres. 7) Presioná "Guardar" para registrar la evaluación.
+
+Pregunta: ¿Qué nota puedo ponerle a una tarea?
+Respuesta: Ingresá un número entero del 1 al 10 en "Calificación (1 a 10)". El formulario muestra expresamente la indicación "Ingresá un número entero entre 1 y 10".
+
+Pregunta: ¿Cómo dejo comentarios o retroalimentación sobre una entrega?
+Respuesta: Entrá en "Corregir tareas", elegí el curso y la tarea, y presioná "Corregir" o "Modificar" junto a la entrega. Escribí tus observaciones en "Retroalimentación", debajo de la calificación, y presioná "Guardar". La retroalimentación es opcional y admite un máximo de 5000 caracteres.
+
+Pregunta: ¿Puedo adjuntar un archivo corregido?
+Respuesta: Los casos de uso del proyecto contemplan un archivo corregido opcional, pero en las ventanas "Corregir entrega" y "Modificar corrección" mostradas no aparece un campo para adjuntarlo. En esos formularios se pueden revisar el texto y los enlaces entregados, ingresar o modificar una nota y escribir retroalimentación. No se puede confirmar una opción de adjuntar archivo desde esas pantallas.
+
+Pregunta: ¿Cómo sé qué trabajos todavía no corregí?
+Respuesta: Entrá en "Corregir tareas", elegí el curso y la tarea y revisá la columna "ESTADO". Las entregas pendientes figuran como "No corregida" y ofrecen el botón "Corregir".
+
+Pregunta: ¿Cómo sé qué entregas ya están corregidas?
+Respuesta: En la tabla de "Corregir tareas", las entregas ya evaluadas muestran la etiqueta verde "Corregida", la nota registrada y el botón "Modificar".
+
+Pregunta: ¿Cómo modifico una corrección o una nota ya cargada?
+Respuesta: 1) Entrá en "Corregir tareas". 2) Seleccioná el curso y la tarea. 3) Buscá la entrega con estado "Corregida" y presioná "Modificar". 4) Se abrirá "Modificar corrección" con el texto, los enlaces y los datos de corrección existentes. 5) Modificá "Calificación (1 a 10)" (entero entre 1 y 10) y/o "Retroalimentación" (opcional, hasta 5000 caracteres). 6) Presioná "Guardar" para conservar los cambios.
+
+Pregunta: ¿Puedo cambiar la retroalimentación después de corregir una entrega?
+Respuesta: Sí. Los casos de uso permiten modificar una corrección ya realizada, incluida la nota o la retroalimentación. Para hacerlo, usá "Modificar" en la fila de la entrega corregida.
+
+Pregunta: ¿Cuál es la diferencia entre "Corregir" y "Modificar" una entrega?
+Respuesta: "Corregir" se ofrece para entregas "No corregida" y abre el formulario "Corregir entrega" para ingresar la primera evaluación. "Modificar" aparece en entregas "Corregida" y abre "Modificar corrección" para actualizar la nota o la retroalimentación ya guardadas.
+
+Pregunta: ¿Qué se muestra dentro de la ventana "Corregir entrega"?
+Respuesta: La ventana identifica al estudiante y muestra el apartado "TEXTO" con su trabajo y "ENLACES" con los vínculos enviados. Más abajo, en "CORRECCIÓN", permite completar "Calificación (1 a 10)" y "Retroalimentación". Al pie se encuentran "Cancelar" y "Guardar".
+
+Pregunta: ¿Qué se muestra dentro de la ventana "Modificar corrección"?
+Respuesta: La ventana identifica al estudiante, muestra el contenido de su entrega en "TEXTO", sus vínculos en "ENLACES" y la sección "CORRECCIÓN" con la nota y retroalimentación guardadas. Podés editarlas y presionar "Guardar" o abandonar los cambios con "Cancelar".
+
+Pregunta: ¿La retroalimentación es obligatoria al calificar?
+Respuesta: No. El formulario indica que la "Retroalimentación" es opcional. Podés guardar una corrección con una calificación válida sin completar ese campo.
+
+Pregunta: ¿Cuál es el máximo de caracteres de la retroalimentación?
+Respuesta: El campo "Retroalimentación" admite un máximo de 5000 caracteres, tanto al corregir como al modificar una corrección.
+
+Pregunta: ¿Cómo cancelo una corrección sin guardar?
+Respuesta: En "Corregir entrega" o "Modificar corrección", presioná "Cancelar" o la X de la esquina superior derecha para cerrar el formulario sin guardar los cambios.
+
+Pregunta: ¿Por qué una entrega no tiene nota?
+Respuesta: Si una entrega está marcada "No corregida", todavía no tiene una calificación registrada. En la tabla puede aparecer un guion en la columna "NOTA" hasta que la corrijas.
+
+Pregunta: ¿El asistente virtual puede corregir entregas por mí?
+Respuesta: No. La revisión de trabajos, la asignación de notas y la retroalimentación corresponden al profesor. El asistente puede orientar sobre cómo usar el Campus Virtual, pero no puede calificar entregas.
+
+Pregunta: ¿Se envía automáticamente un correo cuando corrijo una tarea?
+Respuesta: No. Según los casos de uso del proyecto, la corrección no genera notificaciones automáticas por correo electrónico.
+
+======================================================================
+5. CALIFICACIONES Y PROMEDIOS
+======================================================================
+
+Pregunta: ¿Cómo consulto las calificaciones de mis estudiantes?
+Respuesta: Seleccioná "Calificaciones" en el menú lateral y elegí el curso que quieras consultar en el desplegable "Curso". Se mostrará la información disponible de notas y promedios.
+
+Pregunta: ¿Cómo cambio de curso en la sección Calificaciones?
+Respuesta: En "Calificaciones", abrí el selector "Curso" y elegí otro de tus cursos asignados. La información mostrada se actualizará para ese curso.
+
+Pregunta: ¿Qué información muestra la tabla de calificaciones?
+Respuesta: La tabla presenta a los estudiantes del curso y una columna por tarea, seguida del promedio individual y el estado "Aprobado" o "Desaprobado" cuando corresponda.
+
+Pregunta: ¿Cómo veo la nota de un estudiante en una tarea particular?
+Respuesta: Entrá en "Calificaciones", seleccioná el curso, buscá la fila del estudiante y leé el valor en la columna de la tarea que quieras consultar.
+
+Pregunta: ¿Dónde veo el promedio de un estudiante?
+Respuesta: En "Calificaciones", seleccioná el curso y buscá al estudiante. Su promedio aparece en la columna "PROMEDIO" de la tabla.
+
+Pregunta: ¿Dónde veo el promedio general del curso?
+Respuesta: Al seleccionar un curso en "Calificaciones", aparece una tarjeta con el texto "Promedio del curso" y el valor calculado por la plataforma.
+
+Pregunta: ¿Cómo se calculan los promedios?
+Respuesta: Los casos de uso del Campus Virtual establecen un promedio simple de las calificaciones que corresponda incluir. Las tareas todavía no corregidas no se incluyen; las tareas no entregadas cuyo plazo ya venció se contabilizan con nota 1, según esas reglas.
+
+Pregunta: ¿Por qué algunas tareas aparecen con un guion en lugar de una nota?
+Respuesta: Un guion indica que no se muestra una calificación numérica en esa celda. Puede tratarse de una tarea todavía sin corrección o sin una nota presentada en la tabla. Para verificar una entrega concreta, consultá "Corregir tareas".
+
+Pregunta: ¿Qué nota recibe una tarea que no fue entregada a tiempo?
+Respuesta: Según los casos de uso, las tareas que no fueron entregadas dentro del plazo correspondiente se contabilizan con calificación 1 para el cálculo del promedio.
+
+Pregunta: ¿Las tareas que todavía no corregí cuentan en el promedio?
+Respuesta: No. Los casos de uso indican que las tareas no corregidas no se incluyen en el cálculo del promedio.
+
+Pregunta: ¿Cómo sé si un estudiante está aprobado o desaprobado?
+Respuesta: En "Calificaciones", seleccioná el curso y revisá la columna "ESTADO" de cada estudiante. La plataforma muestra "Aprobado" en verde o "Desaprobado" en rojo y determina el resultado automáticamente según sus reglas de calificación.
+
+Pregunta: ¿Puedo modificar una nota desde la tabla de Calificaciones?
+Respuesta: En la pantalla mostrada de "Calificaciones" no se ve un botón para editar notas. Para modificar una corrección, entrá en "Corregir tareas", seleccioná el curso y la tarea y presioná "Modificar" en la entrega correspondiente.
+
+Pregunta: ¿Puedo consultar las calificaciones de cursos ajenos?
+Respuesta: No. Los casos de uso señalan que el profesor puede consultar las calificaciones de los estudiantes de los cursos que tiene a su cargo.
+
+Pregunta: ¿Qué hago si una tabla tiene demasiadas columnas?
+Respuesta: La tabla de "Calificaciones" puede extenderse horizontalmente cuando un curso tiene muchas tareas. Utilizá la barra de desplazamiento horizontal de la parte inferior de la tabla para ver todas las columnas.
+
+======================================================================
+6. ASISTENTE VIRTUAL
+======================================================================
+
+Pregunta: ¿Cómo accedo al asistente?
+Respuesta: Hacé clic en "Asistente" en el menú lateral izquierdo. Se abrirá una pantalla con un cuadro llamado "Tu consulta" y un botón "Enviar".
+
+Pregunta: ¿Cómo le hago una pregunta al asistente?
+Respuesta: 1) Entrá en "Asistente". 2) Escribí tu pregunta en "Tu consulta". 3) Presioná "Enviar". El asistente responderá sobre el uso de la plataforma o la información del sistema a la que tu rol tenga acceso.
+
+Pregunta: ¿Qué cosas puedo preguntarle al asistente?
+Respuesta: Podés pedir indicaciones para usar el Campus Virtual, por ejemplo cómo inscribir a un estudiante, crear una tarea, corregir una entrega o consultar calificaciones. También podés consultar información del sistema que esté autorizada para tu rol.
+
+Pregunta: ¿Puedo preguntar al asistente cómo corregir una entrega?
+Respuesta: Sí. Puede explicarte los pasos para entrar en "Corregir tareas" y utilizar sus opciones. Sin embargo, no puede realizar la corrección ni asignar una calificación por vos.
+
+Pregunta: ¿El asistente puede inscribir alumnos, crear tareas o cambiar notas por mí?
+Respuesta: No. El asistente es una herramienta de consulta y orientación; no puede crear, modificar ni eliminar datos funcionales del Campus Virtual. Esas acciones se realizan desde las secciones habilitadas para el profesor.
+
+Pregunta: ¿Puede mostrarme información de otros profesores o cursos que no tengo asignados?
+Respuesta: No debe revelar información que exceda tus permisos. El asistente identifica el rol de la cuenta y solo puede consultar los datos autorizados por la plataforma.
+
+Pregunta: ¿El asistente recuerda mensajes anteriores?
+Respuesta: Según los casos de uso, puede utilizar el contexto del diálogo actual y, cuando corresponda, el historial disponible de conversaciones anteriores de tu misma cuenta.
+
+Pregunta: ¿Cómo elimino mi historial del asistente?
+Respuesta: Entrá en "Asistente" y presioná "Eliminar historial", en la parte superior derecha del área de conversación. Si aparece una confirmación, aceptala para eliminar el historial de tu cuenta.
+
+Pregunta: ¿Eliminar el historial del asistente también borra tareas o calificaciones?
+Respuesta: No. La eliminación del historial corresponde a los mensajes y memorias asociadas a tu conversación con el chatbot. No elimina cursos, inscripciones, tareas, entregas ni calificaciones.
+
+Pregunta: ¿Qué pasa si el asistente no sabe una respuesta?
+Respuesta: Debe decirte que no dispone de información suficiente para responder con certeza, en lugar de inventar datos de la plataforma. Cuando corresponda, puede recomendarte consultar a un administrador.
+
+Pregunta: ¿Qué hago si falla el asistente?
+Respuesta: Si no puede procesar la consulta o consultar la información necesaria, debería mostrar un mensaje de error. Podés intentar enviar la pregunta nuevamente.
+
+Pregunta: ¿Puedo usar el asistente sin iniciar sesión?
+Respuesta: No. Los casos de uso establecen que el asistente está disponible únicamente para usuarios autenticados.
+
+Pregunta: ¿Puedo preguntarle sobre cualquier tema que no tenga relación con el campus?
+Respuesta: No es su propósito. El asistente está orientado a preguntas sobre el uso del Campus Virtual y su información, por lo que debería redirigir las consultas ajenas a ese ámbito.
+
+======================================================================
+7. PERMISOS Y REGLAS GENERALES
+======================================================================
+
+Pregunta: ¿Quién puede crear cursos nuevos?
+Respuesta: La creación y gestión general de cursos corresponde al administrador. Como profesor, podés trabajar con los cursos a los que te asignaron, pero no crear cursos desde el menú mostrado.
+
+Pregunta: ¿Quién me asigna a un curso?
+Respuesta: Un administrador gestiona los profesores vinculados a cada curso desde la sección "Cursos", mediante la opción "Profesores".
+
+Pregunta: ¿Puedo cambiar el rol de un estudiante a Profesor?
+Respuesta: No desde tu rol Profesor. La gestión de usuarios y la asignación de roles corresponden al administrador.
+
+Pregunta: ¿Puede una cuenta ser Profesor y Estudiante al mismo tiempo?
+Respuesta: No. Cada cuenta del Campus Virtual posee un único rol a la vez: Estudiante, Profesor o Administrador.
+
+Pregunta: ¿Quién modifica los datos o la contraseña de una cuenta desde la administración?
+Respuesta: El administrador puede editar los datos, cambiar roles y restablecer contraseñas desde la sección "Usuarios". Esas opciones no figuran en el menú del profesor.
+
+Pregunta: ¿Puede un profesor cargar documentos en Fuentes de conocimiento?
+Respuesta: No. La carga y eliminación de fuentes de conocimiento del chatbot corresponde al administrador. El profesor sí puede consultar el asistente desde su propio menú.
+
+======================================================================
+FIN DEL DOCUMENTO
+======================================================================

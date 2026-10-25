@@ -1,0 +1,421 @@
+CAMPUS VIRTUAL - GUÍA DE PREGUNTAS Y RESPUESTAS
+ROL DESTINATARIO: ESTUDIANTE
+
+Este archivo explica cómo utilizar las funciones del Campus Virtual disponibles
+para el rol Estudiante. Está redactado en formato pregunta-respuesta para que el
+asistente de la plataforma pueda orientar a los estudiantes con instrucciones
+claras, concretas y acordes a los botones y pantallas del sitio.
+
+La información se basa en las capturas proporcionadas y en los casos de uso del
+proyecto. Las acciones que modifican datos (entregar, editar o eliminar una
+entrega) se realizan desde el sitio web, no por mensajes al asistente.
+
+Las instrucciones incluyen las pantallas de "Mis entregas", "Entregar tarea",
+"Editar entrega", "Calificaciones" y "Asistente". El formulario de entrega
+permite ingresar texto en "Contenido" y/o direcciones web en "Enlaces".
+Los procedimientos de entrega y edición se realizan desde la aplicación:
+el asistente virtual solo puede explicarlos, no ejecutarlos.
+
+======================================================================
+1. ACCESO Y NAVEGACIÓN
+======================================================================
+
+Pregunta: ¿Cómo ingreso al Campus Virtual como estudiante?
+Respuesta: Abrí la página de inicio de sesión e ingresá tu correo electrónico y contraseña. Si tu cuenta tiene el rol Estudiante, verás el menú correspondiente a ese rol.
+
+Pregunta: ¿Qué necesito para usar el Campus Virtual?
+Respuesta: Necesitás una cuenta registrada e iniciar sesión. Las funciones disponibles dependen de tu rol y de tus inscripciones en cursos.
+
+Pregunta: ¿Cómo me registro si todavía no tengo una cuenta?
+Respuesta: En la pantalla de acceso, seleccioná la opción para registrarte. Completá tu nombre, apellido, correo electrónico y contraseña. El sistema verificará los datos y, si el correo no está registrado, creará la cuenta con el rol Estudiante.
+
+Pregunta: ¿Puedo usar un correo electrónico que ya está registrado?
+Respuesta: No. Cada cuenta se identifica con un correo electrónico único; para registrarte, necesitás un correo que no esté asociado a otra cuenta.
+
+Pregunta: ¿Qué hago si mi correo o contraseña son incorrectos?
+Respuesta: Revisá que hayas escrito correctamente ambos datos y volvé a intentar iniciar sesión. Si olvidaste tu contraseña, utilizá la opción de recuperación de contraseña de la pantalla de acceso.
+
+Pregunta: ¿Cómo recupero mi contraseña si la olvidé?
+Respuesta: Usá la opción de recuperación de contraseña en la pantalla de acceso, ingresá el correo asociado a tu cuenta y seguí el enlace de recuperación que el sistema envía a ese correo.
+
+Pregunta: ¿Cómo sé con qué rol estoy conectado?
+Respuesta: En la parte superior derecha se muestra tu nombre con el rol, por ejemplo "Ana · Estudiante". En la sección "Inicio" también figura tu rol asignado.
+
+Pregunta: ¿Qué opciones encuentro en el menú del estudiante?
+Respuesta: El menú lateral tiene cuatro secciones: "Inicio", "Mis entregas", "Calificaciones" y "Asistente".
+
+Pregunta: ¿Cómo vuelvo a la pantalla principal?
+Respuesta: Hacé clic en "Inicio" en el menú lateral izquierdo. Verás un saludo y los datos generales de tu cuenta y tu rol.
+
+Pregunta: ¿Cómo cambio al modo oscuro?
+Respuesta: Presioná el botón "Oscuro" que aparece en la parte superior derecha de la pantalla para cambiar la apariencia del sitio.
+
+Pregunta: ¿Cómo cierro sesión de forma segura?
+Respuesta: Hacé clic en "Cerrar sesión" en la esquina superior derecha. Al hacerlo, termina tu sesión activa.
+
+Pregunta: ¿Por qué no veo las opciones de profesores o administradores?
+Respuesta: Porque el sistema muestra funciones según el rol. Como estudiante no tenés acceso al menú de gestión de cursos, usuarios, inscripciones de terceros, creación de tareas ni correcciones.
+
+
+======================================================================
+2. CURSOS E INSCRIPCIONES
+======================================================================
+
+Pregunta: ¿Dónde puedo ver mis cursos?
+Respuesta: En "Mis entregas" o en "Calificaciones", abrí el selector "Curso". Allí podés elegir un curso disponible para tu cuenta.
+
+Pregunta: ¿Cómo selecciono uno de mis cursos?
+Respuesta: Entrá en "Mis entregas" o "Calificaciones", hacé clic en el campo "Curso" y seleccioná el curso que querés consultar.
+
+Pregunta: ¿Cómo sé a qué curso pertenece una tarea?
+Respuesta: Entrá en "Mis entregas" y elegí el curso en el desplegable superior. La tabla que aparece corresponde al curso seleccionado.
+
+Pregunta: ¿Cómo me inscribo en un curso?
+Respuesta: La interfaz de estudiante que se muestra no incluye una sección para gestionar inscripciones directamente. Para que te incorporen a un curso, comunicate con un profesor de ese curso o con un administrador, que disponen de herramientas para gestionar inscripciones.
+
+Pregunta: ¿Puedo crear un curso desde mi cuenta?
+Respuesta: No. La creación, modificación y desactivación de cursos son funciones del administrador.
+
+Pregunta: ¿Por qué no aparece un curso en el selector?
+Respuesta: Verificá que estés usando la cuenta correcta. Si el curso no figura entre los disponibles, consultá con el profesor o el administrador para comprobar tu inscripción y el estado del curso.
+
+Pregunta: ¿Qué hago si estoy inscripto pero no puedo ver un curso?
+Respuesta: Consultá con el profesor o el administrador del Campus Virtual. Ellos pueden revisar si tu inscripción está activa y si el curso está disponible.
+
+Pregunta: ¿Puedo ver los estudiantes inscriptos en un curso?
+Respuesta: La interfaz de estudiante mostrada no incluye una lista de alumnos ni un panel de gestión de inscripciones. Esa gestión corresponde al profesor o al administrador.
+
+Pregunta: ¿Puedo darme de baja de un curso desde Mis entregas?
+Respuesta: En las pantallas del estudiante no aparece una opción de baja de inscripción. Para solicitarla, comunicate con el profesor o el administrador del campus.
+
+Pregunta: ¿Puedo pasar de Estudiante a Profesor desde mi perfil?
+Respuesta: No. Cada usuario tiene un único rol y la asignación del rol Profesor corresponde a un administrador.
+
+
+======================================================================
+3. MIS ENTREGAS: LISTADO Y ESTADOS
+======================================================================
+
+Pregunta: ¿Dónde encuentro las tareas que debo entregar?
+Respuesta: Entrá en "Mis entregas" desde el menú lateral y seleccioná un curso en el desplegable "Curso". Aparecerá una tabla con las tareas disponibles de ese curso.
+
+Pregunta: ¿Cómo veo las tareas de Programación I u otro curso?
+Respuesta: Abrí "Mis entregas", seleccioná "Programación I" o el curso correspondiente y revisá la lista de tareas que aparece debajo.
+
+Pregunta: ¿Qué información muestra la tabla Mis entregas?
+Respuesta: La tabla muestra el título de la tarea, la fecha y hora límite, el estado de tu entrega y el botón de acción disponible: "Entregar", "Editar" o "Eliminar", según el caso.
+
+Pregunta: ¿Dónde veo la fecha límite de una tarea?
+Respuesta: En "Mis entregas", seleccioná el curso y buscá la tarea. La columna "Fecha límite" muestra el día y la hora hasta los que se permite entregar.
+
+Pregunta: ¿La fecha límite incluye una hora específica?
+Respuesta: Sí. La columna "Fecha límite" muestra fecha y hora. Tené en cuenta ambos datos al planificar tu entrega.
+
+Pregunta: ¿Qué significa que una tarea esté Pendiente?
+Respuesta: En "Mis entregas", el estado "Pendiente" indica que todavía no registraste una entrega para esa tarea. Si está habilitada, aparece el botón "Entregar".
+
+Pregunta: ¿Qué significa que una tarea esté Entregada?
+Respuesta: Significa que el sistema tiene registrada una entrega tuya para esa tarea. En la tabla pueden aparecer opciones para editarla o eliminarla cuando las reglas de la tarea lo permitan.
+
+Pregunta: ¿Por qué una tarea tiene el botón Entregar?
+Respuesta: Porque la tarea todavía figura pendiente para tu cuenta y está disponible la acción de realizar una entrega.
+
+Pregunta: ¿Por qué veo Editar y Eliminar en vez de Entregar?
+Respuesta: Porque ya existe una entrega registrada para esa tarea. Esos botones sirven para gestionar el trabajo enviado, siempre sujeto a los plazos y a las restricciones de corrección.
+
+Pregunta: ¿Cómo sé si mi trabajo se envió?
+Respuesta: Volvé a "Mis entregas", seleccioná el curso y verificá que la tarea figure con estado "Entregada". Esa es la confirmación visible en el listado.
+
+Pregunta: ¿Por qué no me aparece una tarea?
+Respuesta: Comprobá que hayas seleccionado el curso correcto. Si seguís sin verla, consultá al profesor para verificar que la tarea exista y se encuentre disponible y activa.
+
+Pregunta: ¿Las tareas de todos mis cursos aparecen juntas?
+Respuesta: No en la vista mostrada. Primero seleccionás un curso y luego la tabla muestra las tareas de ese curso.
+
+Pregunta: ¿Qué hago si la lista de Mis entregas está vacía?
+Respuesta: Primero seleccioná un curso en el desplegable superior. Si ya lo hiciste y no aparecen tareas, consultá con el profesor para confirmar si hay actividades disponibles.
+
+Pregunta: ¿Qué diferencia hay entre una tarea y una entrega?
+Respuesta: La tarea es la actividad que crea el profesor, con título, descripción y fecha límite. Tu entrega es el trabajo que enviás para resolver esa tarea.
+
+
+======================================================================
+4. ENVIAR UNA ENTREGA
+======================================================================
+
+Pregunta: ¿Cómo entrego una tarea?
+Respuesta: 1) Entrá en "Mis entregas". 2) Seleccioná el curso en "Curso". 3) Buscá la tarea con estado "Pendiente" y presioná "Entregar". 4) Se abrirá la ventana "Entregar tarea". 5) Escribí tu trabajo en "Contenido" o agregá enlaces a tu trabajo en "Enlaces" (también podés utilizar ambos campos). 6) Si agregás varios enlaces, colocá uno por línea. 7) Presioná "Guardar". 8) Revisá que la tarea aparezca como "Entregada" en el listado.
+
+Pregunta: ¿Qué tipo de contenido puedo presentar en una entrega?
+Respuesta: El formulario "Entregar tarea" permite enviar texto en el campo "Contenido", direcciones web en "Enlaces" o ambas cosas. La indicación debajo de "Contenido" aclara que podés dejarlo vacío si enviás enlaces.
+
+Pregunta: ¿Puedo escribir la resolución de la tarea directamente en el campus?
+Respuesta: Sí. Entrá en "Mis entregas", seleccioná el curso, presioná "Entregar" en la tarea y escribí la resolución en "Contenido". Después hacé clic en "Guardar".
+
+Pregunta: ¿Puedo entregar un enlace a un documento en lugar de pegar el texto?
+Respuesta: Sí. En la ventana "Entregar tarea", dejá vacío el campo "Contenido" e ingresá la dirección de tu documento en "Enlaces". Presioná "Guardar" para registrar la entrega.
+
+Pregunta: ¿Puedo presentar texto y enlaces en la misma entrega?
+Respuesta: Sí. En la ventana "Entregar tarea", escribí el desarrollo en "Contenido" y agregá las direcciones correspondientes en "Enlaces", una por línea. Luego presioná "Guardar".
+
+Pregunta: ¿Cómo agrego varios enlaces a mi entrega?
+Respuesta: Abrí la ventana "Entregar tarea" y escribí los enlaces en el campo "Enlaces", colocando cada dirección en una línea diferente. Después presioná "Guardar".
+
+Pregunta: ¿Qué significa la indicación "Un enlace por línea"?
+Respuesta: Que cada dirección web debe ir en su propia línea dentro del campo "Enlaces", en lugar de escribir varias direcciones seguidas en la misma línea.
+
+Pregunta: ¿Tengo que llenar siempre el campo Contenido?
+Respuesta: No. Debajo de "Contenido", la ventana "Entregar tarea" dice: "Texto de tu entrega. Podés dejarlo vacío si enviás enlaces". Si tu trabajo está en un recurso externo, incluí su URL en "Enlaces".
+
+Pregunta: ¿Puedo adjuntar un archivo directamente desde Mis entregas?
+Respuesta: En el formulario "Entregar tarea" mostrado no hay un botón para subir archivos directamente. Si el trabajo está en un documento o repositorio externo, compartí su dirección en el campo "Enlaces". Verificá que el profesor tenga permiso para acceder.
+
+Pregunta: ¿Qué hago si mi trabajo está guardado en Google Drive o GitHub?
+Respuesta: Copiá el enlace para compartir el archivo o repositorio, abrí "Entregar tarea" e ingresalo en "Enlaces". Si ponés más de uno, separalos por líneas. Verificá que el profesor tenga acceso y hacé clic en "Guardar".
+
+Pregunta: ¿Puedo entregar la tarea después de la fecha límite?
+Respuesta: Según las reglas del Campus Virtual, las entregas deben realizarse antes de la fecha y hora límite. Si el plazo ya venció, consultá con el profesor; él puede modificar la fecha límite de la tarea.
+
+Pregunta: ¿Qué pasa si la tarea no está disponible?
+Respuesta: No podrás efectuar una entrega si la actividad no está disponible para tu cuenta. Verificá el curso y consultá al profesor para conocer el estado de la tarea.
+
+Pregunta: ¿El asistente virtual puede presentar una tarea por mí?
+Respuesta: No. El asistente sirve para consultar información y recibir orientación, pero no puede crear, editar ni eliminar entregas en tu nombre. Tenés que hacerlo desde "Mis entregas".
+
+Pregunta: ¿Qué botones aparecen en la ventana Entregar tarea?
+Respuesta: En la parte inferior de la ventana están "Cancelar" y "Guardar". "Guardar" se usa para registrar el trabajo; "Cancelar" permite salir sin guardar.
+
+Pregunta: ¿Cómo cancelo la entrega de una tarea antes de guardarla?
+Respuesta: En la ventana "Entregar tarea", presioná "Cancelar" o la X de la esquina superior derecha. Si todavía no guardaste, esa acción cierra el formulario sin registrar el contenido que estabas escribiendo.
+
+Pregunta: ¿Dónde se escribe la respuesta de una tarea?
+Respuesta: Dentro de "Mis entregas", seleccioná el curso, presioná "Entregar" en la tarea pendiente y escribí tu resolución en el campo "Contenido" de la ventana "Entregar tarea". Guardá cuando termines.
+
+Pregunta: ¿Dónde pego los enlaces de una tarea?
+Respuesta: En la ventana "Entregar tarea", utilizá el campo "Enlaces". Ingresá una URL por línea y presioná "Guardar" cuando esté lista la entrega.
+
+Pregunta: ¿Qué hago si presioné Entregar pero todavía no preparé mi trabajo?
+Respuesta: Podés presionar "Cancelar" o cerrar la ventana "Entregar tarea" con la X. Prepará la resolución y volvé a la misma tarea antes de la fecha y hora límite.
+
+
+======================================================================
+5. EDITAR O ELIMINAR UNA ENTREGA
+======================================================================
+
+Pregunta: ¿Cómo edito una entrega que ya hice?
+Respuesta: 1) Entrá en "Mis entregas" y seleccioná el curso. 2) Encontrá la tarea con estado "Entregada". 3) Presioná "Editar". 4) Modificá "Contenido" y/o "Enlaces". 5) Presioná "Guardar". La modificación solo está permitida si no venció el plazo y la entrega todavía no fue corregida.
+
+Pregunta: ¿Qué campos puedo modificar en Editar entrega?
+Respuesta: La ventana "Editar entrega" muestra "Contenido" para el texto del trabajo y "Enlaces" para las direcciones web. Podés cambiar uno de ellos o ambos y luego presionar "Guardar".
+
+Pregunta: ¿Cómo corrijo un error de texto de una entrega?
+Respuesta: Abrí "Mis entregas", seleccioná el curso, buscá la entrega y presioná "Editar". Corregí el texto en "Contenido" y guardá los cambios antes de la fecha límite, siempre que la entrega no haya sido corregida.
+
+Pregunta: ¿Cómo cambio un enlace equivocado en mi entrega?
+Respuesta: En "Mis entregas", elegí la tarea entregada y presioná "Editar". Modificá el campo "Enlaces", manteniendo una URL por línea, y presioná "Guardar" si la edición todavía está habilitada.
+
+Pregunta: ¿Puedo agregar más enlaces después de entregar?
+Respuesta: Sí, cuando la entrega todavía puede editarse: abrí "Editar", añadí las nuevas direcciones al campo "Enlaces" (una por línea) y guardá.
+
+Pregunta: ¿Hasta cuándo puedo editar una entrega?
+Respuesta: Solo antes de la fecha y hora límite de la tarea y siempre que el profesor todavía no la haya corregido.
+
+Pregunta: ¿Puedo modificar una entrega que ya fue corregida?
+Respuesta: No. Los casos de uso establecen que la edición de una entrega requiere que todavía no haya sido corregida.
+
+Pregunta: ¿Por qué no puedo editar un trabajo entregado?
+Respuesta: La edición puede estar bloqueada porque pasó la fecha límite o porque el profesor ya corrigió la entrega. Revisá la fecha y consultá con tu profesor si necesitás ayuda.
+
+Pregunta: ¿Cómo cancelo una edición sin guardar?
+Respuesta: En la ventana "Editar entrega", presioná "Cancelar" o la X de la esquina superior derecha, en lugar de "Guardar".
+
+Pregunta: ¿Cómo elimino una entrega?
+Respuesta: 1) Entrá en "Mis entregas" y seleccioná el curso. 2) Localizá la tarea con una entrega registrada. 3) Presioná "Eliminar" en su fila. 4) Confirmá la eliminación si el sistema te lo solicita. Esta operación está sujeta a las condiciones de la tarea.
+
+Pregunta: ¿Cuál es la diferencia entre Editar y Eliminar?
+Respuesta: "Editar" modifica el texto o los enlaces de un trabajo existente. "Eliminar" borra la entrega registrada; no equivale a borrar la tarea que creó el profesor.
+
+Pregunta: ¿Se elimina la tarea del curso si borro mi entrega?
+Respuesta: No. La acción "Eliminar" se refiere a tu entrega individual; la tarea del curso fue creada por el profesor y no se borra con esa operación.
+
+Pregunta: ¿Qué ocurre si cancelo la eliminación de mi entrega?
+Respuesta: Si aparece una confirmación y elegís cancelar, la entrega se conserva y no se aplica la eliminación.
+
+Pregunta: ¿Puedo volver a entregar un trabajo que eliminé?
+Respuesta: Para hacer una nueva entrega, la tarea debe seguir disponible y su plazo no debe haber vencido. Volvé a "Mis entregas" y comprobá si aparece "Entregar".
+
+Pregunta: ¿Qué puedo hacer si ya venció la fecha y necesito cambiar mi trabajo?
+Respuesta: Contactá al profesor. Los plazos los configura el profesor, y las reglas del campus no permiten editar entregas fuera del plazo establecido.
+
+
+======================================================================
+6. CALIFICACIONES, NOTAS Y PROMEDIOS
+======================================================================
+
+Pregunta: ¿Dónde consulto mis notas?
+Respuesta: Entrá en "Calificaciones" desde el menú lateral. Elegí el curso en el selector "Curso" y consultá la tabla de tareas y el promedio que aparece en pantalla.
+
+Pregunta: ¿Cómo veo mis calificaciones de un curso específico?
+Respuesta: 1) Presioná "Calificaciones". 2) En "Curso", seleccioná la materia que querés consultar. 3) Revisá el promedio y las filas de las tareas correspondientes.
+
+Pregunta: ¿Cómo sé cuál es mi promedio del curso?
+Respuesta: En "Calificaciones", después de elegir el curso, aparece una tarjeta con el número "Promedio del curso".
+
+Pregunta: ¿Qué información aparece en la tabla de Calificaciones?
+Respuesta: La tabla muestra "Tarea", "Fecha límite", "Estado", "Nota", "Aprobación" y "Retroalimentación" de cada actividad.
+
+Pregunta: ¿Qué significa el estado Corregida?
+Respuesta: Indica que el profesor ya corrigió esa entrega. En su fila se muestra la nota correspondiente y, si la cargó, la retroalimentación.
+
+Pregunta: ¿Qué significa Sin corregir?
+Respuesta: Significa que la entrega está registrada, pero todavía no recibió una corrección. Por eso la nota puede aparecer como un guion.
+
+Pregunta: ¿Qué significa Sin entregar en Calificaciones?
+Respuesta: Indica que no existe una entrega registrada para esa tarea. Revisá la fecha límite para saber si todavía está a tiempo de realizarse.
+
+Pregunta: ¿Qué significa Aprobada?
+Respuesta: Es el resultado de aprobación determinado por el sistema a partir de la calificación asignada por el profesor.
+
+Pregunta: ¿Qué significa Desaprobada?
+Respuesta: Es el resultado de desaprobación determinado por el sistema a partir de la calificación de la tarea.
+
+Pregunta: ¿Qué significa que aparezca un guion donde debería estar la nota?
+Respuesta: Que no hay una nota visible para esa tarea en ese momento; por ejemplo, porque aún no fue corregida o porque todavía no existe una entrega. Consultá también su columna "Estado".
+
+Pregunta: ¿Dónde puedo ver los comentarios del profesor sobre mi trabajo?
+Respuesta: En "Calificaciones", elegí el curso y buscá la tarea. La columna "Retroalimentación" contiene los comentarios escritos por el profesor, si los hay.
+
+Pregunta: ¿Por qué una tarea corregida no tiene retroalimentación?
+Respuesta: Porque el campo "Retroalimentación" es opcional para el profesor. Puede haber una nota registrada sin un comentario adicional.
+
+Pregunta: ¿Cómo se calcula el promedio?
+Respuesta: Según las reglas del Campus Virtual, se utiliza un promedio simple de las calificaciones que correspondan. Las tareas entregadas que aún no fueron corregidas no se incluyen. Una tarea no entregada cuyo plazo ya venció se contabiliza con calificación 1.
+
+Pregunta: ¿Las tareas sin corregir afectan mi promedio?
+Respuesta: No por el momento. Una tarea entregada pero sin calificar no se incluye en el cálculo del promedio hasta que el profesor la corrija.
+
+Pregunta: ¿Qué pasa con mi promedio si no entrego una tarea a tiempo?
+Respuesta: Cuando vence el plazo y la tarea sigue sin entregar, los casos de uso establecen que se contabiliza con calificación 1 para el promedio.
+
+Pregunta: ¿Una tarea futura que todavía no entregué baja mi promedio?
+Respuesta: No debe tratarse igual que una tarea vencida sin entregar. La regla de contabilizarla con 1 se aplica cuando vence el plazo correspondiente.
+
+Pregunta: ¿Qué escala de calificaciones utiliza el Campus Virtual?
+Respuesta: El profesor ingresa una calificación entera del 1 al 10. El promedio del curso puede visualizarse con decimales.
+
+Pregunta: ¿El profesor puede modificar una nota ya asignada?
+Respuesta: Sí. El profesor puede abrir una corrección existente y modificar la calificación o la retroalimentación. Los cambios se reflejarán al consultar nuevamente las calificaciones.
+
+Pregunta: ¿Puedo cambiar mi nota desde mi cuenta?
+Respuesta: No. Las calificaciones son asignadas o modificadas por el profesor. Desde tu cuenta podés consultarlas, pero no editarlas.
+
+Pregunta: ¿Cómo sé si una tarea está aprobada o desaprobada?
+Respuesta: En "Calificaciones", elegí el curso y consultá la columna "Aprobación". Allí se muestra la etiqueta "Aprobada" o "Desaprobada" cuando corresponde.
+
+Pregunta: ¿Cómo consulto las notas de otra persona?
+Respuesta: No podés. El Campus Virtual permite a cada estudiante consultar únicamente sus propias calificaciones.
+
+Pregunta: ¿Recibo un correo cuando el profesor corrige una tarea?
+Respuesta: No. Según los casos de uso, la corrección de tareas no genera notificaciones automáticas por correo electrónico. Revisá periódicamente la sección "Calificaciones".
+
+Pregunta: ¿Qué hago si una nota me parece incorrecta?
+Respuesta: Revisá la tarea y su retroalimentación en "Calificaciones". Si considerás que hay un error, consultalo con el profesor del curso, que es quien puede modificar la corrección.
+
+Pregunta: ¿Puedo consultar el promedio de otro curso?
+Respuesta: Sí, siempre que el curso esté disponible para tu cuenta. Cambiá la selección en el desplegable "Curso" de "Calificaciones".
+
+
+======================================================================
+7. ASISTENTE VIRTUAL
+======================================================================
+
+Pregunta: ¿Para qué sirve el asistente del Campus Virtual?
+Respuesta: Sirve para responder preguntas sobre cómo usar la plataforma y consultar información del sistema a la que tenés acceso como estudiante, por ejemplo tus cursos, tareas, entregas y calificaciones.
+
+Pregunta: ¿Cómo ingreso al asistente?
+Respuesta: Seleccioná "Asistente" en el menú lateral. Allí aparece una zona de conversación y, debajo, el campo "Tu consulta".
+
+Pregunta: ¿Cómo hago una pregunta al asistente?
+Respuesta: 1) Entrá en "Asistente". 2) Escribí tu pregunta en el cuadro "Tu consulta". 3) Presioná "Enviar". 4) Leé la respuesta en el chat.
+
+Pregunta: ¿Qué tipo de preguntas puedo hacerle al asistente?
+Respuesta: Podés preguntarle, por ejemplo: "¿Cómo entrego una tarea?", "¿Dónde veo mi promedio?", "¿Cómo edito una entrega?" o "¿Qué trabajos tengo pendientes?". Para datos concretos, la respuesta depende de la información autorizada que pueda consultar.
+
+Pregunta: ¿El asistente puede decirme cuáles son mis tareas pendientes?
+Respuesta: Puede responder consultas sobre información real del sistema cuando esa información esté disponible y autorizada para tu cuenta. Si no logra verificarla, debe indicártelo en lugar de inventarla.
+
+Pregunta: ¿El asistente puede consultar mis notas?
+Respuesta: Puede ayudarte con información de tu cuenta que esté autorizada para el rol Estudiante, incluida la consulta de calificaciones si esos datos están disponibles para el chatbot.
+
+Pregunta: ¿El asistente puede mostrarme las notas de otro estudiante?
+Respuesta: No. Debe respetar los permisos del sistema y no puede revelar las calificaciones ni otros datos privados de otras personas.
+
+Pregunta: ¿El asistente puede entregar, editar o eliminar tareas por mí?
+Respuesta: No. El asistente no ejecuta cambios en las entregas ni otras operaciones funcionales. Puede explicarte los pasos para que vos los hagas desde "Mis entregas".
+
+Pregunta: ¿El asistente puede corregir mi trabajo o decidir qué nota me corresponde?
+Respuesta: No. La corrección de entregas y la asignación de calificaciones son responsabilidades del profesor.
+
+Pregunta: ¿El asistente recuerda conversaciones anteriores?
+Respuesta: Puede utilizar el historial disponible de tus conversaciones anteriores para entender consultas relacionadas, siempre asociado a tu propia cuenta.
+
+Pregunta: ¿Cómo puedo borrar el historial del asistente?
+Respuesta: 1) Entrá en "Asistente". 2) Presioná "Eliminar historial" en la parte superior derecha. 3) Leé el aviso y confirmá la eliminación si querés continuar.
+
+Pregunta: ¿Qué pasa si elimino mi historial de chat?
+Respuesta: Se eliminan las conversaciones y los mensajes del asistente asociados a tu cuenta, junto con las memorias derivadas incluidas en la operación. No se borran tus cursos, tareas, entregas ni calificaciones.
+
+Pregunta: ¿Puedo recuperar el historial del asistente después de eliminarlo?
+Respuesta: No desde la aplicación. El caso de uso establece que la eliminación confirmada retira el historial y las memorias correspondientes.
+
+Pregunta: ¿Qué pasa si cancelo la eliminación del historial?
+Respuesta: No se elimina el historial; tus conversaciones guardadas se conservan.
+
+Pregunta: ¿Qué hago si el asistente no sabe la respuesta?
+Respuesta: Puede avisarte que no cuenta con información suficiente. En ese caso, consultá la sección correspondiente del campus o comunicate con un profesor o administrador según el tema.
+
+Pregunta: ¿Puedo preguntarle al asistente temas ajenos al Campus Virtual?
+Respuesta: Su función está limitada a ayudar con el uso de la plataforma educativa y sus datos autorizados. Si preguntás algo fuera de ese alcance, te orientará a volver a temas del campus.
+
+Pregunta: ¿Qué hago si el asistente muestra un error?
+Respuesta: Intentá realizar de nuevo la consulta. Si el problema continúa, comunicalo al responsable del campus. El asistente debe avisar cuando no puede completar una respuesta.
+
+Pregunta: ¿Puedo usar el asistente sin iniciar sesión?
+Respuesta: No. El asistente está disponible para usuarios autenticados; tenés que ingresar con tu cuenta primero.
+
+
+======================================================================
+8. PERMISOS Y DUDAS FRECUENTES
+======================================================================
+
+Pregunta: ¿Qué puedo hacer como estudiante en la plataforma?
+Respuesta: Podés consultar tus cursos disponibles, realizar y gestionar tus entregas dentro de las reglas de cada tarea, revisar tus propias calificaciones y usar el asistente de ayuda.
+
+Pregunta: ¿Puedo crear tareas o cambiarles la fecha límite?
+Respuesta: No. Esas acciones corresponden al profesor asignado al curso. Podés consultarlo si necesitás más tiempo para entregar.
+
+Pregunta: ¿Puedo corregir tareas de otros estudiantes?
+Respuesta: No. La corrección, las calificaciones y la retroalimentación son funciones del profesor.
+
+Pregunta: ¿Puedo activar o desactivar a otros estudiantes?
+Respuesta: No. La gestión de cuentas corresponde al administrador y la gestión de inscripciones de cursos corresponde al administrador y a los profesores autorizados.
+
+Pregunta: ¿Puedo ver información administrativa o cambiar permisos mediante el asistente?
+Respuesta: No. El asistente respeta los mismos permisos que la plataforma y no puede concederte facultades de profesor o administrador.
+
+Pregunta: ¿Qué hago si el profesor todavía no corrigió una entrega?
+Respuesta: Revisá su estado en "Calificaciones". Si aparece "Sin corregir", la corrección está pendiente; podés consultar con el profesor del curso.
+
+Pregunta: ¿Qué hago si olvidé a qué curso corresponde una tarea?
+Respuesta: Entrá en "Mis entregas" y revisá las tareas seleccionando cada curso disponible desde el desplegable "Curso".
+
+Pregunta: ¿Cómo puedo pedir ayuda con un problema de inscripción?
+Respuesta: Comunicate con un profesor del curso o con un administrador. Desde el menú de estudiante mostrado no se gestionan inscripciones directamente.
+
+Pregunta: ¿Puedo usar la plataforma desde otra cuenta para ver otras notas?
+Respuesta: Cada usuario debe iniciar sesión con su propia cuenta. Las calificaciones están restringidas a su propietario y a los profesores autorizados de los cursos correspondientes.
+
+
+======================================================================
+FIN DE LA GUÍA DEL ESTUDIANTE
+======================================================================
