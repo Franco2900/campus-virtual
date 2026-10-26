@@ -6,7 +6,11 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 
 ## Vista previa
 
-> PENDIENTE DE DEFINIR: capturas de la aplicación una vez implementada.
+| Panel del Administrador | Calificaciones (Profesor) | Chatbot |
+|---|---|---|
+| ![Inicio del Administrador](evidencias/admin-panel/01-inicio-admin-light.png) | ![Matriz de calificaciones](evidencias/cu-09/03-matriz-profesor-claro.png) | ![Chat vacío](evidencias/cu-11/01-chat-vacio-claro.png) |
+
+Cada caso de uso tiene su recorrido en tema claro y oscuro dentro de `evidencias/`.
 
 ## Características
 
@@ -131,23 +135,33 @@ El seed del Administrador (`scripts/seed_admin.py`) aplica las migraciones pendi
 # Frontend (desde frontend/)
 npm run build                                 # Windows: cmd /c npm run build
 
-# Lint / formato
-python -m ruff check backend && python -m ruff format --check backend   # backend (desde la raíz)
-npm run lint:format                           # frontend (desde frontend/)
+# Lint / formato (backend, desde la raíz)
+.\.venv\Scripts\python.exe -m ruff check backend
+.\.venv\Scripts\python.exe -m ruff format --check backend   # Linux/macOS: .venv/bin/python -m ruff ...
+
+# Lint / formato (frontend, desde frontend/)
+npm run lint:format                           # Windows: cmd /c npm run lint:format
 
 # Smoke end-to-end (arranca servicios, valida y limpia; por defecto CU-02)
 ..\.venv\Scripts\python.exe scripts\verify.py                 # Linux/macOS: .venv/bin/python ...
 ..\.venv\Scripts\python.exe scripts\verify.py --diagnose     # estado de puertos/pids (read-only)
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu02      # smoke de autenticación (login/registro/sesión)
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu03      # siembra admin + cursos y corre smoke_cu03
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu04      # smoke de gestión de usuarios y profesores
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu05      # smoke de gestión de inscripciones
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu06      # smoke de gestión de tareas
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu07      # smoke de entrega de tareas
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu08      # smoke de corrección de tareas
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu09      # smoke de consulta de calificaciones
 ..\.venv\Scripts\python.exe scripts\verify.py --cu cu10      # smoke de filtrado de usuarios
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu11      # smoke del chatbot
+..\.venv\Scripts\python.exe scripts\verify.py --cu cu12      # smoke de fuentes de conocimiento
 ..\.venv\Scripts\python.exe scripts\verify.py --serve --db backend\instance\campus.db
                                                              # deja backend + Vite vivos y desligados (evidencia UI)
 ..\.venv\Scripts\python.exe scripts\verify.py --cleanup       # detiene los servicios de --serve/--keep
 ```
+
+Cada smoke corre contra una base temporal aislada y sembrada, así que no toca la base de desarrollo. El de CU-11 funciona con Ollama apagado (valida el camino de error 502 y marca los pasos dependientes del modelo con `[SKIP]`); el de CU-12 necesita el modelo de embeddings para completar el alta de una fuente.
 
 `--serve` levanta los servicios **desligados** del proceso del agente (en Windows con `DETACHED_PROCESS`) y vuelve enseguida, dejando los pids en `scripts/.verify-pids`; es el modo que se usa para capturar evidencia con Playwright. `--cleanup` los detiene (en Windows mata el árbol de procesos).
 
@@ -220,6 +234,8 @@ npm run lint:format                           # frontend (desde frontend/)
 | `/submissions` | Entrega de tareas (CU-07) | Estudiante |
 | `/grading` | Corrección de tareas (CU-08) | Profesor |
 | `/grades` | Consulta de calificaciones (CU-09) | Estudiante / Profesor |
+| `/chat` | Chatbot de asistencia (CU-11) | Estudiante / Profesor / Administrador |
+| `/knowledge` | Fuentes de conocimiento del chatbot (CU-12) | Administrador |
 
 ## Configuración
 
@@ -244,7 +260,53 @@ CAMPUS_ADMIN_EMAIL=admin@example.com CAMPUS_ADMIN_PASSWORD=una-clave-segura .ven
 
 Si el Administrador ya existe, el script no duplica nada. El registro público (`/api/auth/register`) siempre crea rol Estudiante; un Administrador sólo se crea por este seed.
 
-El diagrama entidad-relación de la base (tablas, columnas, restricciones e invariantes de negocio) y cómo poblar datos de prueba están en [`docs/er-diagrama.md`](docs/er-diagrama.md).
+### Datos de prueba
+
+El seed del Administrador crea el Administrador y cuatro cursos (`PROG1`, `MAT1`, `FIS1` y `HIST1`, este último inactivo), pero **no crea Profesores, Estudiantes, inscripciones, tareas ni entregas**. Para probar los casos de uso de tareas, entregas, corrección y calificaciones hace falta el seed de demostración, que se ejecuta **después** del anterior y desde la raíz del proyecto:
+
+```bash
+# Windows
+.\.venv\Scripts\python.exe scripts\seed_demo.py
+# Linux/macOS
+.venv/bin/python scripts/seed_demo.py
+```
+
+Es idempotente: busca cada registro por su clave natural (correo, par curso–profesor, par curso–estudiante, par tarea–estudiante) antes de insertarlo, así que se puede correr las veces que haga falta sin duplicar nada. También aplica las migraciones pendientes. Si no encuentra los cursos demo, avisa que hay que correr `seed_admin.py` primero y termina con error.
+
+Qué deja sembrado:
+
+- 6 cursos adicionales (`ALG1`, `BD1`, `REDES1`, `QUIM1`, `PROG2`, `ING1`): 10 cursos en total.
+- 6 Profesores y 18 Estudiantes (2 inactivos), con 14 asignaciones Profesor–curso e inscripciones activas e inactivas.
+- Tareas activas e inactivas, con plazos futuros y vencidos.
+- Entregas de tareas y la corrección de una porción determinista de ellas.
+
+Credenciales de demostración por defecto (las contraseñas se pueden cambiar definiendo las variables **antes** de correr el script):
+
+| Rol | Correo | Contraseña | Variable de entorno |
+|-----|--------|-----------|---------------------|
+| Administrador | el definido en `CAMPUS_ADMIN_EMAIL` | el definido en `CAMPUS_ADMIN_PASSWORD` | `CAMPUS_ADMIN_*` |
+| Profesor | `docente1@campus.edu` … `docente6@campus.edu` | `Docente123` | `CAMPUS_DEMO_TEACHER_PASSWORD` |
+| Estudiante | `alumno1@campus.edu` … `alumno18@campus.edu` | `Alumno123` | `CAMPUS_DEMO_STUDENT_PASSWORD` |
+
+> Las credenciales de demostración son públicas y sirven sólo para desarrollo local. No las uses en un entorno real.
+
+El diagrama entidad-relación de la base (tablas, columnas, restricciones e invariantes de negocio) está en [`docs/er-diagrama.md`](docs/er-diagrama.md).
+
+#### Reiniciar la base local
+
+Para volver a un estado limpio: detené el backend, borrá `backend/instance/campus.db` y corré los dos seeds en orden (aplican las migraciones solos). `backend/instance/` está en `.gitignore`, así que la base no viene en el repositorio.
+
+```bash
+# Windows, desde la raíz del proyecto
+Remove-Item backend\instance\campus.db
+$env:CAMPUS_ADMIN_EMAIL="admin@example.com"; $env:CAMPUS_ADMIN_PASSWORD="una-clave-segura"
+.\.venv\Scripts\python.exe scripts\seed_admin.py
+.\.venv\Scripts\python.exe scripts\seed_demo.py
+
+# Linux/macOS: rm backend/instance/campus.db y correr los seeds con .venv/bin/python
+```
+
+Un reset completo incluye además `backend/instance/chroma` (índice vectorial) y `backend/instance/knowledge` (archivos de fuentes de conocimiento), que se recrean al volver a cargar fuentes.
 
 ## Servidores MCP (Model Context Protocol)
 
@@ -284,7 +346,7 @@ Los cambios se gestionan spec-driven: cada caso de uso se planifica y se impleme
 
 ## Licencia
 
-> PENDIENTE DE DEFINIR.
+Trabajo Práctico Integrador de uso académico (Curso IA — UNLa, Grupo 12). Se publica como muestra del trabajo realizado, sin garantía de ningún tipo. Los usuarios, cursos y credenciales de demostración son ficticios y sólo para desarrollo local.
 
 ## Contacto
 
