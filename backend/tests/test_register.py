@@ -106,3 +106,13 @@ def test_password_is_hashed(client, app):
 
     assert user.password_hash != VALID_PAYLOAD["password"]
     assert check_password_hash(user.password_hash, VALID_PAYLOAD["password"])
+
+
+def test_register_does_not_create_session(client):
+    response = client.post("/api/auth/register", json=VALID_PAYLOAD)
+
+    assert response.status_code == 201
+
+    me_response = client.get("/api/auth/me")
+    assert me_response.status_code == 401
+    assert "Set-Cookie" not in response.headers

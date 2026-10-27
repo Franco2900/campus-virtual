@@ -12,6 +12,24 @@ Trabajo Práctico Integrador — Curso IA (UNLa) — Grupo 12.
 
 Cada caso de uso tiene su recorrido en tema claro y oscuro dentro de `evidencias/`.
 
+## Arquitectura del sistema
+
+### Backend (Flask)
+- **Patrón por capas:** `routes (blueprints) → services (lógica de negocio) → models (SQLAlchemy)`. Las validaciones y reglas de negocio viven exclusivamente en `services/`, nunca en `blueprints/` ni en los modelos.
+- **Blueprints por dominio:** `auth`, `courses`, `users`, `tasks`, `enrollments`, `grades`, `chat`, `knowledge`.
+- **Persistencia:** SQLite con SQLAlchemy. Esquema versionado con **Flask-Migrate/Alembic** (`backend/migrations/`). `db.create_all()` solo se usa en tests (`TESTING=True`).
+- **Autenticación:** sesiones con cookie firmada de Flask (`HttpOnly`, `SameSite=Lax`). Decoradores `@login_required` y `@require_roles` en `backend/blueprints/guards.py`.
+- **Chatbot:** LangChain + Ollama local (`qwen3:4b`) con herramientas de solo lectura scopeadas por sesión. Historial en `Conversation/Message`. RAG con **ChromaDB** + `nomic-embed-text` para las fuentes de conocimiento del Administrador (CU-12).
+
+### Frontend (React + Vite)
+- **Organización por feature:** `src/features/<feature>/` con componentes, API client y páginas propios.
+- **Design system propio:** tokens en `src/theme/tokens.css` (claro/oscuro, color por rol), componentes reutilizables en `src/ui/` (`Button`, `Card`, `Badge`, `RoleBadge`, `PageHeader`, `Spinner`, `EmptyState`, `DataTable`, `FormField`, `Modal`, `ConfirmDialog`, `Toast`), shell en `src/app/` (`AppLayout`, `Navbar`, `Sidebar`, `ProtectedRoute`).
+- **Animaciones:** `motion`. Validaciones del lado del servidor son la fuente de verdad; el cliente solo envía y muestra errores.
+- **Ruteo:** `react-router-dom` con guards por sesión y rol.
+
+### Casos de uso implementados
+Los **12 casos de uso** propuestos fueron implementados, verificados y archivados vía pipeline **spec-driven (OpenSpec)**: CU-01 a CU-12, incluyendo el chatbot (CU-11) con borrado de historial propio y las fuentes de conocimiento (CU-12). Todos cuentan con revisión, evidencias visuales y smoke tests reproducibles.
+
 ## Características
 
 - Registro y autenticación de usuarios (**CU-01 y CU-02 implementados**): alta de cuenta, login con cookie de sesión firmada, sesión actual, cierre de sesión.
@@ -310,33 +328,95 @@ Un reset completo incluye además `backend/instance/chroma` (índice vectorial) 
 
 ## Servidores MCP (Model Context Protocol)
 
-El desarrollo se apoya en cinco servidores MCP. La configuración vive en dos niveles: `opencode.json` (proyecto) declara `filesystem` y `playwright`; la config global de opencode (`~/.config/opencode/opencode.jsonc`) declara `engram`, `context7` y `github`.
+El desarrollo se apoya en cinco servidores MCP. La configuración vive en **dos niveles** para cumplir con el requisito de reproducibilidad:
+
+### Configuración por nivel
+
+**`opencode.json` (proyecto, commiteado):**
+```json
+{
+  "mcp": {
+    "filesystem": {
+      "type": "local",
+      "enabled": true,
+      "command": ["cmd", "/c", "npx", "-y", "@modelcontextprotocol/server-filesystem", "C:/Users/.../tp 2"]
+    },
+    "playwright": {
+      "type": "local",
+      "enabled": true,
+      "command": ["cmd", "/c", "npx", "-y", "@playwright/mcp@latest", "--headless", "--browser", "chromium"]
+    }
+  },
+  "permission": { "bash": {...}, "read": {...} }
+}
+```
+
+**`~/.config/opencode/opencode.jsonc` (config global, fuera del repo):**
+```jsonc
+{
+  "default_agent": "gentle-orchestrator",
+  "mcp": {
+    "context7": { "type": "remote", "url": "https://mcp.context7.com/mcp" },        // externo
+    "engram": { "type": "local", "command": ["engram", "--tools=agent"] },         // memoria persistente
+    "github": { "type": "local", "command": ["github-mcp-server", "stdio", "--read-only", "--toolsets=repos,issues,pull_requests,actions"], "environment": {"GITHUB_MCP_TOKEN": "{env:GITHUB_MCP_TOKEN}"} }
+  }
+}
+```
+
+### Roles por servidor
 
 | Servidor | Tipo | Origen | Rol en el desarrollo |
 |----------|------|--------|----------------------|
-| `engram` | Memoria (local) | Config global | Memoria persistente del proyecto: decisiones, gotchas y estado que sobreviven entre sesiones y a la compactación de contexto. |
-| `context7` | Documentación (remoto/externo) | Config global | Documentación actualizada de Flask, SQLAlchemy, React, Vite, LangChain y Ollama; reduce APIs alucinadas por el modelo. Es el MCP externo requerido por la consigna. |
+| `engram` | Memoria (local) | Config global | Memoria persistente del proyecto: decisiones, gotchas y estado que sobreviven entre sesiones y a la compactación de contexto. Usado para `mem_save`, `mem_search`, `mem_context`, `mem_session_summary`. |
+| `context7` | Documentación (remoto/externo) | Config global | **MCP externo requerido.** Documentación actualizada de Flask, SQLAlchemy, React, Vite, LangChain y Ollama; reduce APIs alucinadas por el modelo. |
 | `filesystem` | Filesystem (local) | `opencode.json` (proyecto) | Acceso a archivos acotado por allowlist a la carpeta del proyecto. Valor demostrativo del protocolo; opencode ya dispone de acceso a archivos nativo. |
-| `playwright` | Browser e2e (local) | `opencode.json` (proyecto) | Validación real de la UI por CU: navegar, completar formularios y capturar screenshots como evidencia verificable (`@playwright/mcp`, headless + chromium). Complementa, no reemplaza, a pytest y al smoke HTTP. |
-| `github` | Repositorio y CI (remoto vía API) | Config global | Servidor `github-mcp-server` en modo **solo lectura** (`--read-only`, toolsets `repos,issues,pull_requests,actions`) para inspeccionar el repositorio, issues, pull requests y runs de Actions sin salir del agente. Token por `GITHUB_MCP_TOKEN`. Es apoyo de inspección: no interviene en el flujo de entrega por CU, donde los commits y el push se hacen con `git` y el CI también se consulta con `gh`. |
+| `playwright` | Browser e2e (local) | `opencode.json` (proyecto) | Validación real de la UI por CU: navegar, completar formularios y capturar screenshots como evidencia verificable (`@playwright/mcp`, headless + chromium). Complementa a pytest y al smoke HTTP. |
+| `github` | Repositorio y CI (remoto vía API) | Config global | Servidor `github-mcp-server` en modo **solo lectura** (`--read-only`, toolsets `repos,issues,pull_requests,actions`) para inspeccionar el repositorio, issues, PRs y runs de Actions. Token por `GITHUB_MCP_TOKEN`. Apoyo de inspección; commits/push se hacen con `git`. |
 
-- **Terminal:** se resuelve con la herramienta nativa de opencode (no se usa un MCP de terminal, por no existir un servidor oficial maduro).
-- **Comando del MCP filesystem:** `cmd /c npx -y @modelcontextprotocol/server-filesystem "<ruta del proyecto>"`.
-- **Portabilidad:** la ruta del MCP filesystem y el binario del MCP `github` son específicos de esta máquina (config global). Para correr en otra máquina hay que ajustarlos o deshabilitarlos; ninguno de los dos es requisito para que la aplicación funcione.
+- **Terminal:** herramienta nativa de opencode (sin MCP de terminal).
+- **Comando del MCP filesystem:** `cmd /c npx -y @modelcontextprotocol/server-filesystem "<ruta del proyecto>"` (Windows requiere `cmd /c` por execution policy).
+- **Portabilidad:** las rutas del MCP filesystem y el binario de `github-mcp-server` son específicos de esta máquina (config global). Para correr en otra máquina hay que ajustarlos; `opencode.json` del proyecto es portable en estructura. Ninguno de los dos es requisito para que la aplicación funcione.
 
 ## Repositorio
 
 - URL: https://github.com/Franco2900/campus-virtual
 - Rama por defecto: `main`. Commits por unidad de trabajo (Conventional Commits). `.atl/` (herramientas locales generadas) está en `.gitignore`.
 
-## Desarrollo spec-driven (openspec)
+## Ingeniería con IA (AI Engineering)
 
-Los cambios se gestionan spec-driven: cada caso de uso se planifica y se implementa con un pipeline reproducible (propuesta → specs → diseño → tareas → aplicación → verificación → archivo), dejando rastro auditable en `openspec/`.
+### Metodología y orquestación
+- **Instrucciones del sistema:** `AGENTS.md` actúa como fuente de verdad operativa para el agente (arquitectura, convenciones, verificación, evidencia, heartbeat, fases/sesiones, optimización de tokens, portabilidad). Se inyecta en el contexto del agente en cada sesión.
+- **Plantilla maestra:** `Plantilla para proyecto con IA/Prompt maestro para inicializar proyectos.txt` guio la inicialización: inspección obligatoria antes de escribir código, regla "preguntar antes de asumir", planificación incremental, un CU a la vez, bitácora de errores y registro de decisiones.
+- **Desarrollo spec-driven (OpenSpec):** cada caso de uso se planifica con pipeline reproducible **propuesta → specs → diseño → tareas → aplicación → verificación → archivo**. 
+  - Estructura: `openspec/changes/{cambio}/` (activos), `openspec/specs/` (fuente de verdad), `openspec/changes/archive/` (auditoría).
+  - CLI: `openspec` (Windows: `cmd /c openspec ...`). En opencode vía nativa con comandos `/opsx-*`.
+  - `openspec/config.yaml` define contexto, `strict_tdd` y reglas por fase. **13 cambios** archivados al cierre.
 
-- Estructura: `openspec/changes/{cambio}/` para cambios activos, `openspec/specs/` como fuente de verdad de specs, `openspec/changes/archive/` como pista de auditoría.
-- CLI: `openspec` (invocarlo en Windows como `cmd /c openspec ...` por la execution policy de PowerShell). En opencode se puede usar la vía nativa con los comandos `/opsx-*`.
-- `config.yaml` contiene el contexto del proyecto, `strict_tdd` (desactivado hasta que exista un runner de tests) y las reglas por fase.
-- Los casos de uso están especificados en `casos_de_uso.md`; openspec los refina por cambio.
+### Subagentes y Skills
+**Subagentes especializados** en `.opencode/agents/`: `backend`, `frontend`, `database`, `tester`, `reviewer` (read-only, con permisos restrictivos). Trabajo delegado y acotado por el orquestador.
+
+**Skills reutilizables** en `.opencode/skills/` (registradas en `.atl/skill-registry.md`):
+- Propias del proyecto: `new-use-case`, `create-crud`, `create-migration`, `run-verification`, `review-use-case`, `design-system`.
+- Del CLI OpenSpec: `openspec-propose`, `openspec-explore`, `openspec-update-change`, `openspec-apply-change`, `openspec-sync-specs`, `openspec-archive-change`.
+
+### Loops de autocorrección (evidencia en `errores/`)
+El proyecto documenta iteración real con detección → corrección → verificación:
+- **Arranque de smoke con Vite**: race entre backend/Vite → se agregó readiness + base temporal aislada en `scripts/verify.py`.
+- **Servicios huérfanos / tool call bloqueado**: lanzar en primer plano congelaba el agente → modo `--serve` desligado (`DETACHED_PROCESS`/`start_new_session`) con cleanup del árbol de procesos.
+- **Anidamiento de modales Bootstrap (CU-04)**: `TypeError: Cannot read properties of null` → refactor a confirmación inline, verificado con Playwright sin errores de consola.
+- **Evidencia con tema oscuro**: toggle con latencia → fijar tema por `localStorage` + recarga y validación por luminancia.
+- **Fila `error` tras upload fallido (CU-12)**: listado no se refrescaba → `onFailed={loadSources}`, verificado con evidencia UI.
+
+### Registro y trazabilidad
+- **Decisiones:** 48 registros en `decisiones/` (`D-001` a `D-049`), con contexto, alternativas, criterios y consecuencias.
+- **Errores:** bitácora en `errores/` con fecha, síntoma, causa, corrección, verificación y estado.
+- **Progreso:** `progreso.md` con estado por CU, fase del proyecto y resumen por sesión.
+- **Evidencia:** screenshots por CU en `evidencias/cu-0X/` (claro/oscuro), revisión obligatoria en `reviews/cu-0X.md` con hallazgos `archivo:línea` y mapa de evidencia.
+- **Memoria persistente:** MCP `engram` para preservar decisiones/gotchas entre sesiones y compacciones.
+
+### Verificación reproducible
+- `scripts/verify.py`: levanta backend + Vite contra base SQLite temporal, aplica migraciones, siembra, corre smoke por CU contra proxy, garantiza cleanup. `--serve` deja servicios desligados para evidencia UI con Playwright. `--diagnose` para diagnóstico read-only.
+- CI en `.github/workflows/ci.yml`: tests backend, build frontend, lint/format (ruff + prettier) en cada push/PR a `main`.
 
 ## Roadmap
 

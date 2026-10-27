@@ -31,3 +31,5 @@ Thumbs.db
 # Playwright MCP session artifacts
 .playwright-mcp/
 scripts/.verify-pids
+# Plantillas personales
+Plantilla para proyecto con IA/

@@ -13,7 +13,6 @@ const INITIAL_FORM = {
 export default function RegisterForm({ onSuccess, onShowLogin }) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   function handleChange(event) {
@@ -24,11 +23,9 @@ export default function RegisterForm({ onSuccess, onShowLogin }) {
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
-    setSuccess("");
     setSubmitting(true);
     try {
       const user = await registerUser(form);
-      setSuccess(`Cuenta creada. Ya podés iniciar sesión como ${user.email}.`);
       setForm(INITIAL_FORM);
       onSuccess?.(user);
     } catch (requestError) {
@@ -86,13 +83,8 @@ export default function RegisterForm({ onSuccess, onShowLogin }) {
         />
 
         {error && (
-          <div className="alert alert-danger py-2" role="alert">
+          <div className="alert alert-danger py-2" role="alert" data-testid="register-error">
             {error}
-          </div>
-        )}
-        {success && (
-          <div className="alert alert-success py-2" role="status">
-            {success}
           </div>
         )}
 

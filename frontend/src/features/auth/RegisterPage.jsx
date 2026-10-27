@@ -14,7 +14,10 @@ export default function RegisterPage() {
           <h1 className="h4 mb-0 brand-gradient">Crear cuenta</h1>
           <p className="text-secondary mb-0">Registrate para acceder al Campus Virtual</p>
         </div>
-        <RegisterForm onSuccess={() => navigate("/login")} onShowLogin={() => navigate("/login")} />
+        <RegisterForm
+          onSuccess={(user) => navigate("/login", { state: { registeredEmail: user.email } })}
+          onShowLogin={() => navigate("/login")}
+        />
       </div>
     </div>
   );

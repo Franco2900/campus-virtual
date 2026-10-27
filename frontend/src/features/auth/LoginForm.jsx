@@ -8,7 +8,7 @@ const INITIAL_FORM = {
   password: "",
 };
 
-export default function LoginForm({ onSuccess, onShowRegister }) {
+export default function LoginForm({ onSuccess, onShowRegister, onSubmitStart }) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -21,6 +21,7 @@ export default function LoginForm({ onSuccess, onShowRegister }) {
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+    onSubmitStart?.();
     setSubmitting(true);
     try {
       const user = await login(form);
