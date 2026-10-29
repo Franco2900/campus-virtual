@@ -10,7 +10,7 @@ No inventar endpoints. Cubre CU-01..CU-12, implementados, verificados y archivad
 | POST | `/api/auth/register` | CU-01 | Registrar una cuenta (rol Estudiante) (201/400/409) | Público |
 | POST | `/api/auth/login` | CU-02 | Iniciar sesión (emite cookie de sesión) (200/400/401) | Público |
 | GET | `/api/auth/me` | CU-02 | Obtener el usuario autenticado (200/401) | Sesión |
-| POST | `/api/auth/logout` | CU-02 | Cerrar sesión (idempotente; sin sesión responde 200) | Sesión |
+| POST | `/api/auth/logout` | CU-02 | Cerrar sesión (idempotente; sin sesión responde 200) | Público (idempotente) |
 | GET | `/api/courses` | CU-03 | Listar cursos (incluye inactivos) (200/401/403) | Sesión + Administrador |
 | POST | `/api/courses` | CU-03 | Crear un curso (201/400/401/403/409) | Sesión + Administrador |
 | GET | `/api/courses/<id>` | CU-03 | Obtener un curso (200/401/403/404) | Sesión + Administrador |
@@ -48,4 +48,6 @@ No inventar endpoints. Cubre CU-01..CU-12, implementados, verificados y archivad
 | DELETE | `/api/knowledge/sources/<id>` | CU-12 | Eliminar una fuente: índice vectorial → archivo → fila (200/401/403/404/500) | Sesión + Administrador |
 
 > Contrato vigente de los 39 endpoints (CU-01..CU-12). No inventar endpoints.
+>
+> Los códigos de cada fila son los que el handler y sus guards devuelven de forma explícita. Un error no controlado devuelve **500** por el manejador por defecto de Flask: el backend no define `errorhandler`.
 
