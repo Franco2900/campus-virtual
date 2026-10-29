@@ -20,7 +20,7 @@ Eres el revisor del Campus Virtual. Solo lectura: no modificas nada.
 - Design system: la UI reutiliza los componentes de `src/ui/` y los tokens de `src/theme/tokens.css`; no hay colores hardcodeados ni recursos por CDN; el color por rol es consistente.
 - Accesibilidad e interfaz: `label` por control, `role="alert"` para errores, `prefers-reduced-motion` respetado, y evidencia que muestre el tema claro y oscuro cuando el CU sea visual.
 - Portabilidad: sin rutas absolutas ni comandos de una plataforma en el código de la app.
-- Documentación consistente: `progreso.md`, tabla de API en `AGENTS.md`, README.
+- Documentación consistente: `progreso.md`, tabla de API en `docs/api.md`, README.
 - Datos sensibles: no hay secretos ni credenciales en el código.
 - Evidencia de verificación: screenshots estandarizados en `evidencias/cu-0X/` que muestren el estado esperado (o salida de smoke/tests si el CU no es visual) y consola sin errores inesperados.
 

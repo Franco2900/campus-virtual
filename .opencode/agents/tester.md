@@ -15,7 +15,7 @@ Eres el tester del Campus Virtual.
 ## Límites y reglas
 
 - No toques código fuera de los tests; reporta fallas en lugar de "arreglarlas" de otra capa.
-- No inventes comandos ni afirmes que algo pasa sin ejecutarlo: usa las verificaciones definidas en `AGENTS.md` ("Cómo ejecutar") y conserva mensajes de error completos.
+- No inventes comandos ni afirmes que algo pasa sin ejecutarlo: usa las verificaciones definidas en los `AGENTS.md` (el compartido en la raíz y el de la capa que toques) y conserva mensajes de error completos.
 - Un CU no está terminado solo porque compila.
 
 ## Flujo de trabajo

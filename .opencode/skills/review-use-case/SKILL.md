@@ -24,7 +24,7 @@ Cargar antes de marcar un CU como Completo, ante "revisar", "checklist del revis
 2. Verificar arquitectura: `routes → services → models`; sin lógica de negocio ni SQL crudo en `routes/`.
 3. Verificar autorización por rol en cada endpoint nuevo y ausencia de secretos en el código.
 4. Gate de evidencia: confirmar screenshots estandarizados en `evidencias/cu-0X/` (`NN-accion.png`, full-page cuando aporte) que muestren el estado esperado, o salida de smoke/tests si el CU no es visual; consola sin errores inesperados.
-5. Comparar documentación: tabla de API en `AGENTS.md`, `progreso.md`, README y specs openspec.
+5. Comparar documentación: tabla de API en `docs/api.md`, `progreso.md`, README y specs openspec.
 6. Emitir APROBADO/RECHAZADO y pedir al orquestador que persista `reviews/cu-0X.md` (hallazgos, severidades, veredicto, mapa de evidencia).
 
 ## Output Contract

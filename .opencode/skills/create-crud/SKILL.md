@@ -33,7 +33,7 @@ Cargar cuando se pide un ABM/CRUD de una entidad (curso, usuario, tarea, inscrip
 
 1. Leer el CU y el esquema/modelos reales.
 2. Crear/ajustar modelo y validaciones en el servicio (migración si cambia el esquema).
-3. Crear rutas del blueprint correspondiente y registrar la API (tabla de `AGENTS.md`).
+3. Crear rutas del blueprint correspondiente y registrar la API (tabla de `docs/api.md`).
 4. Crear pantalla React (reutilizando `src/ui/` y tokens) + consumo del cliente de API.
 5. Verificar con `run-verification`.
 
