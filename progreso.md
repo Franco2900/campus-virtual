@@ -83,6 +83,8 @@ Estados permitidos: **Pendiente** | **En progreso** | **Completada** | **Bloquea
 
 ## Pendientes de definición
 
+- Higiene de `Casos de uso.txt`: pendiente de OK explícito del usuario (ver el punto 7 de arriba).
+
 ---
 
 ## Histórico del roadmap (movido desde `AGENTS.md` el 2026-10-28)

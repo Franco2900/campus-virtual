@@ -96,6 +96,7 @@ Resumen (detalle completo en `casos_de_uso.md`):
 ├── backend/             # API Flask — ver backend/AGENTS.md
 ├── frontend/            # SPA React + Vite — ver frontend/AGENTS.md
 ├── openspec/            # specs spec-driven: fuente de verdad
+├── .atl/                # índice de skills (generado, local a la máquina)
 └── .opencode/           # agents/ (backend, frontend, database, tester, reviewer), commands/, skills/
 ```
 
