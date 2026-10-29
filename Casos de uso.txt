@@ -85,21 +85,6 @@ Los usuarios nuevos reciben inicialmente el rol Estudiante.
 El rol de Profesor es asignado por un Administrador.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 CU-01 — REGISTRARSE
 
 Actor principal:
@@ -130,23 +115,6 @@ Postcondiciones:
 Reglas:
 - El correo electrónico funciona como identificador único de la cuenta.
 - Un usuario solo puede poseer un rol a la vez.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 CU-02 — AUTENTICARSE
@@ -188,16 +156,6 @@ Reglas:
 - El acceso a las funcionalidades depende del rol del usuario.
 
 
-
-
-
-
-
-
-
-
-
-
 CU-03 — GESTIONAR CURSOS
 
 Actor principal:
@@ -228,22 +186,6 @@ Reglas:
 - Un curso puede tener múltiples profesores.
 - Un curso puede encontrarse activo o inactivo.
 - Los cursos inactivos no deben tratarse como cursos activos.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 CU-04 — GESTIONAR USUARIOS
@@ -289,11 +231,6 @@ Reglas:
 - Un usuario no puede conservar simultáneamente dos o más roles.
 
 
-
-
-
-
-
 CU-05 — GESTIONAR INSCRIPCIONES
 
 Actores principales:
@@ -323,23 +260,6 @@ Reglas:
 - Un profesor solo puede inscribir estudiantes en los cursos en los que trabaja.
 - Un estudiante puede estar inscripto en los cursos que correspondan.
 - La gestión de inscripciones no genera notificaciones automáticas por correo electrónico.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 CU-06 — GESTIONAR TAREAS
@@ -380,14 +300,6 @@ Reglas:
 - Las tareas pertenecen a un curso.
 - Una tarea puede encontrarse activa o inactiva.
 - Las modificaciones de tareas no generan notificaciones automáticas por correo electrónico.
-
-
-
-
-
-
-
-
 
 
 CU-07 — ENTREGAR TAREA
@@ -433,11 +345,6 @@ Reglas:
 - La entrega debe realizarse antes de la fecha límite.
 
 
-
-
-
-
-
 CU-08 — CORREGIR TAREA
 
 Actor principal:
@@ -480,11 +387,6 @@ Reglas:
 - La corrección no genera una notificación automática por correo electrónico.
 
 
-
-
-
-
-
 CU-09 — CONSULTAR CALIFICACIONES
 
 Actores principales:
@@ -511,26 +413,6 @@ Reglas:
 - Las tareas no entregadas fuera del plazo correspondiente se contabilizan con calificación 1.
 - El Estudiante solo puede consultar sus propias calificaciones.
 - El Profesor puede consultar las calificaciones de los estudiantes de sus cursos.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 CU-10 — FILTRAR USUARIOS
@@ -563,9 +445,6 @@ Reglas:
 - Solo el Administrador puede utilizar esta funcionalidad.
 - Los resultados deben corresponder a los criterios ingresados.
 - La búsqueda no modifica los datos de los usuarios.
-
-
-
 
 
 CU-11 — UTILIZAR CHATBOT DE ASISTENCIA
@@ -677,50 +556,6 @@ Reglas de negocio:
     15. La recuperación y utilización de conversaciones anteriores deben limitarse al historial que siga disponible y pertenezca al usuario autenticado.
     16. Las validaciones de identidad, permisos y eliminación de datos deben realizarse en el backend y no depender únicamente de las instrucciones proporcionadas al modelo de inteligencia artificial.
     17. La eliminación del historial debe gestionarse de forma que los datos eliminados no puedan volver a incorporarse al contexto del chatbot desde copias de trabajo, cachés o memorias persistentes controladas por la aplicación.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 CU-12 — GESTIONAR FUENTES DE CONOCIMIENTO DEL CHATBOT
