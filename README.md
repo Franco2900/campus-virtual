@@ -204,7 +204,7 @@ El detalle por capa no vive en `AGENTS.md`: está en `backend/AGENTS.md` y `fron
 
 ## API
 
-El contrato completo por endpoint — método, ruta, CU, propósito, auth, body y códigos de estado de los **39 endpoints** — está en **[`docs/api.md`](docs/api.md)**.
+El contrato completo por endpoint — método, ruta, CU, propósito, auth y códigos de estado de los **39 endpoints** — está en **[`docs/api.md`](docs/api.md)**.
 
 Ese archivo es la fuente de verdad del contrato de la API. La tabla no se repite acá a propósito: dos copias se desincronizan apenas se agrega un endpoint nuevo en un CU. Si buscás cómo llamar un endpoint, empezá por `docs/api.md`.
 
