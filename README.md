@@ -187,56 +187,26 @@ Cada smoke corre contra una base temporal aislada y sembrada, así que no toca l
 
 ```
 /
-├── AGENTS.md          # instrucciones para agentes de IA
+├── AGENTS.md          # contrato compartido para agentes (se inyecta en cada sesión)
 ├── README.md          # este archivo
 ├── opencode.json      # configuración de proyecto (MCP, permisos)
-├── casos_de_uso.md    # especificación de los 10 casos de uso
+├── casos_de_uso.md    # especificación de los 12 casos de uso
 ├── decisiones/        # registro de decisiones (README.md + 00-general.md + cu-0X.md)
 ├── errores/           # bitácora de errores (README.md + 00-general.md + cu-0X.md)
-├── progreso.md        # control de progreso
-├── docs/              # documentación de soporte (docs/er-diagrama.md: diagrama entidad-relación)
+├── progreso.md        # control de progreso e histórico por CU
+├── docs/              # documentación de soporte (api.md: contrato de la API; er-diagrama.md: diagrama entidad-relación)
 ├── openspec/          # specs spec-driven (fuente de verdad de specs)
-├── backend/           # API Flask (app.py, config/, models/, services/, blueprints/, migrations/, tests/)
-└── frontend/          # SPA React + Vite (src/api/, src/features/, src/theme/, src/ui/, src/app/)
+├── backend/           # API Flask (app.py, config/, models/, services/, blueprints/, migrations/, tests/) — ver backend/AGENTS.md
+└── frontend/          # SPA React + Vite (src/api/, src/features/, src/theme/, src/ui/, src/app/) — ver frontend/AGENTS.md
 ```
+
+El detalle por capa no vive en `AGENTS.md`: está en `backend/AGENTS.md` y `frontend/AGENTS.md`, y el contrato de la API en `docs/api.md`. `AGENTS.md` indica cuál cargar según la tarea.
 
 ## API
 
-| Método | Ruta | CU | Propósito | Auth |
-|--------|------|----|-----------|------|
-| POST | `/api/auth/register` | CU-01 | Registrar una cuenta (rol Estudiante) | Público |
-| POST | `/api/auth/login` | CU-02 | Iniciar sesión (emite cookie de sesión) | Público |
-| GET | `/api/auth/me` | CU-02 | Obtener el usuario autenticado | Sesión |
-| POST | `/api/auth/logout` | CU-02 | Cerrar sesión (idempotente) | Sesión |
-| GET | `/api/courses` | CU-03 | Listar cursos (incluye inactivos) | Sesión + Administrador |
-| POST | `/api/courses` | CU-03 | Crear un curso (201/400/409) | Sesión + Administrador |
-| GET | `/api/courses/<id>` | CU-03 | Obtener un curso (200/404) | Sesión + Administrador |
-| PUT | `/api/courses/<id>` | CU-03 | Editar un curso (200/400/404/409) | Sesión + Administrador |
-| PATCH | `/api/courses/<id>` | CU-03 | Activar/desactivar un curso — body `{"active": <bool>}` | Sesión + Administrador |
-| GET | `/api/users` | CU-04, CU-10 | Listar usuarios (incluye inactivos); filtros opcionales `q`/`role`/`active` | Sesión + Administrador |
-| GET | `/api/users/<id>` | CU-04 | Obtener un usuario (200/404) | Sesión + Administrador |
-| PUT | `/api/users/<id>` | CU-04 | Editar datos y rol (200/400/404/409) | Sesión + Administrador |
-| PATCH | `/api/users/<id>` | CU-04 | Activar/desactivar — body `{"active": <bool>}` (200/400/404) | Sesión + Administrador |
-| POST | `/api/users/<id>/password` | CU-04 | Resetear contraseña — body `{"password": "..."}` (200/400/404) | Sesión + Administrador |
-| GET | `/api/courses/<id>/teachers` | CU-04 | Listar profesores del curso (200/404) | Sesión + Administrador |
-| POST | `/api/courses/<id>/teachers` | CU-04 | Asignar profesor — body `{"teacher_id": <id>}` (201/400/404/409) | Sesión + Administrador |
-| DELETE | `/api/courses/<id>/teachers/<teacher_id>` | CU-04 | Quitar profesor del curso (200/404) | Sesión + Administrador |
-| GET | `/api/courses/mine` | CU-05 | Listar los cursos del usuario (Admin: todos; Profesor: asignados; Estudiante: inscritos) | Sesión + Administrador/Profesor/Estudiante |
-| GET | `/api/courses/<id>/students` | CU-05 | Listar estudiantes activos con su inscripción (200/403/404) | Sesión + Administrador/Profesor |
-| POST | `/api/courses/<id>/students` | CU-05 | Inscribir estudiante — body `{"student_id": <id>}` (201/400/403/404/409) | Sesión + Administrador/Profesor |
-| PATCH | `/api/courses/<id>/students/<student_id>` | CU-05 | Activar/desactivar inscripción — body `{"active": <bool>}` (200/400/403/404/409) | Sesión + Administrador/Profesor |
-| DELETE | `/api/courses/<id>/students/<student_id>` | CU-05 | Eliminar inscripción (200/403/404) | Sesión + Administrador/Profesor |
-| GET | `/api/courses/<id>/tasks` | CU-06/07 | Listar tareas del curso (Profesor: activas e inactivas; Estudiante: disponibles + entrega propia) (200/403/404) | Sesión + Profesor/Estudiante |
-| POST | `/api/courses/<id>/tasks` | CU-06 | Crear una tarea (201/400/403/404/409) | Sesión + Profesor |
-| GET | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Obtener una tarea (200/403/404) | Sesión + Profesor |
-| PUT | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Editar una tarea, incl. fecha límite (200/400/403/404/409) | Sesión + Profesor |
-| PATCH | `/api/courses/<id>/tasks/<task_id>` | CU-06 | Activar/desactivar tarea — body `{"active": <bool>}` (200/400/403/404) | Sesión + Profesor |
-| POST | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Entregar una tarea — body `{"content", "links"}` (201/400/403/404/409) | Sesión + Estudiante |
-| PUT | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Modificar la entrega propia (200/400/403/404/409) | Sesión + Estudiante |
-| DELETE | `/api/courses/<id>/tasks/<task_id>/submission` | CU-07 | Eliminar la entrega propia (200/403/404/409) | Sesión + Estudiante |
-| GET | `/api/courses/<id>/tasks/<task_id>/submissions` | CU-08 | Listar las entregas de la tarea con datos del estudiante y estado de corrección (200/403/404) | Sesión + Profesor |
-| PUT | `/api/courses/<id>/tasks/<task_id>/submissions/<student_id>/grade` | CU-08 | Corregir o modificar una entrega — body `{"grade": 1..10, "feedback"?: str}` (200/400/403/404) | Sesión + Profesor |
-| GET | `/api/courses/<id>/grades` | CU-09 | Consultar calificaciones del curso según el rol (Estudiante: sus notas, retroalimentación y promedio; Profesor: matriz estudiante × tarea y promedio del curso) (200/401/403/404) | Sesión + Profesor/Estudiante |
+El contrato completo por endpoint — método, ruta, CU, propósito, auth, body y códigos de estado de los **39 endpoints** — está en **[`docs/api.md`](docs/api.md)**.
+
+Ese archivo es la fuente de verdad del contrato de la API. La tabla no se repite acá a propósito: dos copias se desincronizan apenas se agrega un endpoint nuevo en un CU. Si buscás cómo llamar un endpoint, empezá por `docs/api.md`.
 
 ### Pantallas del frontend (rutas)
 
@@ -385,7 +355,7 @@ El desarrollo se apoya en cinco servidores MCP. La configuración vive en **dos 
 ## Ingeniería con IA (AI Engineering)
 
 ### Metodología y orquestación
-- **Instrucciones del sistema:** `AGENTS.md` actúa como fuente de verdad operativa para el agente (arquitectura, convenciones, verificación, evidencia, heartbeat, fases/sesiones, optimización de tokens, portabilidad). Se inyecta en el contexto del agente en cada sesión.
+- **Instrucciones del sistema:** `AGENTS.md` es el contrato compartido que se inyecta en el contexto del agente en cada sesión: proyecto, arquitectura, reglas de negocio, convenciones, verificación, evidencia, heartbeat, fases/sesiones y portabilidad. El detalle por capa no se precarga: vive en `backend/AGENTS.md`, `frontend/AGENTS.md` y `docs/api.md`, y `AGENTS.md` indica cuál leer según la tarea.
 - **Plantilla maestra:** `Plantilla para proyecto con IA/Prompt maestro para inicializar proyectos.txt` guio la inicialización: inspección obligatoria antes de escribir código, regla "preguntar antes de asumir", planificación incremental, un CU a la vez, bitácora de errores y registro de decisiones.
 - **Desarrollo spec-driven (OpenSpec):** cada caso de uso se planifica con pipeline reproducible **propuesta → specs → diseño → tareas → aplicación → verificación → archivo**. 
   - Estructura: `openspec/changes/{cambio}/` (activos), `openspec/specs/` (fuente de verdad), `openspec/changes/archive/` (auditoría).
